@@ -1,0 +1,76 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0028",
+  "title": "Cliente de sincronización en una sola dirección",
+  "type": "feature",
+  "status": "backlog",
+  "priority": "medium",
+  "size": "M",
+  "parent": "EPIC-0006",
+  "description": "Proyecta el backlog a la herramienta externa. Sin credencial avisa y sale bien; si detecta que alguien editó una tarjeta a mano lo avisa sin intentar mezclar nada.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Dos ejecuciones seguidas no producen cambios remotos en la segunda",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/sync.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "Sin credencial avisa y sale con código cero",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/sync.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC3",
+      "must": "Una edición remota se avisa y queda registrada, sin intentar mezclarla",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "integrations",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [
+    "FEAT-0027"
+  ],
+  "labels": [],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "harness",
+      "event": "created",
+      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
+    },
+    {
+      "at": "2026-08-18T18:05:21Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "depends_on=FEAT-0027"
+    }
+  ],
+  "created_at": "2026-08-18T19:00:00Z",
+  "updated_at": "2026-08-18T18:05:21Z"
+}

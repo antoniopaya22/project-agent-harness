@@ -1,0 +1,76 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0018",
+  "title": "Entrevista iterativa al humano",
+  "type": "feature",
+  "status": "ready",
+  "priority": "high",
+  "size": "M",
+  "parent": "EPIC-0004",
+  "description": "Pregunta solo lo que no se puede deducir del código: propósito del proyecto, quién lo usa, términos de dominio, qué está deprecado y dónde duele. Prefiere confirmar una inferencia a preguntar en abierto, y persiste las respuestas para no repetirlas.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "No hace más de cuatro preguntas por ronda",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "Presenta inferencias para confirmar en lugar de preguntas abiertas cuando puede inferir",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC3",
+      "must": "Una segunda ejecución no repite ninguna pregunta ya respondida",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/adopt.test.mjs"
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [
+    "FEAT-0017"
+  ],
+  "labels": [],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "harness",
+      "event": "created",
+      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
+    },
+    {
+      "at": "2026-08-18T18:05:20Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "depends_on=FEAT-0017"
+    }
+  ],
+  "created_at": "2026-08-18T19:00:00Z",
+  "updated_at": "2026-08-18T18:05:20Z"
+}

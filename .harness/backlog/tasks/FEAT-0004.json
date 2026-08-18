@@ -1,0 +1,70 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0004",
+  "title": "Validación de tareas contra el esquema",
+  "type": "feature",
+  "status": "in_review",
+  "priority": "critical",
+  "size": "S",
+  "parent": "EPIC-0002",
+  "description": "Un validador de JSON Schema escrito a mano con el subconjunto de palabras clave que usan los esquemas, que señala fichero y campo en el fallo.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Sale con código 1 e indica fichero y campo cuando una tarea es inválida",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/schema.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "tests/schema.test.mjs en verde"
+    },
+    {
+      "id": "AC2",
+      "must": "Avisa de una palabra clave de esquema no soportada en lugar de ignorarla",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/schema.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "Caso cubierto en el test"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-18T19:00:00Z",
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "harness",
+      "event": "created",
+      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
+    },
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "implementer",
+      "event": "implemented",
+      "note": "entregada en la construcción inicial"
+    }
+  ],
+  "created_at": "2026-08-18T19:00:00Z",
+  "updated_at": "2026-08-18T19:00:00Z"
+}

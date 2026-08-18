@@ -1,0 +1,108 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0023",
+  "title": "Motor de reorganización por lotes verificados",
+  "type": "feature",
+  "status": "ready",
+  "priority": "critical",
+  "size": "L",
+  "parent": "EPIC-0004",
+  "description": "Mueve el código en lotes pequeños con git, verificando los gates entre lotes contra la línea base y revirtiendo el lote si algo empeora. Sin red de seguridad de pruebas no mueve nada: emite tareas en su lugar.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Exige un árbol de trabajo limpio antes de empezar",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/restructure.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "Sin línea base verde rehúsa mover y emite la reorganización como tareas",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/restructure.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC3",
+      "must": "Revierte el lote cuando un gate empeora respecto a la línea base",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/restructure.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC4",
+      "must": "Deja un único commit de reorganización en su propia rama",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC5",
+      "must": "El modo de simulación produce el plan completo sin tocar nada",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/restructure.test.mjs"
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [
+    "FEAT-0017",
+    "FEAT-0021",
+    "FEAT-0022"
+  ],
+  "labels": [],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "harness",
+      "event": "created",
+      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
+    },
+    {
+      "at": "2026-08-18T18:05:21Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "depends_on=FEAT-0017"
+    },
+    {
+      "at": "2026-08-18T18:05:21Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "depends_on=FEAT-0021"
+    },
+    {
+      "at": "2026-08-18T18:05:21Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "depends_on=FEAT-0022"
+    }
+  ],
+  "created_at": "2026-08-18T19:00:00Z",
+  "updated_at": "2026-08-18T18:05:21Z"
+}

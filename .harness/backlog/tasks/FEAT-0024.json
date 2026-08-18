@@ -1,0 +1,70 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0024",
+  "title": "Adaptador universal y degradación a guías ejecutables",
+  "type": "feature",
+  "status": "in_review",
+  "priority": "medium",
+  "size": "M",
+  "parent": "EPIC-0005",
+  "description": "Para herramientas sin subagentes ni comandos de barra: los roles se describen con sus límites y cada comando se convierte en una guía numerada que el humano pega como instrucción.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Todo comando sin equivalente nativo tiene su guía generada",
+      "check": {
+        "type": "command",
+        "run": "node .harness/bin/harness.mjs generate --check"
+      },
+      "status": "pass",
+      "evidence": "docs/runbooks generado para los nueve comandos"
+    },
+    {
+      "id": "AC2",
+      "must": "La sección de roles explica los límites, no solo los nombres",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pass",
+      "evidence": "AGENTS.md sección Roles con línea Never por rol"
+    }
+  ],
+  "context": {
+    "area": "adapters",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-18T19:00:00Z",
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "harness",
+      "event": "created",
+      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
+    },
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "implementer",
+      "event": "implemented",
+      "note": "entregada en la construcción inicial"
+    }
+  ],
+  "created_at": "2026-08-18T19:00:00Z",
+  "updated_at": "2026-08-18T19:00:00Z"
+}

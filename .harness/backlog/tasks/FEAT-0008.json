@@ -1,0 +1,70 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0008",
+  "title": "Ejecución de gates y resolución de áreas",
+  "type": "feature",
+  "status": "in_review",
+  "priority": "critical",
+  "size": "S",
+  "parent": "EPIC-0002",
+  "description": "El único sitio donde se ejecuta un comando de calidad, y la resolución de una ruta a su área mediante los globs declarados.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Un gate no configurado sale con 0 y avisa",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/gates.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "tests/gates.test.mjs en verde"
+    },
+    {
+      "id": "AC2",
+      "must": "Un gate requerido en rojo bloquea el commit",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/gates.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "Caso cubierto en el test"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-18T19:00:00Z",
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "harness",
+      "event": "created",
+      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
+    },
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "implementer",
+      "event": "implemented",
+      "note": "entregada en la construcción inicial"
+    }
+  ],
+  "created_at": "2026-08-18T19:00:00Z",
+  "updated_at": "2026-08-18T19:00:00Z"
+}

@@ -1,0 +1,70 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0003",
+  "title": "Ejecutable principal y equivalentes para PowerShell y POSIX",
+  "type": "feature",
+  "status": "in_review",
+  "priority": "critical",
+  "size": "M",
+  "parent": "EPIC-0002",
+  "description": "Un punto de entrada con tabla de comandos, cero dependencias y códigos de salida documentados, más los envoltorios para que el nombre del comando sea el mismo en las tres shells.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "La ayuda funciona igual en PowerShell y en bash",
+      "check": {
+        "type": "command",
+        "run": "node .harness/bin/harness.mjs help"
+      },
+      "status": "pass",
+      "evidence": "help en verde en Git Bash y PowerShell"
+    },
+    {
+      "id": "AC2",
+      "must": "No hay ninguna dependencia externa",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/cli.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "tests/cli.test.mjs comprueba ausencia de package.json"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-18T19:00:00Z",
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "harness",
+      "event": "created",
+      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
+    },
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "implementer",
+      "event": "implemented",
+      "note": "entregada en la construcción inicial"
+    }
+  ],
+  "created_at": "2026-08-18T19:00:00Z",
+  "updated_at": "2026-08-18T19:00:00Z"
+}

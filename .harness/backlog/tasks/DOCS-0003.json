@@ -1,0 +1,70 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "DOCS-0003",
+  "title": "Convenciones de git y plantilla de solicitud de cambios",
+  "type": "docs",
+  "status": "in_review",
+  "priority": "high",
+  "size": "S",
+  "parent": "EPIC-0001",
+  "description": "Gramática de ramas y de mensajes de commit con ejemplos válidos e inválidos, y la plantilla del cuerpo de la solicitud de cambios con la lista de comprobación para quien revisa.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "La gramática de rama no repite el tipo, que ya vive en el identificador",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pass",
+      "evidence": "CONVENTIONS.md sección Git"
+    },
+    {
+      "id": "AC2",
+      "must": "Hay ejemplos válidos y no válidos de mensaje de commit",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pass",
+      "evidence": "Tres ejemplos de cada"
+    }
+  ],
+  "context": {
+    "area": "docs",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-18T19:00:00Z",
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "harness",
+      "event": "created",
+      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
+    },
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "implementer",
+      "event": "implemented",
+      "note": "entregada en la construcción inicial"
+    }
+  ],
+  "created_at": "2026-08-18T19:00:00Z",
+  "updated_at": "2026-08-18T19:00:00Z"
+}

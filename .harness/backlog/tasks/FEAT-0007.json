@@ -1,0 +1,80 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0007",
+  "title": "Operaciones de backlog validadas",
+  "type": "feature",
+  "status": "in_review",
+  "priority": "critical",
+  "size": "L",
+  "parent": "EPIC-0002",
+  "description": "Crear, mostrar, listar, reclamar, transicionar, refinar criterios, fijar contexto, cambiar de tipo y dividir tareas. Todas validadas, para que un modelo no tenga que editar JSON a mano.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Rehúsa una transición ilegal e imprime a dónde sí se puede ir",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/tasks.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "Verificado: backlog -> done rehusado con exit 3"
+    },
+    {
+      "id": "AC2",
+      "must": "Asigna identificadores con contador por tipo sin colisión",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/tasks.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "tests/tasks.test.mjs en verde"
+    },
+    {
+      "id": "AC3",
+      "must": "Un agente no puede marcar una tarea como hecha",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/tasks.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "Guarda de actor verificada en el test"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-18T19:00:00Z",
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "harness",
+      "event": "created",
+      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
+    },
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "implementer",
+      "event": "implemented",
+      "note": "entregada en la construcción inicial"
+    }
+  ],
+  "created_at": "2026-08-18T19:00:00Z",
+  "updated_at": "2026-08-18T19:00:00Z"
+}
