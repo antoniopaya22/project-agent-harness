@@ -1,0 +1,49 @@
+# Verifica el harness contra sus propias invariantes. No ejecuta nada del proyecto anfitrión
+# (aquí no hay ninguno) y nunca sincroniza con un tracker externo.
+name: harness
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # doctor y status miran el historial de git (deriva de ramas, hotspots).
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          # Sin cache: el harness no tiene dependencias, y no debe tenerlas.
+
+      - name: Sin dependencias
+        run: |
+          test ! -f package.json || (echo "el harness no debe tener package.json" && exit 1)
+          test ! -d node_modules || (echo "el harness no debe tener node_modules" && exit 1)
+
+      - name: Gate lint
+        run: node .harness/bin/harness.mjs gate lint
+
+      - name: Autotests
+        run: node .harness/bin/harness.mjs gate test
+
+      - name: Esquema de tareas
+        run: node .harness/bin/harness.mjs validate
+
+      - name: Higiene del backlog
+        run: node .harness/bin/harness.mjs lint-backlog
+
+      - name: Adaptadores sin deriva
+        run: node .harness/bin/harness.mjs generate --check
+
+      - name: Autodiagnóstico
+        run: node .harness/bin/harness.mjs doctor
+
+      - name: Tablero
+        if: always()
+        run: node .harness/bin/harness.mjs status
