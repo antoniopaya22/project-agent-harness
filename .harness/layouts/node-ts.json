@@ -1,0 +1,64 @@
+{
+  "id": "node-ts",
+  "title": "Node/TypeScript src layout with colocated-or-mirrored tests",
+  "description": "Source under src/, build output under dist/ and never committed, tests either mirrored under tests/ or colocated as *.test.ts next to the unit.",
+  "detect": {
+    "any_file": ["package.json"]
+  },
+  "target": [
+    { "role": "source", "path": "src", "purpose": "application and library code" },
+    { "role": "tests", "path": "tests", "purpose": "tests, mirroring src/ (unless the project colocates)" },
+    { "role": "scripts", "path": "scripts", "purpose": "operational scripts" },
+    { "role": "docs", "path": "docs", "purpose": "harness documentation set" }
+  ],
+  "moves": [
+    {
+      "when": "loose_sources_at_root",
+      "detect": "*.ts/*.js/*.mjs at repo root that are not config files",
+      "to": "src/",
+      "risk": "medium"
+    },
+    {
+      "when": "lib_dir",
+      "detect": "lib/ containing hand-written source (not build output)",
+      "to": "src/",
+      "risk": "medium"
+    },
+    {
+      "when": "flat_tests_at_root",
+      "detect": "*.test.* or *.spec.* at repo root",
+      "to": "tests/",
+      "risk": "low"
+    }
+  ],
+  "reference_rewrites": [
+    { "file": "package.json", "keys": ["main", "module", "types", "exports", "bin", "files", "scripts", "workspaces"] },
+    { "file": "tsconfig.json", "keys": ["compilerOptions.rootDir", "compilerOptions.baseUrl", "compilerOptions.paths", "compilerOptions.outDir", "include", "exclude"] },
+    { "file": "vitest.config.*", "keys": ["test.include", "resolve.alias"] },
+    { "file": "jest.config.*", "keys": ["roots", "testMatch", "moduleNameMapper", "collectCoverageFrom"] },
+    { "file": "eslint.config.*", "keys": ["files", "ignores"] },
+    { "file": ".eslintrc*", "keys": ["ignorePatterns", "overrides.files"] },
+    { "file": "Dockerfile", "keys": ["COPY", "ADD", "WORKDIR", "CMD", "ENTRYPOINT"] },
+    { "file": ".github/workflows/*.yml", "keys": ["run", "paths", "working-directory"] },
+    { "file": "Makefile", "keys": ["*"] }
+  ],
+  "import_rewrite": {
+    "language": "javascript",
+    "note": "Relative specifiers crossing a moved boundary must be recomputed from the new file location. Bare specifiers and path aliases are unaffected except via tsconfig paths.",
+    "patterns": [
+      { "from": "(from\\s+['\"])(\\.[^'\"]+)(['\"])", "to": "recompute-relative" },
+      { "from": "(require\\(\\s*['\"])(\\.[^'\"]+)(['\"]\\s*\\))", "to": "recompute-relative" },
+      { "from": "(import\\(\\s*['\"])(\\.[^'\"]+)(['\"]\\s*\\))", "to": "recompute-relative" }
+    ]
+  },
+  "never_move": [
+    "dist/**",
+    "build/**",
+    "coverage/**",
+    "**/node_modules/**",
+    "**/vendor/**",
+    "*.config.js",
+    "*.config.mjs",
+    "*.config.ts"
+  ]
+}

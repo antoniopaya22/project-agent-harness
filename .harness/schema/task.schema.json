@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "harness/task.schema.json",
+  "title": "Harness task",
+  "description": "A single unit of work. One file per task under .harness/backlog/tasks/<ID>.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "type",
+    "status",
+    "description",
+    "acceptance_criteria",
+    "context",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Relative path to this schema, for editor autocompletion."
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^(FEAT|FIX|CHORE|DOCS|RFCT|TEST|SPIKE|EPIC)-[0-9]{4}$",
+      "description": "Type prefix + per-type counter. Frozen once the task leaves 'backlog'."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 6,
+      "maxLength": 120,
+      "description": "Written for a business reader: no file paths, no code identifiers."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["feature", "fix", "chore", "docs", "refactor", "test", "spike", "epic"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["backlog", "ready", "in_progress", "in_review", "blocked", "done", "cancelled"]
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low"],
+      "default": "medium"
+    },
+    "size": {
+      "type": "string",
+      "enum": ["XS", "S", "M", "L"],
+      "description": "L means it should probably be split."
+    },
+    "parent": {
+      "type": ["string", "null"],
+      "pattern": "^EPIC-[0-9]{4}$",
+      "description": "The epic this task belongs to."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 20,
+      "description": "What and why, in prose. Not a task list."
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Individually checkable. A criterion without a check is not a criterion.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "must", "check", "status"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^AC[0-9]+$" },
+          "must": {
+            "type": "string",
+            "minLength": 10,
+            "description": "Observable outcome, not an implementation instruction."
+          },
+          "check": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type"],
+            "properties": {
+              "type": { "type": "string", "enum": ["command", "review", "manual"] },
+              "run": {
+                "type": ["string", "null"],
+                "description": "Required when type is 'command'. Verified by the tester agent."
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "pass", "fail", "unverifiable"]
+          },
+          "evidence": {
+            "type": ["string", "null"],
+            "description": "Filled by the tester: command output excerpt, or the reviewer's reasoning."
+          }
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The router: what the implementer must read, and nothing more.",
+      "required": ["area"],
+      "properties": {
+        "area": {
+          "type": ["string", "null"],
+          "description": "Area id from project.json. Required to reach status 'ready'."
+        },
+        "docs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Extra docs beyond the cold-start read path."
+        },
+        "files": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Source files known to be relevant."
+        },
+        "out_of_scope": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Explicit non-goals. Prevents scope creep by the implementer."
+        }
+      }
+    },
+    "depends_on": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^(FEAT|FIX|CHORE|DOCS|RFCT|TEST|SPIKE|EPIC)-[0-9]{4}$" },
+      "description": "Must all be 'done' before this task can be claimed."
+    },
+    "blocked_reason": {
+      "type": ["string", "null"],
+      "description": "Required when status is 'blocked'."
+    },
+    "resolution": {
+      "type": ["string", "null"],
+      "description": "Required when status is 'cancelled'."
+    },
+    "labels": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" }
+    },
+    "assignee": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["agent", "human"] },
+        "id": { "type": "string" }
+      }
+    },
+    "claimed_at": { "type": ["string", "null"] },
+    "branch": { "type": ["string", "null"] },
+    "estimate_hours": { "type": ["number", "null"], "minimum": 0 },
+    "links": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pr": { "type": ["string", "null"] },
+        "issue": { "type": ["string", "null"] },
+        "commits": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "worklog": {
+      "type": "array",
+      "description": "Bounded to the last 20 entries; older ones move to workspace/<ID>/worklog.md",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["at", "by", "event"],
+        "properties": {
+          "at": { "type": "string" },
+          "by": { "type": "string" },
+          "event": {
+            "type": "string",
+            "enum": [
+              "created", "groomed", "retyped", "claimed", "planned", "implemented",
+              "verified", "reviewed", "committed", "blocked", "unblocked",
+              "status_changed", "synced", "cancelled", "completed", "split"
+            ]
+          },
+          "note": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "external": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "One block per external tracker. Written only by `harness sync`.",
+      "properties": {
+        "clickup": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": ["string", "null"] },
+            "url": { "type": ["string", "null"] },
+            "list_id": { "type": ["string", "null"] },
+            "last_synced_at": { "type": ["string", "null"] },
+            "content_hash": { "type": ["string", "null"] }
+          }
+        }
+      }
+    },
+    "created_at": { "type": "string" },
+    "updated_at": { "type": "string" }
+  }
+}

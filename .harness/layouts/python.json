@@ -1,0 +1,73 @@
+{
+  "id": "python",
+  "title": "Python src-layout with mirrored tests",
+  "description": "Importable package under src/, tests mirroring the package tree. The layout most tooling assumes and the one that stops 'works on my machine' import bugs.",
+  "detect": {
+    "any_file": ["pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile"]
+  },
+  "target": [
+    { "role": "package", "path": "src/{package}", "purpose": "application code, one importable package" },
+    { "role": "tests", "path": "tests", "purpose": "tests, mirroring the src/{package} tree" },
+    { "role": "scripts", "path": "scripts", "purpose": "operational scripts, not importable" },
+    { "role": "docs", "path": "docs", "purpose": "harness documentation set" }
+  ],
+  "moves": [
+    {
+      "when": "loose_modules_at_root",
+      "detect": "*.py at repo root that are not setup.py/conftest.py/noxfile.py/tasks.py",
+      "to": "src/{package}/",
+      "risk": "medium"
+    },
+    {
+      "when": "package_at_root",
+      "detect": "a directory at repo root containing __init__.py",
+      "to": "src/",
+      "risk": "medium"
+    },
+    {
+      "when": "tests_inside_package",
+      "detect": "test_*.py or *_test.py inside the package tree",
+      "to": "tests/",
+      "risk": "high"
+    },
+    {
+      "when": "flat_tests_at_root",
+      "detect": "test_*.py at repo root",
+      "to": "tests/",
+      "risk": "low"
+    }
+  ],
+  "reference_rewrites": [
+    { "file": "pyproject.toml", "keys": ["tool.setuptools.packages.find.where", "tool.setuptools.package-dir", "tool.poetry.packages", "project.scripts", "tool.pytest.ini_options.testpaths", "tool.pytest.ini_options.pythonpath", "tool.coverage.run.source", "tool.ruff.src", "tool.mypy.files"] },
+    { "file": "setup.cfg", "keys": ["options.packages.find.where", "options.package_dir", "tool:pytest.testpaths"] },
+    { "file": "setup.py", "keys": ["package_dir", "packages"] },
+    { "file": "pytest.ini", "keys": ["testpaths", "pythonpath"] },
+    { "file": "tox.ini", "keys": ["testpaths", "changedir"] },
+    { "file": ".coveragerc", "keys": ["source", "include"] },
+    { "file": "MANIFEST.in", "keys": ["recursive-include", "include", "graft"] },
+    { "file": "Dockerfile", "keys": ["COPY", "ADD", "WORKDIR", "CMD", "ENTRYPOINT"] },
+    { "file": ".github/workflows/*.yml", "keys": ["run", "paths", "working-directory"] },
+    { "file": "Makefile", "keys": ["*"] }
+  ],
+  "import_rewrite": {
+    "language": "python",
+    "note": "Absolute imports of moved top-level modules become imports from the package. Relative imports inside a moved subtree are unaffected.",
+    "patterns": [
+      { "from": "^(\\s*)import {module}\\b", "to": "$1import {package}.{module}" },
+      { "from": "^(\\s*)from {module}(\\.|\\s+import)", "to": "$1from {package}.{module}$2" }
+    ]
+  },
+  "never_move": [
+    "migrations/**",
+    "alembic/**",
+    "**/vendor/**",
+    "**/node_modules/**",
+    ".venv/**",
+    "venv/**",
+    "**/__pycache__/**",
+    "conftest.py",
+    "setup.py",
+    "noxfile.py",
+    "manage.py"
+  ]
+}

@@ -1,0 +1,152 @@
+{
+  "$schema": "./schema/project.schema.json",
+  "harness_version": "1.0.0",
+  "project": {
+    "name": "project-agent-harness",
+    "purpose": "Plantilla de harness para agentes de código, independiente de proveedor: backlog en JSON con criterios de aceptación verificables, subagentes especializados, comandos automatizados y una documentación cuyo camino de lectura está acotado. Se aplica tanto a proyectos nuevos como a proyectos ya en marcha, y opcionalmente proyecta el backlog a ClickUp para que perfiles no técnicos vean el estado.",
+    "task_prefix": "HRN",
+    "output_language": "es"
+  },
+  "git": {
+    "default_branch": "main",
+    "protected_branches": [
+      "main",
+      "master",
+      "develop"
+    ],
+    "commit_scopes": [
+      "cli",
+      "schema",
+      "agents",
+      "commands",
+      "docs",
+      "adapters",
+      "integrations",
+      "ci",
+      "adopt"
+    ],
+    "auto_pr": "ready"
+  },
+  "gates": {
+    "format": {
+      "run": null,
+      "status": "not-configured",
+      "required": false
+    },
+    "lint": {
+      "run": "node scripts/lint.mjs",
+      "check": "node scripts/lint.mjs",
+      "status": "configured",
+      "required": true
+    },
+    "typecheck": {
+      "run": null,
+      "status": "n/a",
+      "required": false
+    },
+    "test": {
+      "run": "node --test \"tests/*.test.mjs\"",
+      "status": "configured",
+      "required": true
+    },
+    "build": {
+      "run": null,
+      "status": "n/a",
+      "required": false
+    },
+    "start": {
+      "run": null,
+      "status": "n/a",
+      "required": false
+    }
+  },
+  "areas": [
+    {
+      "id": "cli",
+      "title": "CLI del harness",
+      "globs": [
+        ".harness/bin/**",
+        "scripts/**"
+      ],
+      "doc": "docs/areas/cli.md"
+    },
+    {
+      "id": "definitions",
+      "title": "Definiciones canónicas: esquemas, agentes, comandos, layouts",
+      "globs": [
+        ".harness/schema/**",
+        ".harness/agents/**",
+        ".harness/commands/**",
+        ".harness/layouts/**",
+        ".harness/templates/**"
+      ],
+      "doc": "docs/areas/definitions.md"
+    },
+    {
+      "id": "adapters",
+      "title": "Generación de adaptadores por proveedor",
+      "globs": [
+        ".harness/bin/lib/generate.mjs",
+        "CLAUDE.md",
+        "AGENTS.md",
+        ".claude/**"
+      ],
+      "doc": "docs/areas/adapters.md"
+    },
+    {
+      "id": "integrations",
+      "title": "Sincronización con trackers externos",
+      "globs": [
+        ".harness/integrations/**"
+      ],
+      "doc": "docs/areas/integrations.md"
+    },
+    {
+      "id": "docs",
+      "title": "Documentación del harness",
+      "globs": [
+        "docs/**",
+        "README.md"
+      ],
+      "doc": "docs/areas/docs.md"
+    }
+  ],
+  "layout": "as-is",
+  "providers": {
+    "claude": true,
+    "agents_md": true,
+    "cursor": false,
+    "copilot": false
+  },
+  "integrations": {
+    "clickup": {
+      "enabled": false,
+      "list_id": null,
+      "custom_fields": {},
+      "users": {}
+    }
+  },
+  "packages": [],
+  "read_path": [
+    {
+      "path": ".harness/ENTRYPOINT.md",
+      "max_lines": 120,
+      "note": "Reglas del juego. Lo unico que se lee siempre."
+    },
+    {
+      "path": ".harness/backlog/tasks/{task}.json",
+      "max_lines": 200,
+      "note": "La tarea es el enrutador: dice que hacer y que leer."
+    },
+    {
+      "path": ".harness/project.json",
+      "max_lines": 200,
+      "note": "Gates, areas y convenciones git. Nadie adivina un comando."
+    },
+    {
+      "path": "docs/areas/{area}.md",
+      "max_lines": 300,
+      "note": "Solo la rebanada de arquitectura que toca la tarea."
+    }
+  ]
+}
