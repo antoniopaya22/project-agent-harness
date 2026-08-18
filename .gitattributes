@@ -1,0 +1,13 @@
+# El harness garantiza salida estable byte a byte para poder detectar deriva
+# (`harness generate --check`). Si el checkout convirtiera finales de línea, esa
+# garantía dependería de la configuración local de cada máquina.
+* text=auto eol=lf
+
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.pdf binary
