@@ -1,0 +1,50 @@
+---
+id: commit
+name: Commit
+purpose: Commit and push the current work on the task branch, following the git conventions, and open the PR when the task is finished.
+args: "[mensaje opcional]"
+kind: script
+capabilities: [read, shell]
+model: fast
+---
+
+Commit the current changes for the task on this branch.
+
+## Do this
+
+```bash
+node .harness/bin/harness.mjs commit
+```
+
+Pass a subject only if the task title is not the right summary for *this* commit:
+
+```bash
+node .harness/bin/harness.mjs commit --message "$ARGUMENTS"
+```
+
+The CLI is what enforces the conventions, so you do not have to remember them. It will:
+
+1. Work out which task this is, from the branch name (or `--task <ID>`).
+2. **Refuse on a protected branch**, and tell you the branch to create instead.
+3. Run every required gate. A red required gate stops the commit — do not reach for `--no-verify`
+   to get past a real failure; fix it, or report it. (`--no-verify` exists for the case where the
+   gate itself is broken, and it records that fact in the commit body.)
+4. Stage everything, build the conventional message — `type(scope): subject`, a body explaining
+   *why*, and a `Refs: <ID>` trailer — and commit.
+5. Push to the task branch, setting upstream on first push. It refuses to push a branch that is
+   behind its upstream rather than force-pushing.
+6. **Open the pull request only when the task has reached `in_review`** — that is, gates green and
+   every acceptance criterion resolved. A PR does not open on intermediate commits. If `gh` is not
+   installed it prints the URL to open by hand.
+
+## What you must not do
+
+- Do not `git commit` directly: you would bypass the gates and the message grammar.
+- Do not `git push --force`. If the branch diverged, reconcile it deliberately and say what you did.
+- Do not merge the PR, mark it ready for review, or assign reviewers. Those are the human's.
+- Do not set the task to `done`.
+
+## Report
+
+The commit subject, the branch, whether it pushed, and either the PR link or the reason there is no
+PR yet (usually: the task is still `in_progress`, which is normal).

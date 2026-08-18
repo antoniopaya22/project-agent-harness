@@ -1,0 +1,42 @@
+---
+id: status
+name: Status
+purpose: Situational awareness in one screen — board counts, work in progress, what is next, and where the backlog has drifted from reality.
+args: ""
+kind: script
+capabilities: [read, shell]
+model: fast
+---
+
+Show the project's state.
+
+```bash
+node .harness/bin/harness.mjs status
+```
+
+Read what it prints and relay it, adding interpretation only where it helps. The four parts:
+
+- **Counts per status** — the shape of the backlog.
+- **Current branch and its task** — a branch with no task is drift, and it is flagged.
+- **Work in progress** — anything `in_progress` or `in_review`, with who claimed it.
+- **Next** — the ready, unblocked, unclaimed task with the highest priority. This is the answer to
+  "what should I do now", computed from one file read.
+
+## The drift section deserves attention
+
+It reports the two ways this system decays in real use:
+
+- **`branch-without-task`** — someone worked without a task. Either create the task retroactively or
+  delete the branch, but do not leave it: the board stops being true, and the board is what
+  non-technical colleagues trust.
+- **`stalled`** — a task claimed but with no commits for over a week. Usually it should go back to
+  `ready` (`harness task unclaim <ID>`) so somebody else can pick it up, or to `blocked` with a reason.
+
+If the user asks for more than the summary, add `harness task list --open` and, when something looks
+structurally wrong, `harness doctor`.
+
+## Report
+
+The status output, then at most three lines: the single most useful next action, anything in the drift
+section that needs a decision, and — only if there is one — a genuine blocker. Do not editorialise
+about a healthy project.

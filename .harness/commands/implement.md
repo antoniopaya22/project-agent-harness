@@ -1,0 +1,111 @@
+---
+id: implement
+name: Implement
+purpose: Take a task from ready to in_review — plan, branch, implement, verify, document, review, commit. Resumable.
+args: "<TASK-ID>"
+kind: hybrid
+agents: [planner, implementer, tester, reviewer, scribe]
+capabilities: [read, search, edit, shell, delegate, ask]
+model: primary
+---
+
+Implement task **$1**.
+
+This command is resumable and idempotent: running it twice must not redo finished work. Follow the
+stages in order, and at each one first check whether it is already done.
+
+## 0 — Load, and resume if there is something to resume
+
+```bash
+node .harness/bin/harness.mjs read-path $1
+node .harness/bin/harness.mjs task show $1
+```
+
+Read exactly the files `read-path` lists. Then check `.harness/workspace/$1/handoff.json`:
+if it exists, **jump to the stage after its `stage` field** (`claimed` → 5, `planned` → 6,
+`implemented` → 7, `verified` → 8, `reviewed` → 10). Say which stage you resumed from.
+
+## 1 — Guard: is this task workable?
+
+- Status must be `ready` or `in_progress`. If it is `backlog`, the task is not groomed: invoke the
+  **planner** to groom it, show the human the resulting acceptance criteria, and **stop** for
+  confirmation before writing any code.
+- If it is `blocked`, `in_review`, `done` or `cancelled`, stop and say why.
+
+## 2 — Guard: dependencies
+
+Any `depends_on` that is not `done` means refuse. List the blockers and stop. Do not "work around"
+a dependency.
+
+## 3 — Branch
+
+Create or switch to the task branch. The grammar is `<git-type>/<number>-<slug>` and the CLI knows
+it — do not invent one. If the working tree is dirty on a protected branch, stop and say so.
+
+## 4 — Claim
+
+```bash
+node .harness/bin/harness.mjs task claim $1 --as implementer
+git switch -c <branch>   # if it does not exist yet
+```
+
+Write `.harness/workspace/$1/handoff.json` with `stage: claimed`.
+
+## 5 — Plan
+
+If `.harness/workspace/$1/plan.md` does not exist, invoke the **planner** to write it.
+Then: **if the plan's risk is `high`, or it touches more than one area, stop and ask the human to
+confirm the approach before implementing.** Otherwise continue. Update the handoff to `planned`.
+
+## 6 — Implement
+
+Invoke the **implementer**. It reads only the read path plus the plan. Update the handoff to
+`implemented`.
+
+## 7 — Verify
+
+Invoke the **tester**. It runs `harness gates` and gives a verdict per criterion with evidence.
+
+- All criteria pass → continue.
+- Something fails → back to stage 6 with the tester's findings. **Maximum two loops.** After the
+  second failed verification, stop, report exactly what is failing and why, and let the human decide.
+  Do not keep trying.
+
+Update the handoff to `verified`.
+
+## 8 — Document
+
+Invoke the **scribe** with the diff. It updates only the docs the change invalidated, then runs
+`harness doctor` to confirm the codemap still tells the truth.
+
+## 9 — Review
+
+Invoke the **reviewer**. Address every blocking finding (that means going back to stage 6 for those
+changes, then re-verifying the affected criteria). Non-blocking findings become candidate tasks, not
+edits. Update the handoff to `reviewed`.
+
+## 10 — Close
+
+```bash
+node .harness/bin/harness.mjs task set-status $1 in_review --as tester
+node .harness/bin/harness.mjs commit --task $1
+```
+
+`commit` pushes to the task branch and — because the task is now `in_review` — opens the pull
+request. Then report:
+
+- what changed, in one screen;
+- the criteria table with verdicts;
+- the PR link;
+- the single next action for the human: review and merge.
+
+## Stopping points — do not skip these
+
+There are exactly four places you stop and hand control to the human:
+
+1. after grooming an ungroomed task, to confirm the acceptance criteria;
+2. when the plan is `high` risk or crosses areas;
+3. after two failed verification loops;
+4. at `done` — only a human sets it, after merging.
+
+Everything else is automatic.
