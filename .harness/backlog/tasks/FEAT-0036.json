@@ -3,7 +3,7 @@
   "id": "FEAT-0036",
   "title": "Validar el fichero de traspaso contra un esquema",
   "type": "feature",
-  "status": "ready",
+  "status": "done",
   "priority": "critical",
   "size": "M",
   "parent": "EPIC-0009",
@@ -16,7 +16,8 @@
         "type": "command",
         "run": "node --test tests/handoff.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "handoff.schema.json y harness handoff read/write/validate/resume"
     },
     {
       "id": "AC2",
@@ -25,7 +26,8 @@
         "type": "command",
         "run": "node --test tests/handoff.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "un traspaso malformado rehusa dar etapa en lugar de adivinar; escribir uno invalido se rehusa"
     },
     {
       "id": "AC3",
@@ -34,7 +36,8 @@
         "type": "review",
         "run": null
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "commands/implement.md etapa 0 usa handoff resume y para si sale distinto de cero"
     }
   ],
   "context": {
@@ -44,17 +47,21 @@
     "out_of_scope": []
   },
   "depends_on": [],
+  "blocked_reason": null,
   "labels": [
     "mejora"
   ],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T16:07:14Z",
+  "branch": "feat/0036-validar-el-fichero-de-traspaso-contra",
   "links": {
     "pr": null,
     "issue": null,
     "commits": []
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T15:30:00Z"
+  "updated_at": "2026-08-20T16:07:15Z"
 }

@@ -2,16 +2,16 @@
   "harness_version": "1.0.0",
   "counts": {
     "backlog": 11,
-    "ready": 44,
+    "ready": 42,
     "in_progress": 0,
     "in_review": 0,
     "blocked": 0,
-    "done": 34,
+    "done": 36,
     "cancelled": 0,
     "total": 89,
-    "open": 55
+    "open": 53
   },
-  "next": "FEAT-0036",
+  "next": "FEAT-0038",
   "tasks": [
     {
       "id": "CHORE-0001",
@@ -865,7 +865,7 @@
       "depends_on": [
         "FEAT-0037"
       ],
-      "blocked": true,
+      "blocked": false,
       "assignee": null,
       "branch": null,
       "updated_at": "2026-08-20T15:40:17Z"
@@ -921,31 +921,31 @@
       "id": "FEAT-0036",
       "title": "Validar el fichero de traspaso contra un esquema",
       "type": "feature",
-      "status": "ready",
+      "status": "done",
       "priority": "critical",
       "size": "M",
       "area": "definitions",
       "parent": "EPIC-0009",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "assignee": "agent:implementer",
+      "branch": "feat/0036-validar-el-fichero-de-traspaso-contra",
+      "updated_at": "2026-08-20T16:07:15Z"
     },
     {
       "id": "FEAT-0037",
       "title": "Riesgo del plan como codigo de salida",
       "type": "feature",
-      "status": "ready",
+      "status": "done",
       "priority": "critical",
       "size": "M",
       "area": "cli",
       "parent": "EPIC-0009",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "assignee": "agent:implementer",
+      "branch": "feat/0037-riesgo-del-plan-como-codigo-de",
+      "updated_at": "2026-08-20T16:07:15Z"
     },
     {
       "id": "FEAT-0038",

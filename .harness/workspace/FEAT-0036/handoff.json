@@ -1,0 +1,8 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "FEAT-0036",
+  "stage": "implemented",
+  "by": "implementer",
+  "summary": "Esquema de traspaso y comando plan-risk implementados y con tests.",
+  "at": "2026-08-20T16:05:52Z"
+}

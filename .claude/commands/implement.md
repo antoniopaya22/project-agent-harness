@@ -29,9 +29,18 @@ one, and the projected surface costs about 46% less. Use `--with-files` when you
 work files inlined too, and `read-path $1` when you want to see the cost breakdown per
 file rather than the content.
 
-Read nothing beyond it unless the work forces you to. Then check `.harness/workspace/$1/handoff.json`:
-if it exists, **jump to the stage after its `stage` field** (`claimed` → 5, `planned` → 6,
-`implemented` → 7, `verified` → 8, `reviewed` → 10). Say which stage you resumed from.
+Read nothing beyond it unless the work forces you to. Then ask where to resume:
+
+```bash
+node .harness/bin/harness.mjs handoff resume $1
+```
+
+It prints the last **completed** stage, and you continue from the one after it (`claimed` → 5,
+`planned` → 6, `implemented` → 7, `verified` → 8, `reviewed` → 10). Say which stage you resumed
+from.
+
+If it exits non-zero the handoff is malformed: **do not guess a stage.** A broken handoff that
+gets read as "start over" silently redoes work and hides the breakage. Report it and stop.
 
 ## 1 — Guard: is this task workable?
 

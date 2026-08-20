@@ -2,13 +2,13 @@
 
 # Tablero — project-agent-harness
 
-89 tareas · 55 abiertas · 34 hechas
+89 tareas · 53 abiertas · 36 hechas
 
 | Columna | Tareas |
 |---------|--------|
 | Backlog | 11 |
-| Listas para empezar | 44 |
-| Hechas | 34 |
+| Listas para empezar | 42 |
+| Hechas | 36 |
 
 ## Backlog (11)
 
@@ -26,7 +26,7 @@
 | `SPIKE-0001` | Verificar los formatos reales de Cursor y de Copilot | low | S | adapters | de EPIC-0005 |
 | `SPIKE-0002` | Verificar la interfaz de programación de ClickUp | low | S | integrations | espera FEAT-0046 · de EPIC-0006 |
 
-## Listas para empezar (44)
+## Listas para empezar (42)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -47,10 +47,8 @@
 | `FEAT-0021` | Perfiles de estructura destino por lenguaje | high | S | definitions | de EPIC-0004 |
 | `FEAT-0022` | Reescritura de referencias tras mover ficheros | critical | L | cli | espera FEAT-0021 · de EPIC-0004 |
 | `FEAT-0023` | Motor de reorganización por lotes verificados | critical | L | cli | espera FEAT-0017, FEAT-0021, FEAT-0022 · de EPIC-0004 |
-| `FEAT-0032` | Cerrar una tarea en una sola llamada | high | M | cli | espera FEAT-0037 · de EPIC-0008 |
+| `FEAT-0032` | Cerrar una tarea en una sola llamada | high | M | cli | de EPIC-0008 |
 | `FEAT-0035` | Sugerir el nivel de modelo segun el tamano de la tarea | medium | S | definitions | de EPIC-0008 |
-| `FEAT-0036` | Validar el fichero de traspaso contra un esquema | critical | M | definitions | de EPIC-0009 |
-| `FEAT-0037` | Riesgo del plan como codigo de salida | critical | M | cli | de EPIC-0009 |
 | `FEAT-0038` | Probar que la comprobacion de un criterio fallaba antes del cambio | critical | L | cli | de EPIC-0009 |
 | `FEAT-0039` | Bloquear la edicion de ficheros generados con automatismos del proveedor | high | M | adapters | de EPIC-0009 |
 | `FEAT-0040` | Gate de secretos sobre el cambio completo | high | S | cli | de EPIC-0009 |
@@ -75,7 +73,7 @@
 | `SPIKE-0004` | Decidir si una tarea puede pertenecer a varias areas | medium | S | definitions | de EPIC-0013 |
 | `SPIKE-0005` | Como evaluar si un cambio de prompt mejora o empeora | medium | M | definitions | de EPIC-0013 |
 
-## Hechas (34)
+## Hechas (36)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -109,6 +107,8 @@
 | `FEAT-0031` | Un solo payload en lugar de cuatro lecturas | critical | M | cli | agent:implementer · de EPIC-0008 |
 | `FEAT-0033` | Cachear el resultado de los gates por huella del arbol | high | M | cli | agent:implementer · de EPIC-0008 |
 | `FEAT-0034` | Gates con alcance por area | high | M | cli | agent:implementer · de EPIC-0008 |
+| `FEAT-0036` | Validar el fichero de traspaso contra un esquema | critical | M | definitions | agent:implementer · de EPIC-0009 |
+| `FEAT-0037` | Riesgo del plan como codigo de salida | critical | M | cli | agent:implementer · de EPIC-0009 |
 | `FIX-0001` | El CLI llegaba incompleto al repositorio remoto | critical | — | cli | agent:implementer |
 | `FIX-0002` | Las opciones repetidas se descartaban en silencio | high | — | cli | agent:implementer |
 | `FIX-0003` | El emparejado de rutas fallaba fuera de Windows | high | — | cli | agent:implementer |

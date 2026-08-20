@@ -30,7 +30,12 @@ import * as statusLib from './lib/status.mjs';
 import * as commitLib from './lib/commit.mjs';
 import { SUBCOMMANDS, taskCommand, next as taskNext } from './lib/task-cmd.mjs';
 import * as readpath from './lib/readpath.mjs';
+import * as workspace from './lib/workspace.mjs';
 import { lintBacklog } from './lib/lint.mjs';
+
+function actorId(ctx, flags) {
+  return String(flags.as || process.env.HARNESS_ACTOR || 'human');
+}
 
 function loadContext() {
   const root = findRoot();
@@ -70,6 +75,8 @@ commands.help = () => {
         ['index', 'regenerate backlog/index.json and backlog/BOARD.md'],
         ['generate [--check]', 'write provider adapters from .harness/ (--check for CI)'],
         ['doctor [--fix]', 'validate the harness itself, including read-path budgets'],
+        ['handoff <sub> <ID>', 'read | write | validate | resume the in-flight state of a task'],
+        ['plan-risk <ID>', 'exit 3 when the plan needs a human checkpoint before coding'],
         ['commit [--task ID]', 'conventional commit + push (+ PR when the task is in_review)'],
         ['sync [--dry-run]', 'project the backlog to the external tracker (optional)'],
         ['version', 'print the harness version'],
@@ -168,6 +175,76 @@ commands.brief = (ctx, { positional, flags }) => {
     );
   }
   return EXIT.OK;
+};
+
+commands.handoff = (ctx, { positional, flags }) => {
+  const sub = positional.shift() || 'read';
+  const id = tasksLib.normalizeId(positional.shift() || flags.task || '');
+  if (!id) fail('usage: harness handoff <read|write|validate|resume> <TASK-ID> [--stage x] [--summary "..."]', EXIT.USAGE);
+
+  if (sub === 'write') {
+    const patch = {};
+    for (const key of ['stage', 'by', 'branch', 'summary', 'next', 'notes_for_next']) {
+      if (typeof flags[key] === 'string') patch[key] = flags[key];
+    }
+    if (!patch.stage) fail(`--stage is required (one of ${workspace.STAGES.join(', ')})`, EXIT.USAGE);
+    if (!patch.by) patch.by = actorId(ctx, flags);
+    if (!patch.summary) fail('--summary is required: a handoff without one is not a handoff', EXIT.USAGE);
+    const written = workspace.writeHandoff(ctx, id, patch);
+    ok(`handoff for ${id}: stage ${written.stage}`);
+    return EXIT.OK;
+  }
+
+  const { exists, handoff, errors } = workspace.readHandoff(ctx, id);
+  if (sub === 'validate') {
+    if (!exists) {
+      info(`no handoff for ${id}`);
+      return EXIT.OK;
+    }
+    if (errors.length) {
+      bad(`handoff for ${id} is invalid — do not trust its stage:`);
+      for (const e of errors) say(`   - ${e.path || '(root)'}: ${e.message}`);
+      return EXIT.CHECK_FAILED;
+    }
+    ok(`handoff for ${id} is valid (stage ${handoff.stage})`);
+    return EXIT.OK;
+  }
+
+  if (sub === 'resume') {
+    const r = workspace.resumeStage(ctx, id);
+    if (r.invalid) {
+      bad(`${r.reason}:`);
+      for (const e of r.errors) say(`   - ${e.path || '(root)'}: ${e.message}`);
+      return EXIT.CHECK_FAILED;
+    }
+    if (flags.json) say(JSON.stringify({ stage: r.stage, reason: r.reason }, null, 2));
+    else say(r.stage ? `${r.stage}` : `${c.gray('(none)')}  ${r.reason}`);
+    return EXIT.OK;
+  }
+
+  if (!exists) {
+    info(`no handoff for ${id}`);
+    return EXIT.OK;
+  }
+  say(JSON.stringify(handoff, null, 2));
+  return errors.length ? EXIT.CHECK_FAILED : EXIT.OK;
+};
+
+commands['plan-risk'] = (ctx, { positional, flags }) => {
+  const id = tasksLib.normalizeId(positional[0] || '');
+  if (!id) fail('usage: harness plan-risk <TASK-ID>', EXIT.USAGE);
+  const verdict = workspace.planNeedsHumanReview(ctx, id);
+  if (flags.json) {
+    say(JSON.stringify(verdict, null, 2));
+    return verdict.stop ? EXIT.PRECONDITION : EXIT.OK;
+  }
+  if (!verdict.stop) {
+    ok(`plan risk ${verdict.risk} — implementation may proceed without a checkpoint`);
+    return EXIT.OK;
+  }
+  bad('stop and get a human to confirm the approach before implementing:');
+  for (const r of verdict.reasons) say(`   - ${r}`);
+  return EXIT.PRECONDITION;
 };
 
 commands.validate = (ctx) => {

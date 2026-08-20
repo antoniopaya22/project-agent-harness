@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "harness/handoff.schema.json",
+  "title": "Harness handoff",
+  "description": "The state of an in-flight task, written to .harness/workspace/<ID>/handoff.json so the work survives a context reset. `/implement` reads `stage` to decide what to skip, which makes this the most consequential file in the harness: an optimistic or malformed handoff makes the next session skip work that never happened.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["task", "stage", "by", "at", "summary"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "task": {
+      "type": "string",
+      "pattern": "^(FEAT|FIX|CHORE|DOCS|RFCT|TEST|SPIKE|EPIC)-[0-9]{4}$"
+    },
+    "stage": {
+      "type": "string",
+      "enum": ["claimed", "planned", "implemented", "verified", "reviewed", "committed"],
+      "description": "The last stage actually COMPLETED. If unsure whether a stage finished, record the earlier one: over-reporting makes the next session skip real work."
+    },
+    "by": { "type": "string", "minLength": 1 },
+    "at": { "type": "string", "minLength": 10 },
+    "branch": { "type": ["string", "null"] },
+    "summary": {
+      "type": "string",
+      "minLength": 10,
+      "description": "What has actually been done, in two or three sentences."
+    },
+    "changed_files": { "type": "array", "items": { "type": "string" } },
+    "gates": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": ["pass", "fail", "skipped", "missing", "not-run"]
+      },
+      "description": "Record red gates too. A branch nobody knows the test status of is worse than a red one."
+    },
+    "acceptance": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "status"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^AC[0-9]+$" },
+          "status": { "type": "string", "enum": ["pending", "pass", "fail", "unverifiable"] },
+          "evidence": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "next": {
+      "type": ["string", "null"],
+      "description": "The agent or person who should continue."
+    },
+    "blockers": { "type": "array", "items": { "type": "string" } },
+    "notes_for_next": {
+      "type": ["string", "null"],
+      "description": "The thing you would say out loud if you could hand this over in person. The most valuable field here, and worth nothing if it is optimistic."
+    }
+  }
+}
