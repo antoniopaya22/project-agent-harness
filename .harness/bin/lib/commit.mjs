@@ -5,8 +5,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { EXIT, c, fail, info, ok, say, toPosixPath, warn } from './util.mjs';
+import { findSecrets } from './secrets.mjs';
 import * as git from './git.mjs';
-import { TYPE_GIT, addWorklog, branchFor, idFromBranch, load, save } from './tasks.mjs';
+import { TYPE_GIT, branchFor, idFromBranch, load, logEvent, save } from './tasks.mjs';
 import { printGateResults, runAllGates, summarize } from './gates.mjs';
 
 export function resolveTask(ctx, explicitId) {
@@ -108,6 +109,7 @@ export function doCommit(ctx, opts = {}) {
     noVerify = false,
     push = true,
     closes = false,
+    allowSecret = false,
     all = true,
     paths = [],
   } = opts;
@@ -160,12 +162,42 @@ export function doCommit(ctx, opts = {}) {
     return report;
   }
 
+  // The moment to catch a credential is before it exists in history, not after.
+  if (!allowSecret) {
+    const added = git
+      .git(ctx, ['diff', '--cached', '--unified=0'], { allowFail: true })
+      .out.split(/\r?\n/)
+      .filter((l) => l.startsWith('+') && !l.startsWith('+++'))
+      .join('\n');
+    const hits = findSecrets(added);
+    if (hits.length) {
+      const lines = hits.slice(0, 5).map((h) => `   - ${h.name}: ${h.excerpt}`);
+      fail(
+        [
+          `refusing to commit: ${hits.length} line(s) look like a credential`,
+          ...lines,
+          '   Move it to .env. If this is a false positive, pass --allow-secret and say why.',
+        ].join('\n'),
+        EXIT.CHECK_FAILED,
+      );
+    }
+  }
+
   const finalScope = scope || inferScope(ctx, staged);
   const msg = buildMessage(ctx, task, {
     message,
     scope: finalScope,
     closes,
-    body: noVerify ? `${body ? `${body}\n\n` : ''}Note: committed with --no-verify; gates were not run.` : body,
+    // Every bypass leaves a trace in the commit body: a skipped check nobody can see
+    // afterwards is the same as no check at all.
+    body:
+      [
+        body || null,
+        noVerify ? 'Note: committed with --no-verify; gates were not run.' : null,
+        allowSecret ? 'Note: committed with --allow-secret; the credential scan was bypassed.' : null,
+      ]
+        .filter(Boolean)
+        .join('\n\n') || null,
   });
 
   const msgFile = path.join(ctx.harnessDir, 'workspace', task.id, 'COMMIT_MSG.txt');
@@ -181,7 +213,7 @@ export function doCommit(ctx, opts = {}) {
   task.branch = current;
   task.links = task.links || { pr: null, issue: null, commits: [] };
   task.links.commits = [...(task.links.commits || []), head.slice(0, 12)].slice(-20);
-  addWorklog(task, 'harness', 'committed', msg.split('\n')[0]);
+  logEvent(ctx, task.id, 'harness', 'committed', msg.split('\n')[0]);
 
   if (push) {
     if (!git.hasRemote(ctx)) {

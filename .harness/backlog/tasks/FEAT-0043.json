@@ -1,0 +1,76 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0043",
+  "title": "Realimentacion sobre la calidad del refinamiento de tareas",
+  "type": "feature",
+  "status": "ready",
+  "priority": "high",
+  "size": "L",
+  "parent": "EPIC-0010",
+  "description": "Toda la tesis del harness es que un buen refinamiento hace corto el camino de lectura, y no hay ni un dato que lo confirme. Si quien implementa registra que ficheros tuvo que leer fuera del camino previsto, al cabo de veinte tareas el harness puede senalar que areas tienen documentacion insuficiente. Convierte una creencia en algo medible y autocorrector.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Se registran las lecturas que hubo que hacer fuera del camino previsto",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/feedback.test.mjs"
+      },
+      "status": "pending",
+      "baseline": "fail"
+    },
+    {
+      "id": "AC2",
+      "must": "El harness agrega esas lecturas por area y senala las que fallan a menudo",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/feedback.test.mjs"
+      },
+      "status": "pending",
+      "baseline": "fail"
+    },
+    {
+      "id": "AC3",
+      "must": "El informe distingue documentacion insuficiente de tarea mal refinada",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [
+    "FEAT-0031"
+  ],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "67",
+      "url": null,
+      "issue": 67,
+      "drifted": false,
+      "remote_hash": "bd3b3427001efd15",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XIPo",
+      "content_hash": "bf62cd253495db20",
+      "last_synced_at": "2026-08-20T18:39:47Z"
+    }
+  },
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T18:39:47Z"
+}

@@ -14,9 +14,10 @@
       "must": "La regeneración preserva las regiones marcadas como conservables",
       "check": {
         "type": "command",
-        "run": "node --test tests/generate.test.mjs"
+        "run": "node --test tests/overrides.test.mjs"
       },
-      "status": "pending"
+      "status": "pending",
+      "baseline": "not-run"
     },
     {
       "id": "AC2",
@@ -30,9 +31,7 @@
   ],
   "context": {
     "area": "adapters",
-    "docs": [
-      "docs/HARNESS-PLAN.md"
-    ],
+    "docs": [],
     "files": [],
     "out_of_scope": []
   },
@@ -46,14 +45,18 @@
     "issue": null,
     "commits": []
   },
-  "worklog": [
-    {
-      "at": "2026-08-18T19:00:00Z",
-      "by": "harness",
-      "event": "created",
-      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
+  "external": {
+    "github": {
+      "id": "49",
+      "url": null,
+      "issue": 49,
+      "drifted": false,
+      "remote_hash": "de114f606f9ed73c",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XHZ4",
+      "content_hash": "0162c6c1bab02246",
+      "last_synced_at": "2026-08-20T18:37:54Z"
     }
-  ],
+  },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-18T19:00:00Z"
+  "updated_at": "2026-08-20T18:37:54Z"
 }

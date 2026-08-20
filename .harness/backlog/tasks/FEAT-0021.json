@@ -3,7 +3,7 @@
   "id": "FEAT-0021",
   "title": "Perfiles de estructura destino por lenguaje",
   "type": "feature",
-  "status": "ready",
+  "status": "done",
   "priority": "high",
   "size": "S",
   "parent": "EPIC-0004",
@@ -16,7 +16,8 @@
         "type": "command",
         "run": "node --test tests/layouts.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "layouts/python.json y node-ts.json con estructura destino, riesgos y exclusiones; validados por layoutProblems"
     },
     {
       "id": "AC2",
@@ -25,35 +26,42 @@
         "type": "command",
         "run": "node --test tests/layouts.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "as-is devuelve null e isMovable rechaza todo; verificado en tests/layouts.test.mjs"
     }
   ],
   "context": {
     "area": "definitions",
-    "docs": [
-      "docs/HARNESS-PLAN.md"
-    ],
+    "docs": [],
     "files": [],
     "out_of_scope": []
   },
   "depends_on": [],
+  "blocked_reason": null,
   "labels": [],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T18:24:59Z",
+  "branch": "feat/0021-perfiles-de-estructura-destino-por-lenguaje",
   "links": {
     "pr": null,
     "issue": null,
     "commits": []
   },
-  "worklog": [
-    {
-      "at": "2026-08-18T19:00:00Z",
-      "by": "harness",
-      "event": "created",
-      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
+  "external": {
+    "github": {
+      "id": "45",
+      "url": null,
+      "issue": 45,
+      "drifted": false,
+      "remote_hash": "cdc9682a4c7e7d98",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XHRE",
+      "content_hash": "5be18f63ad27ca63",
+      "last_synced_at": "2026-08-20T18:37:31Z"
     }
-  ],
+  },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-18T19:00:00Z"
+  "updated_at": "2026-08-20T18:37:31Z"
 }

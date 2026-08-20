@@ -20,7 +20,15 @@ have to reconstruct anything by reading the diff and guessing.
 
 ## Write the handoff
 
-`.harness/workspace/<ID>/handoff.json`:
+Through the CLI, which validates it against a schema and **refuses to save one that the next
+session would misread**:
+
+```bash
+node .harness/bin/harness.mjs handoff write $1 --stage implemented   --summary "qué se ha hecho de verdad, en dos o tres frases" --by implementer
+node .harness/bin/harness.mjs handoff validate $1
+```
+
+The file it maintains, `.harness/workspace/<ID>/handoff.json`:
 
 ```json
 {

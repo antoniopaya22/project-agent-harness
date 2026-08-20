@@ -2,15 +2,38 @@
 // backlog through these commands and never by hand-editing JSON, which is how a schema
 // survives contact with a language model.
 
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
-import { EXIT, bad, c, fail, info, ok, say, table } from './util.mjs';
+import { EXIT, bad, c, fail, info, matchesAny, ok, say, table, toPosixPath } from './util.mjs';
 import * as tasksLib from './tasks.mjs';
 import * as board from './board.mjs';
 import { actor } from './actor.mjs';
+import * as git from './git.mjs';
+import { writeHandoff } from './workspace.mjs';
 
 const taskSubs = {};
 
 
+
+/**
+ * Does this task have anything to do with that path?
+ *
+ * Two ways to be relevant, and both matter: the path is named in `context.files`, or it
+ * falls inside the globs of the task's area. Impact analysis before a change, and a cheap
+ * way to see whether two tasks are about to fight over the same files.
+ */
+export function touchesPath(ctx, task, target) {
+  const wanted = toPosixPath(target).replace(/\/+$/, '');
+  for (const file of task.context?.files || []) {
+    const f = toPosixPath(file);
+    // Exact match, or the task names a directory that contains the path (or vice versa).
+    // Compared segment-wise so `src/api` never matches `src/apiary`.
+    if (f === wanted || f.startsWith(`${wanted}/`) || wanted.startsWith(`${f}/`)) return true;
+  }
+  const area = (ctx.project.areas || []).find((a) => a.id === task.context?.area);
+  if (area && matchesAny(wanted, area.globs)) return true;
+  return false;
+}
 
 taskSubs.list = (ctx, { flags }) => {
   let tasks = tasksLib.loadAll(ctx);
@@ -18,6 +41,9 @@ taskSubs.list = (ctx, { flags }) => {
   if (flags.area) tasks = tasks.filter((t) => t.context?.area === flags.area);
   if (flags.type) tasks = tasks.filter((t) => t.type === flags.type);
   if (flags.open) tasks = tasks.filter((t) => tasksLib.OPEN_STATUSES.includes(t.status));
+  if (typeof flags.touching === 'string') {
+    tasks = tasks.filter((t) => touchesPath(ctx, t, flags.touching));
+  }
   tasks.sort((a, b) => tasksLib.priorityRank(a.priority) - tasksLib.priorityRank(b.priority) || a.id.localeCompare(b.id));
   if (flags.json) {
     say(JSON.stringify(tasks.map((t) => ({ id: t.id, title: t.title, status: t.status, priority: t.priority })), null, 2));
@@ -58,18 +84,54 @@ taskSubs.show = (ctx, { positional, flags }) => {
     say('');
     say(`${c.yellow('Bloqueada')}: ${task.blocked_reason}`);
   }
+  const history = tasksLib.readWorklog(ctx, task.id, flags.history ? 50 : 5);
+  if (history.length) {
+    say('');
+    say(c.bold('Historial') + c.gray(flags.history ? '' : '  (últimas entradas; --history para más)'));
+    for (const e of history) {
+      say(c.gray(`  ${e.at}  ${String(e.by).padEnd(12)} ${e.event}${e.note ? `  ${e.note}` : ''}`));
+    }
+  }
   return EXIT.OK;
 };
 
 taskSubs.next = (ctx, { flags }) => {
-  const next = tasksLib.pickNext(tasksLib.loadAll(ctx));
+  const all = tasksLib.loadAll(ctx);
+  const count = flags.count ? Number(flags.count) : 1;
+  if (!Number.isInteger(count) || count < 1) fail('--count must be a positive integer', EXIT.USAGE);
+
+  // Asking for more than one is asking "what can I run at the same time", which is not the
+  // same as "the top N": two ready tasks over the same files are not parallel work.
+  if (count > 1 || flags.parallel) {
+    const { chosen, deferred } = tasksLib.pickParallel(all, flags.parallel ? Number(flags.parallel) || count : count);
+    if (flags.json) {
+      say(JSON.stringify({
+        chosen: chosen.map((t2) => ({ id: t2.id, title: t2.title })),
+        deferred: deferred.map((d) => ({ id: d.task.id, against: d.against, reasons: d.reasons })),
+      }, null, 2));
+      return EXIT.OK;
+    }
+    if (chosen.length === 0) {
+      info('no ready, unblocked, unclaimed task');
+      return EXIT.OK;
+    }
+    const unblocks = tasksLib.unblockCounts(all);
+    say(table(chosen.map((t2) => [t2.id, t2.priority ?? '—', `desbloquea ${unblocks.get(t2.id) ?? 0}`, t2.title]), ['ID', 'PRIO', 'IMPACTO', 'TÍTULO']));
+    for (const d of deferred) {
+      say(c.gray(`   aparte: ${d.task.id} choca con ${d.against} (${d.reasons.join('; ')})`));
+    }
+    return EXIT.OK;
+  }
+
+  const next = tasksLib.pickNext(all);
   if (!next) {
     if (flags.json) say('null');
     else info('no ready, unblocked, unclaimed task');
     return EXIT.OK;
   }
-  if (flags.json) say(JSON.stringify({ id: next.id, title: next.title }, null, 2));
-  else say(`${next.id}  ${next.title}`);
+  const unblocks = tasksLib.unblockCounts(all).get(next.id) ?? 0;
+  if (flags.json) say(JSON.stringify({ id: next.id, title: next.title, unblocks }, null, 2));
+  else say(`${next.id}  ${next.title}${unblocks ? c.gray(`  (desbloquea ${unblocks})`) : ''}`);
   return EXIT.OK;
 };
 
@@ -89,6 +151,7 @@ taskSubs.new = (ctx, { flags }) => {
   if (flags.parent) task.parent = tasksLib.normalizeId(flags.parent);
   if (flags.size) task.size = String(flags.size);
   tasksLib.save(ctx, task);
+  tasksLib.logEvent(ctx, id, actor(ctx, flags).id, 'created', null);
   board.regenerate(ctx);
   ok(`created ${id} (${task.status})`);
   info(`refine it with /plan ${id} — it cannot become ready until it has real acceptance criteria`);
@@ -98,21 +161,61 @@ taskSubs.new = (ctx, { flags }) => {
 taskSubs.claim = (ctx, { positional, flags }) => {
   const who = actor(ctx, flags);
   const task = tasksLib.load(ctx, requireId(positional[0]));
+  if (task.type === 'epic') {
+    bad(`${task.id} is an epic: it is a container, not work. Claim one of its children instead.`);
+    return EXIT.PRECONDITION;
+  }
   const branch = task.branch || tasksLib.branchFor(task);
   task.assignee = { kind: who.kind, id: who.id };
   task.claimed_at = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
   task.branch = branch;
   const problems = tasksLib.transitionProblems(ctx, task, 'in_progress', { actorKind: who.kind });
+
+  // Claiming used to be advisory: two agents in two worktrees could both take the same
+  // task and only find out at merge time. A branch already on the remote is the one signal
+  // that somebody else really started, and it costs one network call to check.
+  if (!flags.force && git.hasRemote(ctx)) {
+    const remote = git.git(ctx, ['ls-remote', '--heads', 'origin', branch], { allowFail: true });
+    if (remote.code === 0 && remote.out.trim()) {
+      problems.push(
+        `branch ${branch} already exists on the remote, so somebody has this task. ` +
+          'Coordinate, or pass --force if you know it is stale.',
+      );
+    }
+  }
+
   if (problems.length) {
     for (const p of problems) bad(p);
     return EXIT.PRECONDITION;
   }
   task.status = 'in_progress';
-  tasksLib.addWorklog(task, who.id, 'claimed', `branch ${branch}`);
+  tasksLib.logEvent(ctx, task.id, who.id, 'claimed', `branch ${branch}`);
   tasksLib.save(ctx, task);
   board.regenerate(ctx);
   ok(`${task.id} claimed by ${who.kind}:${who.id}`);
-  info(`branch: ${branch}  (git switch -c ${branch})`);
+
+  // Claiming used to print the branch and the handoff as homework for the agent. Running
+  // the choreography by hand showed the obvious failure: forget either one and the task is
+  // in_progress pointing at a branch that does not exist, which nothing detects.
+  if (flags['no-branch']) {
+    info(`branch not created: ${branch}  (git switch -c ${branch})`);
+  } else if (git.isRepo(ctx)) {
+    if (git.branchExists(ctx, branch)) {
+      git.git(ctx, ['switch', branch]);
+      info(`switched to ${branch}`);
+    } else {
+      git.git(ctx, ['switch', '-c', branch]);
+      ok(`created and switched to ${branch}`);
+    }
+  }
+
+  writeHandoff(ctx, task.id, {
+    stage: 'claimed',
+    by: who.id,
+    branch,
+    summary: `Tarea reclamada por ${who.kind}:${who.id}. Rama ${branch}. Nada implementado todavía.`,
+    next: 'planner',
+  });
   return EXIT.OK;
 };
 
@@ -122,7 +225,7 @@ taskSubs.unclaim = (ctx, { positional, flags }) => {
   task.assignee = null;
   task.claimed_at = null;
   task.status = 'ready';
-  tasksLib.addWorklog(task, who.id, 'status_changed', 'unclaimed');
+  tasksLib.logEvent(ctx, task.id, who.id, 'status_changed', 'unclaimed');
   tasksLib.save(ctx, task);
   board.regenerate(ctx);
   ok(`${task.id} back to ready`);
@@ -145,7 +248,7 @@ taskSubs['set-status'] = (ctx, { positional, flags }) => {
   const from = task.status;
   task.status = to;
   if (to !== 'blocked') task.blocked_reason = null;
-  tasksLib.addWorklog(task, who.id, to === 'done' ? 'completed' : 'status_changed', `${from} -> ${to}`);
+  tasksLib.logEvent(ctx, task.id, who.id, to === 'done' ? 'completed' : 'status_changed', `${from} -> ${to}`);
   tasksLib.save(ctx, task);
   board.regenerate(ctx);
   ok(`${task.id}: ${from} -> ${to}`);
@@ -163,9 +266,17 @@ taskSubs.ac = (ctx, { positional, flags }) => {
   }
   const ac = (task.acceptance_criteria || []).find((x) => x.id === acId);
   if (!ac) fail(`${task.id} has no criterion ${acId}`, EXIT.NOT_FOUND);
+  if (status === 'pass' && ac.baseline === 'pass' && !flags.force) {
+    bad(
+      `${acId} already passed before the change (baseline: pass), so a pass now proves nothing.
+` +
+        '   Fix the check or regroom the criterion. Use --force only if you can say why this is legitimate.',
+    );
+    return EXIT.CHECK_FAILED;
+  }
   ac.status = status;
   if (typeof flags.evidence === 'string') ac.evidence = flags.evidence;
-  tasksLib.addWorklog(task, who.id, 'verified', `${acId} -> ${status}`);
+  tasksLib.logEvent(ctx, task.id, who.id, 'verified', `${acId} -> ${status}`);
   tasksLib.save(ctx, task);
   ok(`${task.id} ${acId}: ${status}`);
   return EXIT.OK;
@@ -202,7 +313,7 @@ taskSubs['ac-set'] = (ctx, { positional, flags }) => {
     for (const p of problems) bad(`${p.path || '(root)'}: ${p.message}`);
     return EXIT.CHECK_FAILED;
   }
-  tasksLib.addWorklog(task, who.id, 'groomed', `${acId} set`);
+  tasksLib.logEvent(ctx, task.id, who.id, 'groomed', `${acId} set`);
   tasksLib.save(ctx, task);
   ok(`${task.id} ${acId}: ${ac.must} [${ac.check.type}]`);
   return EXIT.OK;
@@ -216,7 +327,7 @@ taskSubs['ac-rm'] = (ctx, { positional, flags }) => {
   task.acceptance_criteria = (task.acceptance_criteria || []).filter((x) => x.id !== acId);
   if (task.acceptance_criteria.length === before) fail(`${task.id} has no criterion ${acId}`, EXIT.NOT_FOUND);
   if (task.acceptance_criteria.length === 0) fail('a task must keep at least one acceptance criterion', EXIT.PRECONDITION);
-  tasksLib.addWorklog(task, who.id, 'groomed', `${acId} removed`);
+  tasksLib.logEvent(ctx, task.id, who.id, 'groomed', `${acId} removed`);
   tasksLib.save(ctx, task);
   ok(`${task.id}: removed ${acId}`);
   return EXIT.OK;
@@ -228,7 +339,7 @@ taskSubs.describe = (ctx, { positional, flags }) => {
   const text = typeof flags.text === 'string' ? flags.text : positional.slice(1).join(' ');
   if (!text) fail('usage: harness task describe <ID> --text "..."', EXIT.USAGE);
   task.description = text;
-  tasksLib.addWorklog(task, who.id, 'groomed', 'description rewritten');
+  tasksLib.logEvent(ctx, task.id, who.id, 'groomed', 'description rewritten');
   tasksLib.save(ctx, task);
   ok(`${task.id}: description updated (${text.length} chars)`);
   return EXIT.OK;
@@ -260,7 +371,7 @@ taskSubs.context = (ctx, { positional, flags }) => {
     changes.push('out_of_scope+');
   }
   if (changes.length === 0) fail('usage: harness task context <ID> [--area a] [--doc path] [--file path] [--out-of-scope "..."]', EXIT.USAGE);
-  tasksLib.addWorklog(task, who.id, 'groomed', changes.join(' '));
+  tasksLib.logEvent(ctx, task.id, who.id, 'groomed', changes.join(' '));
   tasksLib.save(ctx, task);
   board.regenerate(ctx);
   ok(`${task.id} context: ${changes.join(', ')}`);
@@ -283,7 +394,7 @@ taskSubs.retype = (ctx, { positional, flags }) => {
   const newId = tasksLib.allocateId(ctx, type);
   task.id = newId;
   task.type = type;
-  tasksLib.addWorklog(task, who.id, 'retyped', `${oldId} -> ${newId}`);
+  tasksLib.logEvent(ctx, task.id, who.id, 'retyped', `${oldId} -> ${newId}`);
   tasksLib.save(ctx, task);
   fs.rmSync(tasksLib.taskFile(ctx, oldId), { force: true });
   board.regenerate(ctx);
@@ -317,11 +428,11 @@ taskSubs.split = (ctx, { positional, flags }) => {
     epic.acceptance_criteria = [
       { id: 'AC1', must: 'Todas las tareas hijas están en done.', check: { type: 'review', run: null }, status: 'pending' },
     ];
-    tasksLib.addWorklog(epic, who.id, 'split', `from ${parentTask.id}`);
+    tasksLib.logEvent(ctx, epic.id, who.id, 'split', `from ${parentTask.id}`);
     tasksLib.save(ctx, epic);
     parentTask.resolution = `Dividida en el epic ${epicId}`;
     parentTask.status = 'cancelled';
-    tasksLib.addWorklog(parentTask, who.id, 'split', `-> ${epicId}`);
+    tasksLib.logEvent(ctx, parentTask.id, who.id, 'split', `-> ${epicId}`);
     tasksLib.save(ctx, parentTask);
   }
   const created = [];
@@ -335,7 +446,7 @@ taskSubs.split = (ctx, { positional, flags }) => {
       area: parentTask.context?.area ?? null,
     });
     child.parent = epicId;
-    tasksLib.addWorklog(child, who.id, 'split', `child of ${epicId}`);
+    tasksLib.logEvent(ctx, child.id, who.id, 'split', `child of ${epicId}`);
     tasksLib.save(ctx, child);
     created.push(id);
   }
@@ -364,7 +475,7 @@ taskSubs.edit = (ctx, { positional, flags }) => {
     set('depends_on', flags['depends-on']);
   }
   if (changes.length === 0) fail('nothing to change: pass --priority/--size/--area/--title/--estimate/--parent/--label/--depends-on', EXIT.USAGE);
-  tasksLib.addWorklog(task, who.id, 'status_changed', changes.join(' '));
+  tasksLib.logEvent(ctx, task.id, who.id, 'status_changed', changes.join(' '));
   tasksLib.save(ctx, task);
   board.regenerate(ctx);
   ok(`${task.id} updated: ${changes.join(', ')}`);
@@ -392,3 +503,51 @@ function requireId(id) {
   return id;
 }
 
+
+/**
+ * Records what each `command` check does BEFORE the change.
+ *
+ * The implementer prompt says "write the failing test first" and nothing verified it. A
+ * check that already passes proves nothing about the criterion, and it is the most common
+ * way a green result lies. Running the checks up front turns that from a warning into a
+ * recorded fact the tester can compare against.
+ */
+taskSubs['ac-baseline'] = (ctx, { positional, flags }) => {
+  const who = actor(ctx, flags);
+  const task = tasksLib.load(ctx, requireId(positional[0]));
+  const runnable = (task.acceptance_criteria || []).filter((a) => a.check?.type === 'command' && a.check.run);
+  if (runnable.length === 0) {
+    info(`${task.id} has no command checks to baseline`);
+    return EXIT.OK;
+  }
+
+  const alreadyPassing = [];
+  for (const ac of runnable) {
+    const res = spawnSync(ac.check.run, {
+      cwd: ctx.root,
+      shell: true,
+      stdio: 'pipe',
+      encoding: 'utf8',
+    });
+    // A command that cannot even start (missing test file, for instance) is the normal
+    // state before the work exists, and is distinguished from a clean failing assertion.
+    const started = res.error === undefined && res.status !== null;
+    ac.baseline = !started ? 'error' : res.status === 0 ? 'pass' : 'fail';
+    if (ac.baseline === 'pass') alreadyPassing.push(ac.id);
+    const mark = ac.baseline === 'pass' ? c.red('PASS') : c.green(ac.baseline.toUpperCase());
+    say(`${mark} ${c.bold(ac.id)} ${c.gray(ac.check.run)}`);
+  }
+
+  tasksLib.save(ctx, task);
+  tasksLib.logEvent(ctx, task.id, who.id, 'verified', `baseline: ${runnable.map((a) => `${a.id}=${a.baseline}`).join(' ')}`);
+
+  if (alreadyPassing.length) {
+    bad(
+      `${alreadyPassing.join(', ')} already pass before any change, so they cannot prove their criterion.\n` +
+        '   Either the work is already done, or the check is testing the wrong thing. Regroom before implementing.',
+    );
+    return EXIT.CHECK_FAILED;
+  }
+  ok(`${runnable.length} check(s) baselined — all of them fail today, which is what makes them evidence`);
+  return EXIT.OK;
+};

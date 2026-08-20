@@ -1,0 +1,82 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0048",
+  "title": "Sumidero del tablero de GitHub",
+  "type": "feature",
+  "status": "done",
+  "priority": "high",
+  "size": "M",
+  "parent": "EPIC-0011",
+  "description": "El tablero visual, con un campo de estado cuyas opciones son exactamente los estados del harness, de modo que la traduccion sea la identidad y desaparezca una clase entera de errores. Los identificadores de campos y opciones se descubren una vez y se guardan en configuracion.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "El campo de estado del tablero replica los estados del harness uno a uno",
+      "check": {
+        "type": "manual",
+        "run": null
+      },
+      "status": "pass",
+      "evidence": "campo Status creado con exactamente los 7 estados del harness, verificado por consulta a la API"
+    },
+    {
+      "id": "AC2",
+      "must": "Los identificadores de campos y opciones se descubren y se guardan, no se escriben a mano",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/sync-github.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "discoverProject descubre proyecto, campo y opciones en una consulta y los guarda en config.json"
+    },
+    {
+      "id": "AC3",
+      "must": "Una tarea nueva aparece en el tablero en la columna correcta",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/sync-github.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "89 tareas en el tablero; CHORE-0006 (done) en complete y EPIC-0012 (in_progress) en in progress"
+    }
+  ],
+  "context": {
+    "area": "integrations",
+    "docs": [],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [
+    "FEAT-0046",
+    "SPIKE-0003"
+  ],
+  "blocked_reason": null,
+  "labels": [
+    "mejora"
+  ],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T20:06:42Z",
+  "branch": "feat/0048-sumidero-del-tablero-de-github",
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "72",
+      "url": null,
+      "issue": 72,
+      "drifted": false,
+      "remote_hash": "663e74b60200c968",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XIcw",
+      "content_hash": "880799ac88c888f6",
+      "last_synced_at": "2026-08-20T18:40:22Z"
+    }
+  },
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T20:06:52Z"
+}

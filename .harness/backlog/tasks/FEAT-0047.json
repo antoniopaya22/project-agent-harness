@@ -1,0 +1,91 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0047",
+  "title": "Sumidero de incidencias de GitHub",
+  "type": "feature",
+  "status": "done",
+  "priority": "high",
+  "size": "M",
+  "parent": "EPIC-0011",
+  "description": "Cada tarea se proyecta como una incidencia con sus criterios de aceptacion como lista de comprobacion. Sin ningun secreto: el transporte es la herramienta de linea de comandos de GitHub, que ya esta autenticada. Es el destino por defecto justamente porque cuesta cero configurar.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Una tarea se proyecta como incidencia con sus criterios como lista de comprobacion",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/sync-github.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "24 incidencias reales creadas con titulo con id delante y criterios como lista de comprobacion"
+    },
+    {
+      "id": "AC2",
+      "must": "Dos ejecuciones seguidas no producen cambios remotos en la segunda",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/sync-github.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "verificado contra el remoto real: segunda pasada da 24 sin cambios y 65 por crear"
+    },
+    {
+      "id": "AC3",
+      "must": "La proyeccion no requiere ningun secreto en el proyecto",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pass",
+      "evidence": "el transporte es gh, ya autenticado: ningun secreto en el proyecto"
+    },
+    {
+      "id": "AC4",
+      "must": "Una edicion manual en remoto se avisa sin intentar mezclarla",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/sync-github.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "si el cuerpo remoto difiere se marca drifted, se avisa y se sobrescribe: el repo manda"
+    }
+  ],
+  "context": {
+    "area": "integrations",
+    "docs": [],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [
+    "FEAT-0046"
+  ],
+  "blocked_reason": null,
+  "labels": [
+    "mejora"
+  ],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T16:37:28Z",
+  "branch": "feat/0047-sumidero-de-incidencias-de-github",
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "71",
+      "url": null,
+      "issue": 71,
+      "drifted": false,
+      "remote_hash": "fb2bc1eadd7dd53a",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XIbA",
+      "content_hash": "429599dca3da8260",
+      "last_synced_at": "2026-08-20T18:40:17Z"
+    }
+  },
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T18:40:17Z"
+}

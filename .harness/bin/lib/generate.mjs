@@ -34,12 +34,13 @@ export function loadDefinitions(ctx, kind) {
   const dir = path.join(ctx.harnessDir, kind);
   return listFiles(dir, '.md').map((file) => {
     const { data, body } = parseFrontMatter(fs.readFileSync(file, 'utf8'));
+    const rel = toPosixPath(path.relative(ctx.root, file));
     return {
       file,
-      rel: toPosixPath(path.relative(ctx.root, file)),
+      rel,
       id: data.id || path.basename(file, '.md'),
       data,
-      body: body.trim(),
+      body: resolveTemplates(ctx, body.trim(), { source: rel }),
     };
   });
 }
@@ -64,6 +65,44 @@ function rulesBlock(def) {
 function arr(v) {
   if (v === undefined || v === null) return [];
   return Array.isArray(v) ? v : [v];
+}
+
+/**
+ * Two substitutions, both there to stop the same thing: the same fact written twice.
+ *
+ * `{{config:a.b.c}}` pulls a value out of project.json, so a number like the verification
+ * loop limit lives in configuration instead of as prose inside a prompt.
+ *
+ * `{{include:name}}` splices in `.harness/includes/<name>.md`, so the hard rules and a
+ * role's procedure are written once and referenced. Duplicated prompt text is paid for on
+ * every invocation and, worse, is two places that will drift apart.
+ */
+export function resolveTemplates(ctx, text, { source = '' } = {}) {
+  const unresolved = [];
+  let out = String(text).replace(/\{\{config:([A-Za-z0-9_.]+)\}\}/g, (_, dotted) => {
+    const value = dotted.split('.').reduce((node, key) => (node == null ? undefined : node[key]), ctx.project);
+    if (value === undefined || value === null) {
+      unresolved.push(`{{config:${dotted}}}`);
+      return `{{config:${dotted}}}`;
+    }
+    return String(value);
+  });
+
+  out = out.replace(/\{\{include:([A-Za-z0-9_-]+)\}\}/g, (_, name) => {
+    const file = path.join(ctx.harnessDir, 'includes', `${name}.md`);
+    if (!fs.existsSync(file)) {
+      unresolved.push(`{{include:${name}}}`);
+      return `{{include:${name}}}`;
+    }
+    return fs.readFileSync(file, 'utf8').trim();
+  });
+
+  if (unresolved.length) {
+    // Left in place on purpose: a silently blank substitution would delete an instruction
+    // and nobody would notice. Doctor turns these into an error.
+    process.stderr.write(`harness generate: unresolved in ${source}: ${unresolved.join(', ')}\n`);
+  }
+  return out;
 }
 
 /** Every generated agent/command prompt gets the same preamble, so the roster reads as one system. */

@@ -2,50 +2,69 @@
 
 # Tablero — project-agent-harness
 
-49 tareas · 49 abiertas · 0 hechas
+89 tareas · 31 abiertas · 58 hechas
 
 | Columna | Tareas |
 |---------|--------|
 | Backlog | 11 |
-| Listas para empezar | 9 |
-| En revisión | 29 |
+| Listas para empezar | 18 |
+| En curso | 2 |
+| Hechas | 58 |
 
 ## Backlog (11)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
-| `CHORE-0003` | Crear la lista destino y sus campos personalizados | medium | S | integrations | espera SPIKE-0002 · de EPIC-0006 |
+| `CHORE-0003` | Crear la lista destino y sus campos personalizados | low | S | integrations | espera SPIKE-0002, FEAT-0046 · de EPIC-0006 |
 | `EPIC-0005` | Soporte de otros proveedores de agentes | medium | — | — | — |
-| `EPIC-0006` | Proyección del backlog a ClickUp | medium | — | — | — |
+| `EPIC-0006` | Proyección del backlog a ClickUp | low | — | — | — |
 | `EPIC-0007` | Endurecimiento, automatismos y publicación | medium | — | — | — |
 | `FEAT-0025` | Anulaciones locales, regiones preservadas y matriz de capacidades | low | M | adapters | de EPIC-0005 |
 | `FEAT-0026` | Versionado del harness y migraciones entre versiones | low | M | cli | espera SPIKE-0001 · de EPIC-0005 |
-| `FEAT-0027` | Interfaz de adaptador y tabla de correspondencias | medium | M | integrations | espera CHORE-0003 · de EPIC-0006 |
-| `FEAT-0028` | Cliente de sincronización en una sola dirección | medium | M | integrations | espera FEAT-0027 · de EPIC-0006 |
+| `FEAT-0027` | Interfaz de adaptador y tabla de correspondencias | low | M | integrations | espera CHORE-0003, FEAT-0046 · de EPIC-0006 |
+| `FEAT-0028` | Cliente de sincronización en una sola dirección | low | M | integrations | espera FEAT-0027, FEAT-0046 · de EPIC-0006 |
 | `FEAT-0029` | Política de permisos y automatismos del proveedor | medium | M | adapters | de EPIC-0007 |
 | `SPIKE-0001` | Verificar los formatos reales de Cursor y de Copilot | low | S | adapters | de EPIC-0005 |
-| `SPIKE-0002` | Verificar la interfaz de programación de ClickUp | medium | S | integrations | de EPIC-0006 |
+| `SPIKE-0002` | Verificar la interfaz de programación de ClickUp | low | S | integrations | de EPIC-0006 |
 
-## Listas para empezar (9)
+## Listas para empezar (18)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
 | `CHORE-0002` | Proyectos de prueba y verificación de la adopción en integración continua | medium | M | cli | espera FEAT-0020, FEAT-0023 · de EPIC-0004 |
 | `EPIC-0004` | Adopción de un proyecto ya existente | high | — | — | — |
-| `FEAT-0017` | Reconocimiento del proyecto y línea base de calidad | high | M | cli | de EPIC-0004 |
-| `FEAT-0018` | Entrevista iterativa al humano | high | M | cli | espera FEAT-0017 · de EPIC-0004 |
+| `EPIC-0008` | Eficiencia del camino de lectura en frío | critical | — | — | — |
+| `EPIC-0009` | Mecanismos en lugar de instrucciones | critical | — | — | — |
+| `EPIC-0010` | Anti-podredumbre: que la estructura se defienda sola | high | — | — | — |
+| `EPIC-0013` | Preguntas abiertas y medicion honesta | medium | — | — | — |
+| `FEAT-0018` | Entrevista iterativa al humano | high | M | cli | de EPIC-0004 |
 | `FEAT-0019` | Inferencia y propuesta de adopción | high | M | cli | espera FEAT-0017, FEAT-0018 · de EPIC-0004 |
 | `FEAT-0020` | Aplicación de la estructura y verificación final | high | M | cli | espera FEAT-0019 · de EPIC-0004 |
-| `FEAT-0021` | Perfiles de estructura destino por lenguaje | high | S | definitions | de EPIC-0004 |
-| `FEAT-0022` | Reescritura de referencias tras mover ficheros | critical | L | cli | espera FEAT-0021 · de EPIC-0004 |
-| `FEAT-0023` | Motor de reorganización por lotes verificados | critical | L | cli | espera FEAT-0017, FEAT-0021, FEAT-0022 · de EPIC-0004 |
+| `FEAT-0032` | Cerrar una tarea en una sola llamada | high | M | cli | de EPIC-0008 |
+| `FEAT-0035` | Sugerir el nivel de modelo segun el tamano de la tarea | medium | S | definitions | de EPIC-0008 |
+| `FEAT-0039` | Bloquear la edicion de ficheros generados con automatismos del proveedor | high | M | adapters | de EPIC-0009 |
+| `FEAT-0042` | Frescura de documentos medida en commits, no en rutas existentes | high | M | cli | de EPIC-0010 |
+| `FEAT-0043` | Realimentacion sobre la calidad del refinamiento de tareas | high | L | cli | de EPIC-0010 |
+| `FEAT-0054` | Importar incidencias existentes como tareas | medium | S | cli | de EPIC-0012 |
+| `FEAT-0056` | Registrar coste y duracion por tarea | medium | S | cli | de EPIC-0013 |
+| `SPIKE-0004` | Decidir si una tarea puede pertenecer a varias areas | medium | S | definitions | de EPIC-0013 |
+| `SPIKE-0005` | Como evaluar si un cambio de prompt mejora o empeora | medium | M | definitions | de EPIC-0013 |
 
-## En revisión (29)
+## En curso (2)
+
+| Id | Tarea | Prioridad | Tamaño | Área | Notas |
+|----|-------|-----------|--------|------|-------|
+| `EPIC-0012` | Ergonomia y huecos del dia a dia | high | — | — | — |
+| `FEAT-0051` | La siguiente tarea se elige por camino critico | high | S | cli | agent:implementer · de EPIC-0012 |
+
+## Hechas (58)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
 | `CHORE-0001` | Sembrar el backlog del propio harness desde el plan | high | M | definitions | agent:implementer · de EPIC-0001 |
 | `CHORE-0004` | Autopruebas e integración continua | high | M | cli | agent:implementer · de EPIC-0007 |
+| `CHORE-0005` | Configurar el limite de vueltas del bucle de verificacion | low | XS | definitions | agent:implementer · de EPIC-0009 |
+| `CHORE-0006` | Afinar el autodiagnostico y el limite de tamano de fichero | low | XS | cli | agent:implementer · de EPIC-0012 |
 | `DOCS-0001` | Fichero de entrada en frío y camino de lectura | critical | S | docs | agent:implementer · de EPIC-0001 |
 | `DOCS-0002` | Set documental: arquitectura, mapa, convenciones, entorno y glosario | high | L | docs | agent:implementer · de EPIC-0001 |
 | `DOCS-0003` | Convenciones de git y plantilla de solicitud de cambios | high | S | docs | agent:implementer · de EPIC-0001 |
@@ -53,6 +72,7 @@
 | `EPIC-0001` | Cimientos: esquemas, entrada en frío y set documental | critical | — | — | — |
 | `EPIC-0002` | CLI núcleo: el ejecutable determinista | critical | — | — | — |
 | `EPIC-0003` | Agentes, comandos y proyección a Claude Code | high | — | — | — |
+| `EPIC-0011` | Proyeccion del backlog a GitHub | high | — | — | — |
 | `FEAT-0001` | Esquema JSON de tarea | critical | M | definitions | agent:implementer · de EPIC-0001 |
 | `FEAT-0002` | Esquema JSON de proyecto y configuración de ejemplo | critical | M | definitions | agent:implementer · de EPIC-0001 |
 | `FEAT-0003` | Ejecutable principal y equivalentes para PowerShell y POSIX | critical | M | cli | agent:implementer · de EPIC-0002 |
@@ -69,10 +89,36 @@
 | `FEAT-0014` | Comando de implementación reanudable | critical | L | definitions | agent:implementer · de EPIC-0003 |
 | `FEAT-0015` | Comando de commit con apertura de solicitud de cambios | critical | L | cli | agent:implementer · de EPIC-0003 |
 | `FEAT-0016` | Comandos de revisión y de traspaso | high | S | definitions | agent:implementer · de EPIC-0003 |
+| `FEAT-0017` | Reconocimiento del proyecto y línea base de calidad | high | M | cli | agent:implementer · de EPIC-0004 |
+| `FEAT-0021` | Perfiles de estructura destino por lenguaje | high | S | definitions | agent:implementer · de EPIC-0004 |
+| `FEAT-0022` | Reescritura de referencias tras mover ficheros | critical | L | cli | agent:implementer · de EPIC-0004 |
+| `FEAT-0023` | Motor de reorganización por lotes verificados | critical | L | cli | agent:implementer · de EPIC-0004 |
 | `FEAT-0024` | Adaptador universal y degradación a guías ejecutables | medium | M | adapters | agent:implementer · de EPIC-0005 |
+| `FEAT-0030` | Medir el camino de lectura en tokens y no en líneas | critical | M | cli | agent:implementer · de EPIC-0008 |
+| `FEAT-0031` | Un solo payload en lugar de cuatro lecturas | critical | M | cli | agent:implementer · de EPIC-0008 |
+| `FEAT-0033` | Cachear el resultado de los gates por huella del arbol | high | M | cli | agent:implementer · de EPIC-0008 |
+| `FEAT-0034` | Gates con alcance por area | high | M | cli | agent:implementer · de EPIC-0008 |
+| `FEAT-0036` | Validar el fichero de traspaso contra un esquema | critical | M | definitions | agent:implementer · de EPIC-0009 |
+| `FEAT-0037` | Riesgo del plan como codigo de salida | critical | M | cli | agent:implementer · de EPIC-0009 |
+| `FEAT-0038` | Probar que la comprobacion de un criterio fallaba antes del cambio | critical | L | cli | agent:implementer · de EPIC-0009 |
+| `FEAT-0040` | Gate de secretos sobre el cambio completo | high | S | cli | agent:implementer · de EPIC-0009 |
+| `FEAT-0041` | El reclamo de una tarea rehusa si ya hay rama en el remoto | medium | S | cli | agent:implementer · de EPIC-0009 |
+| `FEAT-0044` | Derivar el estado de una epica de sus tareas hijas | medium | S | cli | agent:implementer · de EPIC-0010 |
+| `FEAT-0045` | Detectar ficheros generados que ya no tienen fuente | medium | S | adapters | agent:implementer · de EPIC-0010 |
+| `FEAT-0046` | Motor de proyeccion con varios sumideros | critical | M | integrations | agent:implementer · de EPIC-0011 |
+| `FEAT-0047` | Sumidero de incidencias de GitHub | high | M | integrations | agent:implementer · de EPIC-0011 |
+| `FEAT-0048` | Sumidero del tablero de GitHub | high | M | integrations | agent:implementer · de EPIC-0011 |
+| `FEAT-0049` | Sincronizar desde integracion continua | medium | S | integrations | agent:implementer · de EPIC-0011 |
+| `FEAT-0050` | Arranque para un proyecto nuevo | critical | M | cli | agent:implementer · de EPIC-0012 |
+| `FEAT-0052` | Cola de tareas y deteccion de trabajo paralelizable | medium | S | cli | agent:implementer · de EPIC-0012 |
+| `FEAT-0053` | Buscar que tareas tocan una ruta | medium | XS | cli | agent:implementer · de EPIC-0012 |
+| `FEAT-0055` | Tiempo de ciclo en el informe de situacion | low | S | cli | agent:implementer · de EPIC-0012 |
 | `FIX-0001` | El CLI llegaba incompleto al repositorio remoto | critical | — | cli | agent:implementer |
 | `FIX-0002` | Las opciones repetidas se descartaban en silencio | high | — | cli | agent:implementer |
 | `FIX-0003` | El emparejado de rutas fallaba fuera de Windows | high | — | cli | agent:implementer |
+| `RFCT-0001` | Sacar el historial de trabajo del fichero de tarea | high | S | cli | agent:implementer · de EPIC-0008 |
+| `RFCT-0002` | Los comandos referencian a los agentes en vez de reescribirlos | high | M | definitions | agent:implementer · de EPIC-0008 |
+| `SPIKE-0003` | Verificar la interfaz de programacion de proyectos y sub-issues | high | S | integrations | agent:researcher · de EPIC-0011 |
 
 ---
 

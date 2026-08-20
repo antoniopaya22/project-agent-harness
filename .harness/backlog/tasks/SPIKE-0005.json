@@ -1,0 +1,63 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "SPIKE-0005",
+  "title": "Como evaluar si un cambio de prompt mejora o empeora",
+  "type": "spike",
+  "status": "ready",
+  "priority": "medium",
+  "size": "M",
+  "parent": "EPIC-0013",
+  "description": "La mitad determinista del harness esta cubierta por pruebas. La mitad de juicio no: no hay forma de saber si la definicion del revisor de hoy es mejor que la de ayer. Hace falta al menos entender que costaria tener escenarios con veredicto esperado antes de decidir si merece la pena.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Queda escrito que haria falta para evaluar un cambio de prompt y cuanto costaria",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "La recomendacion es explicita, incluida la de no hacerlo si no se justifica",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "definitions",
+    "docs": [],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "90",
+      "url": null,
+      "issue": 90,
+      "drifted": false,
+      "remote_hash": "3e67293dc1972d3b",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XJMM",
+      "content_hash": "cc80159b6b76fd2c",
+      "last_synced_at": "2026-08-20T18:42:08Z"
+    }
+  },
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T18:42:08Z"
+}

@@ -2,22 +2,22 @@
   "harness_version": "1.0.0",
   "counts": {
     "backlog": 11,
-    "ready": 9,
-    "in_progress": 0,
-    "in_review": 29,
+    "ready": 18,
+    "in_progress": 2,
+    "in_review": 0,
     "blocked": 0,
-    "done": 0,
+    "done": 58,
     "cancelled": 0,
-    "total": 49,
-    "open": 49
+    "total": 89,
+    "open": 31
   },
-  "next": "FEAT-0017",
+  "next": "FEAT-0018",
   "tasks": [
     {
       "id": "CHORE-0001",
       "title": "Sembrar el backlog del propio harness desde el plan",
       "type": "chore",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "definitions",
@@ -25,8 +25,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "CHORE-0002",
@@ -43,31 +42,30 @@
       ],
       "blocked": true,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T18:05:21Z"
+      "branch": null
     },
     {
       "id": "CHORE-0003",
       "title": "Crear la lista destino y sus campos personalizados",
       "type": "chore",
       "status": "backlog",
-      "priority": "medium",
+      "priority": "low",
       "size": "S",
       "area": "integrations",
       "parent": "EPIC-0006",
       "depends_on": [
-        "SPIKE-0002"
+        "SPIKE-0002",
+        "FEAT-0046"
       ],
       "blocked": true,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T18:05:21Z"
+      "branch": null
     },
     {
       "id": "CHORE-0004",
       "title": "Autopruebas e integración continua",
       "type": "chore",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "cli",
@@ -75,14 +73,41 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
+    },
+    {
+      "id": "CHORE-0005",
+      "title": "Configurar el limite de vueltas del bucle de verificacion",
+      "type": "chore",
+      "status": "done",
+      "priority": "low",
+      "size": "XS",
+      "area": "definitions",
+      "parent": "EPIC-0009",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "chore/0005-configurar-el-limite-de-vueltas-del"
+    },
+    {
+      "id": "CHORE-0006",
+      "title": "Afinar el autodiagnostico y el limite de tamano de fichero",
+      "type": "chore",
+      "status": "done",
+      "priority": "low",
+      "size": "XS",
+      "area": "cli",
+      "parent": "EPIC-0012",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "chore/0006-afinar-el-autodiagnostico-y-el-limite"
     },
     {
       "id": "DOCS-0001",
       "title": "Fichero de entrada en frío y camino de lectura",
       "type": "docs",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "S",
       "area": "docs",
@@ -90,14 +115,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "DOCS-0002",
       "title": "Set documental: arquitectura, mapa, convenciones, entorno y glosario",
       "type": "docs",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "L",
       "area": "docs",
@@ -105,14 +129,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "DOCS-0003",
       "title": "Convenciones de git y plantilla de solicitud de cambios",
       "type": "docs",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "S",
       "area": "docs",
@@ -120,14 +143,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "DOCS-0004",
       "title": "Puerta de entrada y guía de arranque",
       "type": "docs",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "S",
       "area": "docs",
@@ -135,14 +157,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "EPIC-0001",
       "title": "Cimientos: esquemas, entrada en frío y set documental",
       "type": "epic",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": null,
       "area": null,
@@ -150,14 +171,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "EPIC-0002",
       "title": "CLI núcleo: el ejecutable determinista",
       "type": "epic",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": null,
       "area": null,
@@ -165,14 +185,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "EPIC-0003",
       "title": "Agentes, comandos y proyección a Claude Code",
       "type": "epic",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": null,
       "area": null,
@@ -180,8 +199,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "EPIC-0004",
@@ -195,8 +213,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "EPIC-0005",
@@ -210,23 +227,21 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "EPIC-0006",
       "title": "Proyección del backlog a ClickUp",
       "type": "epic",
       "status": "backlog",
-      "priority": "medium",
+      "priority": "low",
       "size": null,
       "area": null,
       "parent": null,
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "EPIC-0007",
@@ -240,14 +255,97 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
+    },
+    {
+      "id": "EPIC-0008",
+      "title": "Eficiencia del camino de lectura en frío",
+      "type": "epic",
+      "status": "ready",
+      "priority": "critical",
+      "size": null,
+      "area": null,
+      "parent": null,
+      "depends_on": [],
+      "blocked": false,
+      "assignee": null,
+      "branch": null
+    },
+    {
+      "id": "EPIC-0009",
+      "title": "Mecanismos en lugar de instrucciones",
+      "type": "epic",
+      "status": "ready",
+      "priority": "critical",
+      "size": null,
+      "area": null,
+      "parent": null,
+      "depends_on": [],
+      "blocked": false,
+      "assignee": null,
+      "branch": null
+    },
+    {
+      "id": "EPIC-0010",
+      "title": "Anti-podredumbre: que la estructura se defienda sola",
+      "type": "epic",
+      "status": "ready",
+      "priority": "high",
+      "size": null,
+      "area": null,
+      "parent": null,
+      "depends_on": [],
+      "blocked": false,
+      "assignee": null,
+      "branch": null
+    },
+    {
+      "id": "EPIC-0011",
+      "title": "Proyeccion del backlog a GitHub",
+      "type": "epic",
+      "status": "done",
+      "priority": "high",
+      "size": null,
+      "area": null,
+      "parent": null,
+      "depends_on": [],
+      "blocked": false,
+      "assignee": null,
+      "branch": null
+    },
+    {
+      "id": "EPIC-0012",
+      "title": "Ergonomia y huecos del dia a dia",
+      "type": "epic",
+      "status": "in_progress",
+      "priority": "high",
+      "size": null,
+      "area": null,
+      "parent": null,
+      "depends_on": [],
+      "blocked": false,
+      "assignee": null,
+      "branch": null
+    },
+    {
+      "id": "EPIC-0013",
+      "title": "Preguntas abiertas y medicion honesta",
+      "type": "epic",
+      "status": "ready",
+      "priority": "medium",
+      "size": null,
+      "area": null,
+      "parent": null,
+      "depends_on": [],
+      "blocked": false,
+      "assignee": null,
+      "branch": null
     },
     {
       "id": "FEAT-0001",
       "title": "Esquema JSON de tarea",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "M",
       "area": "definitions",
@@ -255,14 +353,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0002",
       "title": "Esquema JSON de proyecto y configuración de ejemplo",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "M",
       "area": "definitions",
@@ -270,14 +367,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0003",
       "title": "Ejecutable principal y equivalentes para PowerShell y POSIX",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "M",
       "area": "cli",
@@ -285,14 +381,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0004",
       "title": "Validación de tareas contra el esquema",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "S",
       "area": "cli",
@@ -300,14 +395,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0005",
       "title": "Generación del índice y del tablero legible",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "cli",
@@ -315,14 +409,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0006",
       "title": "Revisión de higiene del backlog",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "cli",
@@ -330,14 +423,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0007",
       "title": "Operaciones de backlog validadas",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "L",
       "area": "cli",
@@ -345,14 +437,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0008",
       "title": "Ejecución de gates y resolución de áreas",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "S",
       "area": "cli",
@@ -360,14 +451,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0009",
       "title": "Los seis agentes especializados",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "L",
       "area": "definitions",
@@ -375,14 +465,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0010",
       "title": "Generación del adaptador de Claude Code",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "M",
       "area": "adapters",
@@ -390,14 +479,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0011",
       "title": "Formato canónico de comando y su proyección",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "S",
       "area": "definitions",
@@ -405,14 +493,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0012",
       "title": "Comandos de backlog, situación y autodiagnóstico",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "cli",
@@ -420,14 +507,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0013",
       "title": "Comandos de planificación y verificación",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "definitions",
@@ -435,14 +521,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0014",
       "title": "Comando de implementación reanudable",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "L",
       "area": "definitions",
@@ -450,14 +535,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0015",
       "title": "Comando de commit con apertura de solicitud de cambios",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "L",
       "area": "cli",
@@ -465,14 +549,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0016",
       "title": "Comandos de revisión y de traspaso",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "S",
       "area": "definitions",
@@ -480,23 +563,21 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0017",
       "title": "Reconocimiento del proyecto y línea base de calidad",
       "type": "feature",
-      "status": "ready",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "cli",
       "parent": "EPIC-0004",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "assignee": "agent:implementer",
+      "branch": "feat/0017-reconocimiento-del-proyecto-y-linea-base"
     },
     {
       "id": "FEAT-0018",
@@ -510,10 +591,9 @@
       "depends_on": [
         "FEAT-0017"
       ],
-      "blocked": true,
+      "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T18:05:20Z"
+      "branch": null
     },
     {
       "id": "FEAT-0019",
@@ -530,8 +610,7 @@
       ],
       "blocked": true,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T18:05:20Z"
+      "branch": null
     },
     {
       "id": "FEAT-0020",
@@ -547,29 +626,27 @@
       ],
       "blocked": true,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T18:05:20Z"
+      "branch": null
     },
     {
       "id": "FEAT-0021",
       "title": "Perfiles de estructura destino por lenguaje",
       "type": "feature",
-      "status": "ready",
+      "status": "done",
       "priority": "high",
       "size": "S",
       "area": "definitions",
       "parent": "EPIC-0004",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "assignee": "agent:implementer",
+      "branch": "feat/0021-perfiles-de-estructura-destino-por-lenguaje"
     },
     {
       "id": "FEAT-0022",
       "title": "Reescritura de referencias tras mover ficheros",
       "type": "feature",
-      "status": "ready",
+      "status": "done",
       "priority": "critical",
       "size": "L",
       "area": "cli",
@@ -577,16 +654,15 @@
       "depends_on": [
         "FEAT-0021"
       ],
-      "blocked": true,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T18:05:21Z"
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0022-reescritura-de-referencias-tras-mover-ficheros"
     },
     {
       "id": "FEAT-0023",
       "title": "Motor de reorganización por lotes verificados",
       "type": "feature",
-      "status": "ready",
+      "status": "done",
       "priority": "critical",
       "size": "L",
       "area": "cli",
@@ -596,16 +672,15 @@
         "FEAT-0021",
         "FEAT-0022"
       ],
-      "blocked": true,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T18:05:21Z"
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0023-motor-de-reorganizacion-por-lotes-verificados"
     },
     {
       "id": "FEAT-0024",
       "title": "Adaptador universal y degradación a guías ejecutables",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "medium",
       "size": "M",
       "area": "adapters",
@@ -613,8 +688,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0025",
@@ -628,8 +702,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0026",
@@ -645,42 +718,41 @@
       ],
       "blocked": true,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T18:05:21Z"
+      "branch": null
     },
     {
       "id": "FEAT-0027",
       "title": "Interfaz de adaptador y tabla de correspondencias",
       "type": "feature",
       "status": "backlog",
-      "priority": "medium",
+      "priority": "low",
       "size": "M",
       "area": "integrations",
       "parent": "EPIC-0006",
       "depends_on": [
-        "CHORE-0003"
+        "CHORE-0003",
+        "FEAT-0046"
       ],
       "blocked": true,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T18:05:21Z"
+      "branch": null
     },
     {
       "id": "FEAT-0028",
       "title": "Cliente de sincronización en una sola dirección",
       "type": "feature",
       "status": "backlog",
-      "priority": "medium",
+      "priority": "low",
       "size": "M",
       "area": "integrations",
       "parent": "EPIC-0006",
       "depends_on": [
-        "FEAT-0027"
+        "FEAT-0027",
+        "FEAT-0046"
       ],
       "blocked": true,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T18:05:21Z"
+      "branch": null
     },
     {
       "id": "FEAT-0029",
@@ -694,14 +766,410 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
+    },
+    {
+      "id": "FEAT-0030",
+      "title": "Medir el camino de lectura en tokens y no en líneas",
+      "type": "feature",
+      "status": "done",
+      "priority": "critical",
+      "size": "M",
+      "area": "cli",
+      "parent": "EPIC-0008",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0030-medir-el-camino-de-lectura-en"
+    },
+    {
+      "id": "FEAT-0031",
+      "title": "Un solo payload en lugar de cuatro lecturas",
+      "type": "feature",
+      "status": "done",
+      "priority": "critical",
+      "size": "M",
+      "area": "cli",
+      "parent": "EPIC-0008",
+      "depends_on": [
+        "FEAT-0030",
+        "RFCT-0001"
+      ],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0031-un-solo-payload-en-lugar-de"
+    },
+    {
+      "id": "FEAT-0032",
+      "title": "Cerrar una tarea en una sola llamada",
+      "type": "feature",
+      "status": "ready",
+      "priority": "high",
+      "size": "M",
+      "area": "cli",
+      "parent": "EPIC-0008",
+      "depends_on": [
+        "FEAT-0037"
+      ],
+      "blocked": false,
+      "assignee": null,
+      "branch": null
+    },
+    {
+      "id": "FEAT-0033",
+      "title": "Cachear el resultado de los gates por huella del arbol",
+      "type": "feature",
+      "status": "done",
+      "priority": "high",
+      "size": "M",
+      "area": "cli",
+      "parent": "EPIC-0008",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0033-cachear-el-resultado-de-los-gates"
+    },
+    {
+      "id": "FEAT-0034",
+      "title": "Gates con alcance por area",
+      "type": "feature",
+      "status": "done",
+      "priority": "high",
+      "size": "M",
+      "area": "cli",
+      "parent": "EPIC-0008",
+      "depends_on": [
+        "FEAT-0033"
+      ],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0034-gates-con-alcance-por-area"
+    },
+    {
+      "id": "FEAT-0035",
+      "title": "Sugerir el nivel de modelo segun el tamano de la tarea",
+      "type": "feature",
+      "status": "ready",
+      "priority": "medium",
+      "size": "S",
+      "area": "definitions",
+      "parent": "EPIC-0008",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": null,
+      "branch": null
+    },
+    {
+      "id": "FEAT-0036",
+      "title": "Validar el fichero de traspaso contra un esquema",
+      "type": "feature",
+      "status": "done",
+      "priority": "critical",
+      "size": "M",
+      "area": "definitions",
+      "parent": "EPIC-0009",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0036-validar-el-fichero-de-traspaso-contra"
+    },
+    {
+      "id": "FEAT-0037",
+      "title": "Riesgo del plan como codigo de salida",
+      "type": "feature",
+      "status": "done",
+      "priority": "critical",
+      "size": "M",
+      "area": "cli",
+      "parent": "EPIC-0009",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0037-riesgo-del-plan-como-codigo-de"
+    },
+    {
+      "id": "FEAT-0038",
+      "title": "Probar que la comprobacion de un criterio fallaba antes del cambio",
+      "type": "feature",
+      "status": "done",
+      "priority": "critical",
+      "size": "L",
+      "area": "cli",
+      "parent": "EPIC-0009",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0038-probar-que-la-comprobacion-de-un"
+    },
+    {
+      "id": "FEAT-0039",
+      "title": "Bloquear la edicion de ficheros generados con automatismos del proveedor",
+      "type": "feature",
+      "status": "ready",
+      "priority": "high",
+      "size": "M",
+      "area": "adapters",
+      "parent": "EPIC-0009",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": null,
+      "branch": null
+    },
+    {
+      "id": "FEAT-0040",
+      "title": "Gate de secretos sobre el cambio completo",
+      "type": "feature",
+      "status": "done",
+      "priority": "high",
+      "size": "S",
+      "area": "cli",
+      "parent": "EPIC-0009",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0040-gate-de-secretos-sobre-el-cambio"
+    },
+    {
+      "id": "FEAT-0041",
+      "title": "El reclamo de una tarea rehusa si ya hay rama en el remoto",
+      "type": "feature",
+      "status": "done",
+      "priority": "medium",
+      "size": "S",
+      "area": "cli",
+      "parent": "EPIC-0009",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0041-el-reclamo-de-una-tarea-rehusa"
+    },
+    {
+      "id": "FEAT-0042",
+      "title": "Frescura de documentos medida en commits, no en rutas existentes",
+      "type": "feature",
+      "status": "ready",
+      "priority": "high",
+      "size": "M",
+      "area": "cli",
+      "parent": "EPIC-0010",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": null,
+      "branch": null
+    },
+    {
+      "id": "FEAT-0043",
+      "title": "Realimentacion sobre la calidad del refinamiento de tareas",
+      "type": "feature",
+      "status": "ready",
+      "priority": "high",
+      "size": "L",
+      "area": "cli",
+      "parent": "EPIC-0010",
+      "depends_on": [
+        "FEAT-0031"
+      ],
+      "blocked": false,
+      "assignee": null,
+      "branch": null
+    },
+    {
+      "id": "FEAT-0044",
+      "title": "Derivar el estado de una epica de sus tareas hijas",
+      "type": "feature",
+      "status": "done",
+      "priority": "medium",
+      "size": "S",
+      "area": "cli",
+      "parent": "EPIC-0010",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0044-derivar-el-estado-de-una-epica"
+    },
+    {
+      "id": "FEAT-0045",
+      "title": "Detectar ficheros generados que ya no tienen fuente",
+      "type": "feature",
+      "status": "done",
+      "priority": "medium",
+      "size": "S",
+      "area": "adapters",
+      "parent": "EPIC-0010",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0045-detectar-ficheros-generados-que-ya-no"
+    },
+    {
+      "id": "FEAT-0046",
+      "title": "Motor de proyeccion con varios sumideros",
+      "type": "feature",
+      "status": "done",
+      "priority": "critical",
+      "size": "M",
+      "area": "integrations",
+      "parent": "EPIC-0011",
+      "depends_on": [
+        "SPIKE-0003"
+      ],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0046-motor-de-proyeccion-con-varios-sumideros"
+    },
+    {
+      "id": "FEAT-0047",
+      "title": "Sumidero de incidencias de GitHub",
+      "type": "feature",
+      "status": "done",
+      "priority": "high",
+      "size": "M",
+      "area": "integrations",
+      "parent": "EPIC-0011",
+      "depends_on": [
+        "FEAT-0046"
+      ],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0047-sumidero-de-incidencias-de-github"
+    },
+    {
+      "id": "FEAT-0048",
+      "title": "Sumidero del tablero de GitHub",
+      "type": "feature",
+      "status": "done",
+      "priority": "high",
+      "size": "M",
+      "area": "integrations",
+      "parent": "EPIC-0011",
+      "depends_on": [
+        "FEAT-0046",
+        "SPIKE-0003"
+      ],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0048-sumidero-del-tablero-de-github"
+    },
+    {
+      "id": "FEAT-0049",
+      "title": "Sincronizar desde integracion continua",
+      "type": "feature",
+      "status": "done",
+      "priority": "medium",
+      "size": "S",
+      "area": "integrations",
+      "parent": "EPIC-0011",
+      "depends_on": [
+        "FEAT-0047",
+        "FEAT-0048"
+      ],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0049-sincronizar-desde-integracion-continua"
+    },
+    {
+      "id": "FEAT-0050",
+      "title": "Arranque para un proyecto nuevo",
+      "type": "feature",
+      "status": "done",
+      "priority": "critical",
+      "size": "M",
+      "area": "cli",
+      "parent": "EPIC-0012",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0050-arranque-para-un-proyecto-nuevo"
+    },
+    {
+      "id": "FEAT-0051",
+      "title": "La siguiente tarea se elige por camino critico",
+      "type": "feature",
+      "status": "in_progress",
+      "priority": "high",
+      "size": "S",
+      "area": "cli",
+      "parent": "EPIC-0012",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0051-la-siguiente-tarea-se-elige-por"
+    },
+    {
+      "id": "FEAT-0052",
+      "title": "Cola de tareas y deteccion de trabajo paralelizable",
+      "type": "feature",
+      "status": "done",
+      "priority": "medium",
+      "size": "S",
+      "area": "cli",
+      "parent": "EPIC-0012",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0052-cola-de-tareas-y-deteccion-de"
+    },
+    {
+      "id": "FEAT-0053",
+      "title": "Buscar que tareas tocan una ruta",
+      "type": "feature",
+      "status": "done",
+      "priority": "medium",
+      "size": "XS",
+      "area": "cli",
+      "parent": "EPIC-0012",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0053-buscar-que-tareas-tocan-una-ruta"
+    },
+    {
+      "id": "FEAT-0054",
+      "title": "Importar incidencias existentes como tareas",
+      "type": "feature",
+      "status": "ready",
+      "priority": "medium",
+      "size": "S",
+      "area": "cli",
+      "parent": "EPIC-0012",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": null,
+      "branch": null
+    },
+    {
+      "id": "FEAT-0055",
+      "title": "Tiempo de ciclo en el informe de situacion",
+      "type": "feature",
+      "status": "done",
+      "priority": "low",
+      "size": "S",
+      "area": "cli",
+      "parent": "EPIC-0012",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0055-tiempo-de-ciclo-en-el-informe"
+    },
+    {
+      "id": "FEAT-0056",
+      "title": "Registrar coste y duracion por tarea",
+      "type": "feature",
+      "status": "ready",
+      "priority": "medium",
+      "size": "S",
+      "area": "cli",
+      "parent": "EPIC-0013",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": null,
+      "branch": null
     },
     {
       "id": "FIX-0001",
       "title": "El CLI llegaba incompleto al repositorio remoto",
       "type": "fix",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": null,
       "area": "cli",
@@ -709,14 +1177,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "fix/0001-el-cli-llegaba-incompleto-al-repositorio",
-      "updated_at": "2026-08-20T15:12:24Z"
+      "branch": "fix/0001-el-cli-llegaba-incompleto-al-repositorio"
     },
     {
       "id": "FIX-0002",
       "title": "Las opciones repetidas se descartaban en silencio",
       "type": "fix",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": null,
       "area": "cli",
@@ -724,14 +1191,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "fix/0002-las-opciones-repetidas-se-descartaban-en",
-      "updated_at": "2026-08-20T15:12:51Z"
+      "branch": "fix/0002-las-opciones-repetidas-se-descartaban-en"
     },
     {
       "id": "FIX-0003",
       "title": "El emparejado de rutas fallaba fuera de Windows",
       "type": "fix",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": null,
       "area": "cli",
@@ -739,8 +1205,35 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "fix/0003-el-emparejado-de-rutas-fallaba-fuera",
-      "updated_at": "2026-08-20T15:15:14Z"
+      "branch": "fix/0003-el-emparejado-de-rutas-fallaba-fuera"
+    },
+    {
+      "id": "RFCT-0001",
+      "title": "Sacar el historial de trabajo del fichero de tarea",
+      "type": "refactor",
+      "status": "done",
+      "priority": "high",
+      "size": "S",
+      "area": "cli",
+      "parent": "EPIC-0008",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "refactor/0001-sacar-el-historial-de-trabajo-del"
+    },
+    {
+      "id": "RFCT-0002",
+      "title": "Los comandos referencian a los agentes en vez de reescribirlos",
+      "type": "refactor",
+      "status": "done",
+      "priority": "high",
+      "size": "M",
+      "area": "definitions",
+      "parent": "EPIC-0008",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "refactor/0002-los-comandos-referencian-a-los-agentes"
     },
     {
       "id": "SPIKE-0001",
@@ -754,23 +1247,65 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "SPIKE-0002",
       "title": "Verificar la interfaz de programación de ClickUp",
       "type": "spike",
       "status": "backlog",
-      "priority": "medium",
+      "priority": "low",
       "size": "S",
       "area": "integrations",
       "parent": "EPIC-0006",
+      "depends_on": [
+        "FEAT-0046"
+      ],
+      "blocked": false,
+      "assignee": null,
+      "branch": null
+    },
+    {
+      "id": "SPIKE-0003",
+      "title": "Verificar la interfaz de programacion de proyectos y sub-issues",
+      "type": "spike",
+      "status": "done",
+      "priority": "high",
+      "size": "S",
+      "area": "integrations",
+      "parent": "EPIC-0011",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:researcher",
+      "branch": "spike/0003-verificar-la-interfaz-de-programacion-de"
+    },
+    {
+      "id": "SPIKE-0004",
+      "title": "Decidir si una tarea puede pertenecer a varias areas",
+      "type": "spike",
+      "status": "ready",
+      "priority": "medium",
+      "size": "S",
+      "area": "definitions",
+      "parent": "EPIC-0013",
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
+    },
+    {
+      "id": "SPIKE-0005",
+      "title": "Como evaluar si un cambio de prompt mejora o empeora",
+      "type": "spike",
+      "status": "ready",
+      "priority": "medium",
+      "size": "M",
+      "area": "definitions",
+      "parent": "EPIC-0013",
+      "depends_on": [],
+      "blocked": false,
+      "assignee": null,
+      "branch": null
     }
   ]
 }

@@ -1,0 +1,64 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0035",
+  "title": "Sugerir el nivel de modelo segun el tamano de la tarea",
+  "type": "feature",
+  "status": "ready",
+  "priority": "medium",
+  "size": "S",
+  "parent": "EPIC-0008",
+  "description": "El nivel de modelo se asigna hoy por rol y es fijo. Usar el nivel mas caro para una tarea de mantenimiento de tamano minimo es dinero quemado, y usar el mas barato para un diseno delicado es peor.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "El harness sugiere un nivel de modelo a partir del tipo, tamano y riesgo de la tarea",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/modeltier.test.mjs"
+      },
+      "status": "pending",
+      "baseline": "not-run"
+    },
+    {
+      "id": "AC2",
+      "must": "La sugerencia es informativa y no impide elegir otro nivel",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "definitions",
+    "docs": [],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "59",
+      "url": null,
+      "issue": 59,
+      "drifted": false,
+      "remote_hash": "bb9284c38c04c7c5",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XH8Y",
+      "content_hash": "23fd0b49a96bb05d",
+      "last_synced_at": "2026-08-20T18:38:58Z"
+    }
+  },
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T18:38:58Z"
+}

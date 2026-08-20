@@ -1,0 +1,69 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "RFCT-0001",
+  "title": "Sacar el historial de trabajo del fichero de tarea",
+  "type": "refactor",
+  "status": "done",
+  "priority": "high",
+  "size": "S",
+  "parent": "EPIC-0008",
+  "description": "Veinte entradas de historial viven dentro del fichero que ocupa el segundo puesto del camino de lectura. Es contexto que se paga en cada implementacion y que nadie usa para implementar. Su sitio es el directorio de trabajo de la tarea.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "El fichero de tarea ya no contiene el historial y el esquema lo refleja",
+      "check": {
+        "type": "command",
+        "run": "node .harness/bin/harness.mjs validate"
+      },
+      "status": "pass",
+      "evidence": "worklog fuera del esquema; validate en verde sobre 89 tareas"
+    },
+    {
+      "id": "AC2",
+      "must": "El historial completo queda accesible y no se pierde nada de lo ya registrado",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/tasks.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "178 entradas migradas a backlog/worklog/*.jsonl; task show las muestra"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "blocked_reason": null,
+  "labels": [
+    "mejora"
+  ],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T15:52:43Z",
+  "branch": "refactor/0001-sacar-el-historial-de-trabajo-del",
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "84",
+      "url": null,
+      "issue": 84,
+      "drifted": false,
+      "remote_hash": "ef1c43e817b454dc",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XI8E",
+      "content_hash": "8349a7e23f79f815",
+      "last_synced_at": "2026-08-20T18:41:36Z"
+    }
+  },
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T18:41:36Z"
+}

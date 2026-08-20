@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "FEAT-0044",
+  "stage": "claimed",
+  "by": "implementer",
+  "branch": "feat/0044-derivar-el-estado-de-una-epica",
+  "summary": "Tarea reclamada por agent:implementer. Rama feat/0044-derivar-el-estado-de-una-epica. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-20T17:53:14Z"
+}

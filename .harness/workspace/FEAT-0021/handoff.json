@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "FEAT-0021",
+  "stage": "claimed",
+  "by": "implementer",
+  "branch": "feat/0021-perfiles-de-estructura-destino-por-lenguaje",
+  "summary": "Tarea reclamada por agent:implementer. Rama feat/0021-perfiles-de-estructura-destino-por-lenguaje. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-20T18:24:59Z"
+}

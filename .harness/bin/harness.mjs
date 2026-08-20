@@ -29,7 +29,18 @@ import * as doctorLib from './lib/doctor.mjs';
 import * as statusLib from './lib/status.mjs';
 import * as commitLib from './lib/commit.mjs';
 import { SUBCOMMANDS, taskCommand, next as taskNext } from './lib/task-cmd.mjs';
+import * as readpath from './lib/readpath.mjs';
+import * as workspace from './lib/workspace.mjs';
+import * as init from './lib/init.mjs';
+import * as syncLib from './lib/sync.mjs';
+import * as surveyLib from './lib/survey.mjs';
+import * as layoutsLib from './lib/layouts.mjs';
+import * as restructureLib from './lib/restructure.mjs';
 import { lintBacklog } from './lib/lint.mjs';
+
+function actorId(ctx, flags) {
+  return String(flags.as || process.env.HARNESS_ACTOR || 'human');
+}
 
 function loadContext() {
   const root = findRoot();
@@ -50,6 +61,9 @@ function loadContext() {
 // commands
 // ---------------------------------------------------------------------------
 
+/** Markdown fence, kept as a constant so writing it never fights with template literals. */
+const FENCE = '```';
+
 const commands = {};
 
 commands.help = () => {
@@ -58,18 +72,26 @@ commands.help = () => {
   say(
     table(
       [
+        ['init [dir]', 'install the harness into a project that does not have one'],
+        ['survey [dir]', 'read-only report of what a project actually contains [--baseline]'],
+        ['layouts [id]', 'the declared target structures a reorganisation may move towards'],
+        ['restructure [dir]', 'move the code to the declared layout, in verified batches [--dry-run]'],
         ['status', 'one-screen situational awareness'],
-        ['read-path <ID>', 'the exact files to read to work on a task'],
+        ['brief <ID>', 'the whole cold-start read path as one payload, projected'],
+        ['read-path <ID>', 'the exact files to read to work on a task, with their cost'],
         ['task <sub>', 'list | show | next | new | claim | unclaim | set-status | ac | retype | split | edit'],
-        ['gate <name>', 'run a declared quality gate (format|lint|typecheck|test|build|start)'],
+        ['gate <name>', 'run a gate (format|lint|typecheck|test|build|start) [--scope area] [--no-cache]'],
         ['gates', 'run every blocking gate and summarise'],
         ['validate', 'every task against the schema'],
         ['lint-backlog', 'cross-task hygiene: cycles, orphans, unready "ready"'],
         ['index', 'regenerate backlog/index.json and backlog/BOARD.md'],
         ['generate [--check]', 'write provider adapters from .harness/ (--check for CI)'],
-        ['doctor [--fix]', 'validate the harness itself, including read-path budgets'],
+        ['doctor [--fix] [--only c]', 'validate the harness itself, including read-path budgets'],
+        ['handoff <sub> <ID>', 'read | write | validate | resume the in-flight state of a task'],
+        ['plan-risk <ID>', 'exit 3 when the plan needs a human checkpoint before coding'],
         ['commit [--task ID]', 'conventional commit + push (+ PR when the task is in_review)'],
-        ['sync [--dry-run]', 'project the backlog to the external tracker (optional)'],
+        ['sinks', 'which projections are installed, and whether each can run'],
+        ['sync [--dry-run] [--limit n]', 'project the backlog to every enabled sink'],
         ['version', 'print the harness version'],
       ],
       ['COMMAND', 'WHAT IT DOES'],
@@ -83,6 +105,152 @@ commands.help = () => {
 commands.version = () => {
   say(HARNESS_VERSION);
   return EXIT.OK;
+};
+
+commands.init = (_unused, { positional, flags }) => {
+  const target = path.resolve(positional[0] || process.cwd());
+  // The template is the repository this CLI lives in: .harness/bin/ -> repo root.
+  const templateRoot = path.resolve(import.meta.dirname, '..', '..');
+  if (!fs.existsSync(path.join(templateRoot, '.harness', 'ENTRYPOINT.md'))) {
+    fail('cannot locate the harness template to install from', EXIT.NOT_FOUND);
+  }
+  if (!fs.existsSync(target)) fail(`${target} does not exist`, EXIT.NOT_FOUND);
+  if (path.resolve(templateRoot) === target) {
+    fail('refusing to initialise the template into itself', EXIT.PRECONDITION);
+  }
+
+  const result = init.initProject(templateRoot, target, {
+    name: typeof flags.name === 'string' ? flags.name : null,
+    purpose: typeof flags.purpose === 'string' ? flags.purpose : null,
+    language: typeof flags.language === 'string' ? flags.language : 'es',
+    layout: typeof flags.layout === 'string' ? flags.layout : 'as-is',
+    force: Boolean(flags.force),
+  });
+  if (flags.json) {
+    say(JSON.stringify(result, null, 2));
+    return EXIT.OK;
+  }
+  init.printInitReport(target, result);
+  return EXIT.OK;
+};
+
+commands.survey = (ctx, { positional, flags }) => {
+  const target = path.resolve(positional[0] || ctx.root);
+  const result = surveyLib.survey(target);
+  if (flags.baseline) {
+    // Separate and opt-in: unlike the rest of the survey, this executes the project's own
+    // tooling, which can leave artefacts that are not ours to create.
+    result.baseline = surveyLib.gateBaseline(target, result.stack);
+    result.safetyNet = surveyLib.hasSafetyNet(result.baseline);
+  }
+  if (flags.json) {
+    say(JSON.stringify(result, null, 2));
+    return EXIT.OK;
+  }
+  say(c.bold(`${result.root}`) + c.gray(`  ${result.fileCount} ficheros${result.isGitRepo ? '' : '  (sin git)'}`));
+  say('');
+  say(`${c.bold('stack')}      ${result.stack.language || c.yellow('no reconocido')}${result.stack.packageManager ? c.gray(`  ·  ${result.stack.packageManager}`) : ''}`);
+  const gates = Object.entries(result.stack.gates);
+  say(`${c.bold('gates')}      ${gates.length ? '' : c.yellow('ninguno con evidencia')}`);
+  for (const [name, g] of gates) say(`  ${name.padEnd(10)} ${g.run}${c.gray(`   [${g.evidence}]`)}`);
+  say(`${c.bold('areas')}      ${result.areas.map((a) => a.id).join(', ') || c.yellow('ninguna evidente')}`);
+  say(`${c.bold('ci')}         ${result.ci.map((x) => x.file).join(', ') || c.gray('ninguna')}`);
+  say(`${c.bold('docs')}       ${result.docs.length} ficheros markdown`);
+  say(`${c.bold('pendientes')} ${result.pending.length} marcas TODO/FIXME`);
+  if (result.existingHarness) {
+    say('');
+    warn(`este proyecto ya tiene harness v${result.existingHarness.version}: ${result.existingHarness.gates.join(', ') || 'sin gates'}`);
+    say(c.gray('   adoptarlo otra vez no es lo que quieres; usa `harness doctor`.'));
+  }
+  if (result.hotspots.length) {
+    say('');
+    say(c.bold('Más tocados'));
+    say(table(result.hotspots.slice(0, 8).map((x) => [String(x.touches), x.file]), ['COMMITS', 'FICHERO']));
+  }
+  if (result.baseline) {
+    say('');
+    say(c.bold('Línea base'));
+    for (const [name, b] of Object.entries(result.baseline)) {
+      const mark = b.state === 'pass' ? c.green('PASS') : c.red(b.state.toUpperCase());
+      say(`  ${mark} ${name.padEnd(10)} ${c.gray(b.command)}`);
+    }
+    say('');
+    if (result.safetyNet.safe) ok(`Red de seguridad: ${result.safetyNet.reason}`);
+    else bad(`Sin red de seguridad: ${result.safetyNet.reason}`);
+  }
+  return EXIT.OK;
+};
+
+commands.layouts = (ctx, { positional, flags }) => {
+  const requested = positional[0];
+  if (requested) {
+    const layout = layoutsLib.loadLayout(ctx, requested);
+    say(flags.json ? JSON.stringify(layout, null, 2) : layoutsLib.summarise(layout));
+    return EXIT.OK;
+  }
+  const rows = [...layoutsLib.availableLayouts(ctx), layoutsLib.AS_IS].map((id) => {
+    if (id === layoutsLib.AS_IS) return [id, 'no mueve ningún fichero'];
+    return [id, layoutsLib.summarise(layoutsLib.loadLayout(ctx, id))];
+  });
+  say(table(rows, ['LAYOUT', 'ESTRUCTURA DESTINO']));
+  say('');
+  info(`este proyecto usa: ${ctx.project.layout || layoutsLib.AS_IS}`);
+  return EXIT.OK;
+};
+
+commands.restructure = (ctx, { positional, flags }) => {
+  const target = path.resolve(positional[0] || ctx.root);
+  const layout = layoutsLib.loadLayout(ctx, typeof flags.layout === 'string' ? flags.layout : undefined);
+  if (!layout) {
+    info(`layout "${ctx.project.layout || layoutsLib.AS_IS}": no se mueve ningún fichero. Declara otro perfil para reorganizar.`);
+    return EXIT.OK;
+  }
+
+  // The oracle has to exist before anything moves, so it is taken here rather than trusted.
+  const stack = surveyLib.detectStack(target);
+  const baseline = surveyLib.gateBaseline(target, stack);
+  const safetyNet = surveyLib.hasSafetyNet(baseline);
+  say(c.bold('Línea base'));
+  for (const [name, b] of Object.entries(baseline)) {
+    say(`  ${b.state === 'pass' ? c.green('PASS') : c.red(b.state.toUpperCase())} ${name.padEnd(10)} ${c.gray(b.command)}`);
+  }
+  if (Object.keys(baseline).length === 0) say(c.gray('  (ningún gate con evidencia)'));
+  say('');
+
+  const result = restructureLib.restructure(ctx, target, {
+    layout,
+    baseline,
+    safetyNet,
+    dryRun: Boolean(flags['dry-run']),
+    batchSize: flags.batch ? Number(flags.batch) : 10,
+    packageName: typeof flags.package === 'string' ? flags.package : null,
+  });
+  restructureLib.printReport(result);
+
+  if (flags['dry-run'] && result.report.length) {
+    const planFile = path.join(ctx.harnessDir, 'adoption', 'RESTRUCTURE-PLAN.md');
+    fs.mkdirSync(path.dirname(planFile), { recursive: true });
+    const body = ['# Plan de reorganización', '', FENCE, ...result.report, FENCE, ''].join('\n');
+    fs.writeFileSync(planFile, body, 'utf8');
+    say('');
+    ok(`plan escrito en ${path.relative(ctx.root, planFile)}`);
+  }
+
+  // Condition 4: whatever survived becomes one commit, so reverting is one command.
+  if (!flags['dry-run'] && result.commits > 1) {
+    restructureLib.squashInto(ctx, result.commits, 'chore(restructure): mover el código al layout declarado');
+    ok('lotes combinados en un único commit revertible');
+  }
+
+  if (result.aborted?.asTasks) {
+    say('');
+    info('tareas que emitir en su lugar:');
+    for (const t of restructureLib.movesAsTasks(restructureLib.planMoves(target, layout), safetyNet)) {
+      say(`   ${t.type.padEnd(9)} ${t.title}`);
+    }
+    return EXIT.PRECONDITION;
+  }
+  return result.aborted ? EXIT.CHECK_FAILED : EXIT.OK;
 };
 
 commands.status = (ctx, { flags }) => {
@@ -117,17 +285,130 @@ commands['read-path'] = (ctx, { positional, flags }) => {
   say(c.bold(`${task.id}  ${task.title}`));
   say('');
   let total = 0;
+  const budgets = new Map((ctx.project.read_path || []).map((e) => [e.path, e.max_tokens]));
   const rows = entries.map((e) => {
     const full = path.join(ctx.root, e.path);
-    const exists = fs.existsSync(full);
-    const lines = exists ? fs.readFileSync(full, 'utf8').split('\n').length : null;
-    if (lines) total += lines;
-    return [e.path, lines === null ? c.red('missing') : `${lines} lines`, c.gray(e.why)];
+    if (!fs.existsSync(full)) return [e.path, c.red('missing'), '', c.gray(e.why)];
+    const text = fs.readFileSync(full, 'utf8');
+    const tokens = Math.ceil(text.length / 4);
+    total += tokens;
+    // Tokens are what the model pays; lines are shown only for human orientation.
+    const budget = budgets.get(e.path) ?? budgets.get(e.path.replace(/[^/]+\.json$/, '{task}.json'));
+    const over = budget && tokens > budget;
+    return [
+      e.path,
+      over ? c.red(`~${tokens} tok`) : `~${tokens} tok`,
+      c.gray(`${text.split('\n').length} ln`),
+      c.gray(e.why),
+    ];
   });
-  say(table(rows, ['FILE', 'SIZE', 'WHY']));
+  say(table(rows, ['FILE', 'COST', 'LINES', 'WHY']));
   say('');
-  say(c.gray(`${entries.length} files, ~${total} lines. Read nothing else unless the work forces you to.`));
+  const cap = ctx.project.read_path_total_max_tokens;
+  const verdict = cap && total > cap ? c.red(`over the ${cap} cap`) : c.gray(`cap ${cap ?? 'n/a'}`);
+  say(`${c.gray(`${entries.length} files, ~${total} tokens`)}  ${verdict}`);
+  say(c.gray('Read nothing else unless the work forces you to.'));
   return EXIT.OK;
+};
+
+commands.brief = (ctx, { positional, flags }) => {
+  const id = positional[0];
+  if (!id) fail('usage: harness brief <TASK-ID> [--with-files] [--json]', EXIT.USAGE);
+  const task = tasksLib.load(ctx, id);
+  const { body, stats } = readpath.renderBrief(ctx, task, { withFiles: Boolean(flags['with-files']) });
+  if (flags.json) {
+    say(JSON.stringify({ task: task.id, stats, body }, null, 2));
+    return EXIT.OK;
+  }
+  process.stdout.write(body);
+  if (!flags.quiet) {
+    const saved = stats.naiveTokens > 0 ? Math.round((1 - stats.briefTokens / stats.naiveTokens) * 100) : 0;
+    say(
+      c.gray(
+        `
+===== brief =====
+~${stats.briefTokens} tokens in 1 call ` +
+          `(vs ~${stats.naiveTokens} in ${stats.naiveCalls} reads: ${saved >= 0 ? '-' : '+'}${Math.abs(saved)}% context, ` +
+          `-${stats.naiveCalls - 1} calls)`,
+      ),
+    );
+  }
+  return EXIT.OK;
+};
+
+commands.handoff = (ctx, { positional, flags }) => {
+  const sub = positional.shift() || 'read';
+  const id = tasksLib.normalizeId(positional.shift() || flags.task || '');
+  if (!id) fail('usage: harness handoff <read|write|validate|resume> <TASK-ID> [--stage x] [--summary "..."]', EXIT.USAGE);
+
+  if (sub === 'write') {
+    const patch = {};
+    for (const key of ['stage', 'by', 'branch', 'summary', 'next', 'notes_for_next']) {
+      if (typeof flags[key] === 'string') patch[key] = flags[key];
+    }
+    if (!patch.stage) fail(`--stage is required (one of ${workspace.STAGES.join(', ')})`, EXIT.USAGE);
+    if (!patch.by) patch.by = actorId(ctx, flags);
+    if (!patch.summary) fail('--summary is required: a handoff without one is not a handoff', EXIT.USAGE);
+    const written = workspace.writeHandoff(ctx, id, patch);
+    ok(`handoff for ${id}: stage ${written.stage}`);
+    return EXIT.OK;
+  }
+
+  const { exists, handoff, errors } = workspace.readHandoff(ctx, id);
+  if (sub === 'validate') {
+    if (!exists) {
+      info(`no handoff for ${id}`);
+      return EXIT.OK;
+    }
+    if (errors.length) {
+      bad(`handoff for ${id} is invalid — do not trust its stage:`);
+      for (const e of errors) say(`   - ${e.path || '(root)'}: ${e.message}`);
+      return EXIT.CHECK_FAILED;
+    }
+    ok(`handoff for ${id} is valid (stage ${handoff.stage})`);
+    return EXIT.OK;
+  }
+
+  if (sub === 'resume') {
+    const r = workspace.resumeStage(ctx, id);
+    if (r.invalid) {
+      bad(`${r.reason}:`);
+      for (const e of r.errors) say(`   - ${e.path || '(root)'}: ${e.message}`);
+      return EXIT.CHECK_FAILED;
+    }
+    if (flags.json) say(JSON.stringify({ stage: r.stage, reason: r.reason }, null, 2));
+    else say(r.stage ? `${r.stage}` : `${c.gray('(none)')}  ${r.reason}`);
+    return EXIT.OK;
+  }
+
+  if (!exists) {
+    info(`no handoff for ${id}`);
+    return EXIT.OK;
+  }
+  say(JSON.stringify(handoff, null, 2));
+  return errors.length ? EXIT.CHECK_FAILED : EXIT.OK;
+};
+
+commands['plan-risk'] = (ctx, { positional, flags }) => {
+  const id = tasksLib.normalizeId(positional[0] || '');
+  if (!id) fail('usage: harness plan-risk <TASK-ID>', EXIT.USAGE);
+  const verdict = workspace.planNeedsHumanReview(ctx, id);
+  if (flags.json) {
+    say(JSON.stringify(verdict, null, 2));
+    return verdict.stop ? EXIT.PRECONDITION : EXIT.OK;
+  }
+  if (verdict.missing) {
+    // Not a checkpoint: there is simply nothing to assess yet.
+    info(verdict.reasons[0]);
+    return EXIT.NOT_FOUND;
+  }
+  if (!verdict.stop) {
+    ok(`plan risk ${verdict.risk} — implementation may proceed without a checkpoint`);
+    return EXIT.OK;
+  }
+  bad('stop and get a human to confirm the approach before implementing:');
+  for (const r of verdict.reasons) say(`   - ${r}`);
+  return EXIT.PRECONDITION;
 };
 
 commands.validate = (ctx) => {
@@ -159,7 +440,8 @@ commands['lint-backlog'] = (ctx) => {
 };
 
 commands.index = (ctx) => {
-  const { index, changed } = board.regenerate(ctx);
+  const { index, changed, epics } = board.regenerate(ctx);
+  for (const e of epics || []) ok(`epic derivada  ${e}`);
   if (changed.length === 0) info('index and board already up to date');
   else for (const f of changed) ok(`wrote ${f}`);
   info(`${index.counts.total} task(s): ${Object.entries(index.counts).filter(([k, v]) => v && k !== 'total').map(([k, v]) => `${k} ${v}`).join(', ')}`);
@@ -185,7 +467,15 @@ commands.generate = (ctx, { flags }) => {
 };
 
 commands.doctor = (ctx, { flags }) => {
-  const { issues, fixed, counts } = doctorLib.runDoctor(ctx, { fix: Boolean(flags.fix) });
+  const only = typeof flags.only === 'string' ? flags.only : null;
+  let { issues, fixed, counts } = doctorLib.runDoctor(ctx, { fix: Boolean(flags.fix) });
+  if (only) {
+    const known = [...new Set(doctorLib.CHECKS)];
+    if (!known.includes(only)) fail(`unknown check "${only}" (known: ${known.join(', ')})`, EXIT.USAGE);
+    issues = issues.filter((i) => i.check === only);
+    fixed = [];
+    counts = { error: issues.filter((i) => i.level === 'error').length, warn: issues.filter((i) => i.level === 'warn').length };
+  }
   for (const f of fixed) ok(f);
   const byCheck = new Map();
   for (const i of issues) {
@@ -204,14 +494,26 @@ commands.doctor = (ctx, { flags }) => {
 
 commands.gate = (ctx, { positional, flags }) => {
   const name = gates.requireGateName(positional[0]);
-  const r = gates.runGate(ctx, name, { check: Boolean(flags.check), capture: false });
+  const r = gates.runGate(ctx, name, {
+    check: Boolean(flags.check),
+    capture: false,
+    scope: typeof flags.scope === 'string' ? flags.scope : null,
+    cache: !flags['no-cache'],
+  });
   gates.printGateResults([r]);
   if (r.state === 'fail') return EXIT.CHECK_FAILED;
   return EXIT.OK;
 };
 
 commands.gates = (ctx, { flags }) => {
-  const summary = gates.summarize(gates.runAllGates(ctx, { check: Boolean(flags.check), capture: true }));
+  const summary = gates.summarize(
+    gates.runAllGates(ctx, {
+      check: Boolean(flags.check),
+      capture: true,
+      scope: typeof flags.scope === 'string' ? flags.scope : null,
+      cache: !flags['no-cache'],
+    }),
+  );
   gates.printGateResults(summary.results);
   if (flags.json) say(JSON.stringify(summary.map, null, 2));
   return summary.ok ? EXIT.OK : EXIT.CHECK_FAILED;
@@ -224,28 +526,34 @@ commands.commit = (ctx, { flags }) => {
     scope: typeof flags.scope === 'string' ? flags.scope : null,
     body: typeof flags.body === 'string' ? flags.body : null,
     noVerify: Boolean(flags['no-verify']),
+    allowSecret: Boolean(flags['allow-secret']),
     push: flags.push !== 'false' && flags['no-push'] !== true,
     closes: Boolean(flags.closes),
   });
   return EXIT.OK;
 };
 
-commands.sync = (ctx, { flags }) => {
-  const cfg = ctx.project.integrations?.clickup;
-  if (!cfg?.enabled) {
-    info('sync disabled: integrations.clickup.enabled is false in project.json');
+commands.sync = async (ctx, { flags }) => {
+  const results = await syncLib.runSync(ctx, {
+    dryRun: Boolean(flags['dry-run']),
+    only: typeof flags.sink === 'string' ? flags.sink : null,
+    limit: flags.limit ? Number(flags.limit) : null,
+  });
+  return results.some((r) => r.failed > 0) ? EXIT.CHECK_FAILED : EXIT.OK;
+};
+
+commands.sinks = async (ctx, { flags }) => {
+  const status = await syncLib.sinkStatus(ctx);
+  if (flags.json) {
+    say(JSON.stringify(status, null, 2));
     return EXIT.OK;
   }
-  if (!process.env.CLICKUP_API_TOKEN) {
-    info('sync disabled: CLICKUP_API_TOKEN is not set');
+  if (status.length === 0) {
+    info('no sinks installed');
     return EXIT.OK;
   }
-  const adapter = path.join(ctx.harnessDir, 'integrations', 'clickup', 'adapter.mjs');
-  if (!fs.existsSync(adapter)) {
-    warn('ClickUp adapter not installed yet (phase 5 of docs/HARNESS-PLAN.md)');
-    return EXIT.OK;
-  }
-  return import(`file://${adapter}`).then((m) => m.run(ctx, { dryRun: Boolean(flags['dry-run']) }));
+  say(table(status.map((s) => [s.id, s.enabled ? c.green('enabled') : c.gray('disabled'), s.reason]), ['SINK', 'STATE', 'WHY']));
+  return EXIT.OK;
 };
 
 commands.task = (ctx, parsed) => taskCommand(ctx, parsed);
@@ -264,7 +572,7 @@ async function main(argv) {
     commands.help();
     return EXIT.USAGE;
   }
-  if (name === 'help' || name === 'version') return fn();
+  if (name === 'help' || name === 'version' || name === 'init') return fn(null, parsed);
   const ctx = loadContext();
   const result = await fn(ctx, parsed);
   return typeof result === 'number' ? result : EXIT.OK;

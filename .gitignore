@@ -231,3 +231,9 @@ __marimo__/
 .harness/workspace/*/gate-output/
 
 # El plan y los informes de una adopción sí se commitean: son evidencia revisable.
+
+# Resultados de gates cacheados por huella del arbol. Derivado, nunca fuente.
+.harness/.cache/
+
+# Log de auditoria de sincronizacion: ruido, y puede contener nombres.
+.harness/integrations/*/sync.log.jsonl

@@ -3,7 +3,7 @@
   "id": "FEAT-0011",
   "title": "Formato canónico de comando y su proyección",
   "type": "feature",
-  "status": "in_review",
+  "status": "done",
   "priority": "high",
   "size": "S",
   "parent": "EPIC-0003",
@@ -32,13 +32,12 @@
   ],
   "context": {
     "area": "definitions",
-    "docs": [
-      "docs/HARNESS-PLAN.md"
-    ],
+    "docs": [],
     "files": [],
     "out_of_scope": []
   },
   "depends_on": [],
+  "blocked_reason": null,
   "labels": [],
   "assignee": {
     "kind": "agent",
@@ -51,20 +50,18 @@
     "issue": null,
     "commits": []
   },
-  "worklog": [
-    {
-      "at": "2026-08-18T19:00:00Z",
-      "by": "harness",
-      "event": "created",
-      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
-    },
-    {
-      "at": "2026-08-18T19:00:00Z",
-      "by": "implementer",
-      "event": "implemented",
-      "note": "entregada en la construcción inicial"
+  "external": {
+    "github": {
+      "id": "35",
+      "url": null,
+      "issue": 35,
+      "drifted": false,
+      "remote_hash": "470001493708252e",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XGYo",
+      "content_hash": "4cf9ae3c21d81025",
+      "last_synced_at": "2026-08-20T18:35:19Z"
     }
-  ],
+  },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-18T19:00:00Z"
+  "updated_at": "2026-08-20T18:35:19Z"
 }

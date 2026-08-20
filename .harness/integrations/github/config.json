@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "project": {
+    "owner": "antoniopaya22",
+    "number": 1,
+    "project_id": "PVT_kwHOAOjmK84Bg-VW",
+    "status_field_id": "PVTSSF_lAHOAOjmK84Bg-VWzhf71Z8",
+    "status_options": {
+      "backlog": "99cca063",
+      "ready": "77fe0460",
+      "in progress": "84cfba23",
+      "in review": "36f4f5c0",
+      "blocked": "18b73cf2",
+      "complete": "48ec070a",
+      "cancelled": "1c7113ba"
+    }
+  },
+  "_comment": "Los identificadores de proyecto, campo y opciones se descubren en la primera sincronizacion y se guardan aqui. Sin secretos: el transporte es gh, que ya esta autenticado. Para el tablero hace falta el scope project."
+}

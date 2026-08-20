@@ -1,0 +1,79 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0030",
+  "title": "Medir el camino de lectura en tokens y no en líneas",
+  "type": "feature",
+  "status": "done",
+  "priority": "critical",
+  "size": "M",
+  "parent": "EPIC-0008",
+  "description": "Los presupuestos del camino de lectura se declaran en líneas, que es un proxy malo: trescientas líneas pueden ser tres mil o doce mil tokens. Toda la promesa del harness pivota sobre esta medida, así que tiene que ser la correcta. Basta una estimación por caracteres partidos entre cuatro, siempre que sea la que se hace cumplir.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Los presupuestos se declaran y se comprueban en tokens estimados",
+      "check": {
+        "type": "command",
+        "run": "node .harness/bin/harness.mjs doctor"
+      },
+      "status": "pass",
+      "evidence": "project.schema.json exige max_tokens y prohibe max_lines; doctor los hace cumplir"
+    },
+    {
+      "id": "AC2",
+      "must": "El comando de camino de lectura imprime el coste estimado de cada fichero y el total",
+      "check": {
+        "type": "command",
+        "run": "node .harness/bin/harness.mjs read-path FEAT-0017"
+      },
+      "status": "pass",
+      "evidence": "read-path imprime coste por fichero, lineas como referencia humana, y el total contra el tope"
+    },
+    {
+      "id": "AC3",
+      "must": "El autodiagnostico falla cuando el arranque en frio completo excede su presupuesto",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/readpath.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "doctor comprueba el tope agregado y el coste de orientacion real de cada tarea; 117 autotests en verde"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "blocked_reason": null,
+  "labels": [
+    "mejora"
+  ],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T15:51:24Z",
+  "branch": "feat/0030-medir-el-camino-de-lectura-en",
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "54",
+      "url": null,
+      "issue": 54,
+      "drifted": false,
+      "remote_hash": "8ed5d4cf5fa77873",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XHkM",
+      "content_hash": "0637b11a89ae2815",
+      "last_synced_at": "2026-08-20T18:38:21Z"
+    }
+  },
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T18:38:21Z"
+}

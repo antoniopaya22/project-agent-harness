@@ -166,3 +166,51 @@ test('next skips epics, blocked tasks and claimed tasks, and respects priority',
   assert.equal(pickNext([done, epic, blocked, claimed, low, critical, blocker]).id, 'FEAT-0006');
   assert.equal(pickNext([epic, blocked, claimed]), null, 'nothing workable means null, not a guess');
 });
+
+test('in_review refuses while a required gate is red, which the docs always claimed', () => {
+  // ENTRYPOINT.md has said this since day one and nothing enforced it. Running the
+  // /implement choreography by hand closed a task with a red test suite.
+  const { ctx, cleanup } = tempHarness({
+    project: { gates: { test: { run: 'node -e "process.exit(1)"', required: true, status: 'configured' } } },
+  });
+  try {
+    const task = makeTask({
+      status: 'in_progress',
+      acceptance_criteria: [{ id: 'AC1', must: 'Algo observable ocurre.', check: { type: 'review', run: null }, status: 'pass' }],
+    });
+    const problems = transitionProblems(ctx, task, 'in_review', { allTasks: [task] });
+    assert.ok(problems.some((p) => /required gate "test" is red/.test(p)), problems.join('; '));
+  } finally {
+    cleanup();
+  }
+});
+
+test('a green required gate lets in_review through', () => {
+  const { ctx, cleanup } = tempHarness({
+    project: { gates: { test: { run: 'node -e "process.exit(0)"', required: true, status: 'configured' } } },
+  });
+  try {
+    const task = makeTask({
+      status: 'in_progress',
+      acceptance_criteria: [{ id: 'AC1', must: 'Algo observable ocurre.', check: { type: 'review', run: null }, status: 'pass' }],
+    });
+    assert.deepEqual(transitionProblems(ctx, task, 'in_review', { allTasks: [task] }), []);
+  } finally {
+    cleanup();
+  }
+});
+
+test('the gate check can be skipped, so backlog hygiene does not run test suites', () => {
+  const { ctx, cleanup } = tempHarness({
+    project: { gates: { test: { run: 'node -e "process.exit(1)"', required: true, status: 'configured' } } },
+  });
+  try {
+    const task = makeTask({
+      status: 'in_progress',
+      acceptance_criteria: [{ id: 'AC1', must: 'Algo observable ocurre.', check: { type: 'review', run: null }, status: 'pass' }],
+    });
+    assert.deepEqual(transitionProblems(ctx, task, 'in_review', { allTasks: [task], skipGates: true }), []);
+  } finally {
+    cleanup();
+  }
+});

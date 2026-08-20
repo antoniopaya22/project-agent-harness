@@ -37,7 +37,8 @@
       "run": "node scripts/lint.mjs",
       "check": "node scripts/lint.mjs",
       "status": "configured",
-      "required": true
+      "required": true,
+      "run_scoped": null
     },
     "typecheck": {
       "run": null,
@@ -47,7 +48,8 @@
     "test": {
       "run": "node --test \"tests/*.test.mjs\"",
       "status": "configured",
-      "required": true
+      "required": true,
+      "run_scoped": "node --test {paths}"
     },
     "build": {
       "run": null,
@@ -130,23 +132,27 @@
   "read_path": [
     {
       "path": ".harness/ENTRYPOINT.md",
-      "max_lines": 120,
+      "max_tokens": 1800,
       "note": "Reglas del juego. Lo unico que se lee siempre."
     },
     {
       "path": ".harness/backlog/tasks/{task}.json",
-      "max_lines": 200,
+      "max_tokens": 1200,
       "note": "La tarea es el enrutador: dice que hacer y que leer."
     },
     {
       "path": ".harness/project.json",
-      "max_lines": 200,
+      "max_tokens": 1200,
       "note": "Gates, areas y convenciones git. Nadie adivina un comando."
     },
     {
       "path": "docs/areas/{area}.md",
-      "max_lines": 300,
+      "max_tokens": 2000,
       "note": "Solo la rebanada de arquitectura que toca la tarea."
     }
-  ]
+  ],
+  "read_path_total_max_tokens": 6500,
+  "implement": {
+    "max_verify_loops": 2
+  }
 }

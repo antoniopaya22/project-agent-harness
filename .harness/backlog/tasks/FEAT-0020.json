@@ -39,9 +39,7 @@
   ],
   "context": {
     "area": "cli",
-    "docs": [
-      "docs/HARNESS-PLAN.md"
-    ],
+    "docs": [],
     "files": [],
     "out_of_scope": []
   },
@@ -57,20 +55,18 @@
     "issue": null,
     "commits": []
   },
-  "worklog": [
-    {
-      "at": "2026-08-18T19:00:00Z",
-      "by": "harness",
-      "event": "created",
-      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
-    },
-    {
-      "at": "2026-08-18T18:05:20Z",
-      "by": "human",
-      "event": "status_changed",
-      "note": "depends_on=FEAT-0019"
+  "external": {
+    "github": {
+      "id": "44",
+      "url": null,
+      "issue": 44,
+      "drifted": false,
+      "remote_hash": "ca06aa9fd5f65596",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XHJE",
+      "content_hash": "f325229b16cc89c3",
+      "last_synced_at": "2026-08-20T18:37:06Z"
     }
-  ],
+  },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-18T18:05:20Z"
+  "updated_at": "2026-08-20T18:37:06Z"
 }

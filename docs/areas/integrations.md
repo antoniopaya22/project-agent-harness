@@ -13,11 +13,20 @@ owner: Antonio Payá
 
 ## Qué hace esta área
 
-Proyecta el backlog a una herramienta visual para que perfiles no técnicos vean el estado del proyecto.
-ClickUp es la implementación de referencia.
+Proyecta el backlog a herramientas externas para que se vea el estado del proyecto sin tocar el
+repositorio. **No es un cliente de una herramienta: es una proyección con N sumideros** (D9).
+
+| Nivel | Destino | Coste de configuración |
+|-------|---------|------------------------|
+| **1, por defecto y siempre activo** | GitHub Issues + Projects | Ninguno: el transporte es `gh`, ya autenticado. **Cero secretos en el proyecto** |
+| **2, opcional** | ClickUp, Jira, Linear… | Token, configuración y activación explícita |
 
 Su límite: **una sola dirección**. El repositorio es la fuente de verdad, porque para cambiar el estado
-de una tarea hay que tocar el código. Nadie edita tarjetas.
+de una tarea hay que tocar el código. Fuera se consulta, no se edita.
+
+Cada sumidero reconcilia contra el repositorio por su cuenta y **ninguno habla con otro**: dos espejos
+no pueden entrar en conflicto, solo pueden estar cada uno más o menos fresco. El fallo de un sumidero no
+impide que los demás se completen.
 
 ## La interfaz de adaptador
 
@@ -34,6 +43,52 @@ Un adaptador vive en `.harness/integrations/<proveedor>/adapter.mjs` y exporta:
 | `unmapStatus(remote)` | La inversa, para detectar deriva |
 
 Añadir Jira o Linear significa escribir otro directorio con estas funciones, sin tocar el núcleo.
+Con GitHub y ClickUp la interfaz tiene **dos implementaciones reales**, que es la única forma de saber
+si una abstracción está bien puesta.
+
+### GitHub: el sumidero por defecto
+
+Transporte: `gh` y `gh api graphql`, porque **los tableros de GitHub son solo GraphQL** — la API REST de
+los proyectos clásicos está retirada. Requiere el scope `project` en el token
+(`gh auth refresh -s project`); el token habitual solo trae `repo` y `workflow`.
+
+| Harness | GitHub |
+|---------|--------|
+| tarea | incidencia, con los criterios como lista de comprobación |
+| `id` | prefijo del título: `FEAT-0042 · …` |
+| `status` | campo de selección única del tablero, **mapeo identidad** con los siete estados |
+| `type`, `priority`, `context.area` | etiquetas |
+| `parent` (épica) | sub-issue — **[VERIFY]** superficie exacta de la API |
+| `branch`, `links.pr` | referencias cruzadas nativas |
+
+### Verificado contra la API (20/08/2026)
+
+Comprobado por introspección del esquema GraphQL, no de memoria:
+
+| Necesidad | Resolución |
+|-----------|-----------|
+| Añadir una incidencia al tablero | `addProjectV2ItemById(projectId, contentId)` |
+| Fijar el estado | `updateProjectV2ItemFieldValue(projectId, itemId, fieldId, value: { singleSelectOptionId })` |
+| Descubrir los identificadores | **Una sola consulta**: `ProjectV2SingleSelectField` expone `id`, `name` y `options { id name }` |
+| Crear el campo de estado con sus opciones | **Una sola mutación**: `createProjectV2Field(dataType: SINGLE_SELECT, singleSelectOptions: [...])` |
+| Épicas como sub-issues | `addSubIssue(issueId, subIssueId)` existe en el esquema |
+
+Fijar un estado necesita **cuatro** identificadores (proyecto, item, campo, opción). Los tres estables
+—proyecto, campo, opciones— se descubren una vez y se guardan en la configuración; el del item es por
+tarea y vive en `external.github`.
+
+### El token de integración continua, y por qué importa al diseño
+
+Una incidencia es un recurso **del repositorio**, así que el `GITHUB_TOKEN` de Actions puede escribirla
+con permiso `issues: write`. Un tablero es un recurso **de usuario u organización**, así que ese token
+no llega: hace falta un PAT o una App con scope `project`.
+
+Eso no es un inconveniente, es el argumento del diseño de varios sumideros: en integración continua el
+sumidero de incidencias funciona sin configurar nada y el del tablero se salta **avisando**, en lugar de
+romper la construcción. Cada sumidero declara qué credencial necesita y se desactiva solo si le falta.
+
+En local no hace falta ningún secreto: el transporte es `gh`, ya autenticado, con `gh auth refresh -s
+project` para el tablero.
 
 ## Mapeo de campos a ClickUp
 

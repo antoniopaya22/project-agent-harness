@@ -1,0 +1,6 @@
+{"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
+{"at":"2026-08-20T16:37:13Z","by":"researcher","event":"claimed","note":"branch spike/0003-verificar-la-interfaz-de-programacion-de"}
+{"at":"2026-08-20T16:37:13Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-20T16:37:13Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-20T16:37:19Z","by":"tester","event":"status_changed","note":"in_progress -> in_review"}
+{"at":"2026-08-20T16:37:20Z","by":"human","event":"completed","note":"in_review -> done"}

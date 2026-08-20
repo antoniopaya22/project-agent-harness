@@ -12,8 +12,21 @@
 | 2 — Agentes y comandos | **construida**: 6 agentes, 9 comandos, adaptadores de Claude Code y `AGENTS.md` con detección de deriva |
 | 3 — `/adopt` | pendiente. El camino manual equivalente está documentado en [QUICKSTART](QUICKSTART.md#camino-b--proyecto-que-ya-existe) |
 | 4 — Multi-proveedor | parcial: `AGENTS.md` y runbooks hechos; Cursor y Copilot necesitan verificar su formato |
-| 5 — ClickUp | pendiente. Interfaz especificada en [areas/integrations](areas/integrations.md) |
-| 6 — Endurecimiento | parcial: 89 autotests, CI y documentación hechos; automatismos del proveedor pendientes |
+| 5 — Proyección externa | pendiente. GitHub por defecto (D9), ClickUp como espejo opcional |
+| 6 — Endurecimiento | parcial: 113 autotests, CI en Linux y Windows y documentación hechos; automatismos del proveedor pendientes |
+
+Tras construir las fases 0–2 se revisó el harness con perspectiva y se sembró una **segunda ronda de
+40 tareas en 6 épicas nuevas**, ordenadas por el criterio de que la mejora más valiosa es la que ataca la
+tesis central del proyecto:
+
+| Épica | Qué ataca |
+|-------|-----------|
+| Eficiencia del camino de lectura | Los presupuestos se miden en líneas, que es un proxy malo; un agente hace 4 llamadas donde bastaría 1; el fichero de tarea arrastra campos que nadie usa para implementar |
+| Mecanismos en lugar de instrucciones | La regla general: cada vez que un prompt dice «fíjate en X» hay un código de salida esperando a existir. El fichero de traspaso, en el que `/implement` **confía** para saltarse trabajo, es lo más crítico sin validar |
+| Anti-podredumbre | La frescura de documentos se mide por existencia de rutas, así que un documento puede estar obsoleto con todas sus rutas vivas |
+| Proyección a GitHub | D9: destino por defecto sin secretos, y la interfaz de adaptador deja de ser especulativa |
+| Ergonomía y huecos | El mayor: hay comando planeado para adoptar un proyecto existente y, para uno nuevo, una lista de pasos manuales |
+| Preguntas abiertas y medición | Tres cosas sin resolver, incluida la incómoda: nadie ha medido si el harness se paga |
 
 Verificación: `harness doctor` en verde, `harness gates` en verde, 89 autotests, cero deriva de
 adaptadores. El backlog del propio proyecto está sembrado desde §12 (46 tareas, incluidas 7 épicas) y
@@ -108,12 +121,34 @@ La parte difícil no es mover, es **reescribir las referencias**: imports, rutas
 `tsconfig.json` paths, `Dockerfile` COPY, workflows de CI, `pytest.ini` testpaths, configuración de cobertura,
 `MANIFEST.in`, entry points. Van en el mismo commit y con inventario explícito de qué se ha tocado.
 
-**D6 — Sync con ClickUp: proyección de una sola dirección (push).**
-El repo es la fuente de verdad porque es donde ocurre el trabajo: para cambiar el estado de una tarjeta hay que
-tocar el código, así que se cambia desde el harness. Los compañeros no técnicos **consultan**, no editan.
-Consecuencia de diseño: no hay `pull`, no hay resolución de conflictos, no hay emparejado de tareas remotas
-preexistentes. Queda una única salvaguarda barata: si el hash remoto no coincide con el guardado, alguien tocó
-la tarjeta a mano y `/sync` lo **avisa** sin intentar mezclar nada.
+**D6 — Proyección externa de una sola dirección (push), a varios sumideros.**
+El repo es la fuente de verdad porque es donde ocurre el trabajo: para cambiar el estado de una tarea hay que
+tocar el código, así que se cambia desde el harness. Fuera se **consulta**, no se edita.
+Consecuencia: no hay `pull`, no hay resolución de conflictos, no hay emparejado de tareas remotas
+preexistentes. Queda una salvaguarda barata: si el contenido remoto no coincide con el hash guardado, alguien
+editó a mano y `/sync` lo **avisa** sin intentar mezclar nada.
+
+**D9 — GitHub es la proyección por defecto; los demás trackers son espejos opcionales.**
+Dos niveles, y el reparto no es arbitrario:
+
+| Nivel | Destino | Por qué |
+|-------|---------|---------|
+| **1, siempre activo** | GitHub Issues + Projects | Está donde vive el código, y **no necesita ni un secreto**: el transporte es `gh`, que ya está autenticado. Coste de configuración cero |
+| **2, opcional** | ClickUp, Jira, Linear… | Espejo para quien viva en otra herramienta. Requiere token y configuración explícita |
+
+Lo importante de esta decisión no es GitHub, es lo que le hace a la arquitectura: el motor de sincronización deja
+de ser «un cliente de ClickUp» y pasa a ser **una proyección con N sumideros**. `harness sync` recorre los
+sumideros habilitados; cada uno reconcilia contra el repo por su cuenta y **nunca hablan entre ellos**, así que
+dos espejos no pueden entrar en conflicto — solo pueden estar cada uno más o menos fresco.
+
+Y hace que la interfaz de adaptador deje de ser especulativa: tiene dos implementaciones desde el primer día,
+que es la única forma de saber si una abstracción está bien puesta.
+
+Detalles que **hay que verificar** antes de escribir el código (spike propio): Projects v2 es solo GraphQL —
+la API REST de los proyectos clásicos está retirada — así que el transporte será `gh project`, que exige el
+scope `project` en el token (el habitual no lo trae: `gh auth refresh -s project`). Pendiente también confirmar
+la superficie de sub-issues para las épicas, y si el `GITHUB_TOKEN` de Actions puede escribir en un Project
+(es un recurso de usuario u organización, no del repositorio, así que probablemente haga falta un PAT o una App).
 
 **D7 — Los *gates* de calidad se declaran una vez y se invocan siempre igual.**
 `project.json` declara cómo se formatea, lintea, tipa, testea, construye y ejecuta el proyecto. Ningún agente

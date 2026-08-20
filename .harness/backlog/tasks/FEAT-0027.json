@@ -4,7 +4,7 @@
   "title": "Interfaz de adaptador y tabla de correspondencias",
   "type": "feature",
   "status": "backlog",
-  "priority": "medium",
+  "priority": "low",
   "size": "M",
   "parent": "EPIC-0006",
   "description": "Las operaciones que debe implementar cualquier tracker, y la correspondencia de estados editable sin tocar código, para que añadir otro tracker no toque el núcleo.",
@@ -30,14 +30,13 @@
   ],
   "context": {
     "area": "integrations",
-    "docs": [
-      "docs/HARNESS-PLAN.md"
-    ],
+    "docs": [],
     "files": [],
     "out_of_scope": []
   },
   "depends_on": [
-    "CHORE-0003"
+    "CHORE-0003",
+    "FEAT-0046"
   ],
   "labels": [],
   "assignee": null,
@@ -48,20 +47,18 @@
     "issue": null,
     "commits": []
   },
-  "worklog": [
-    {
-      "at": "2026-08-18T19:00:00Z",
-      "by": "harness",
-      "event": "created",
-      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
-    },
-    {
-      "at": "2026-08-18T18:05:21Z",
-      "by": "human",
-      "event": "status_changed",
-      "note": "depends_on=CHORE-0003"
+  "external": {
+    "github": {
+      "id": "51",
+      "url": null,
+      "issue": 51,
+      "drifted": false,
+      "remote_hash": "bfc68a0bb0378ac5",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XHeE",
+      "content_hash": "9a4d7e18676793d5",
+      "last_synced_at": "2026-08-20T18:38:05Z"
     }
-  ],
+  },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-18T18:05:21Z"
+  "updated_at": "2026-08-20T18:38:05Z"
 }

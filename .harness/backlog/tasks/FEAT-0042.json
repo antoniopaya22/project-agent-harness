@@ -1,0 +1,72 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0042",
+  "title": "Frescura de documentos medida en commits, no en rutas existentes",
+  "type": "feature",
+  "status": "ready",
+  "priority": "high",
+  "size": "M",
+  "parent": "EPIC-0010",
+  "description": "El autodiagnostico comprueba que las rutas citadas en el mapa del codigo existen, asi que un documento puede estar completamente obsoleto con todas sus rutas vivas. Anotando en cada documento de area el commit contra el que se verifico, se puede avisar cuando los ficheros de esa area han recibido muchos cambios desde entonces.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Cada documento de area declara el commit contra el que fue verificado",
+      "check": {
+        "type": "command",
+        "run": "node .harness/bin/harness.mjs doctor"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "El autodiagnostico avisa cuando el area ha cambiado sustancialmente desde esa verificacion",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/freshness.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC3",
+      "must": "El aviso propone la accion concreta en lugar de solo senalar el problema",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "66",
+      "url": null,
+      "issue": 66,
+      "drifted": false,
+      "remote_hash": "b6378f76edf6fe93",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XINI",
+      "content_hash": "b06149d6306e565b",
+      "last_synced_at": "2026-08-20T18:39:41Z"
+    }
+  },
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T18:39:41Z"
+}

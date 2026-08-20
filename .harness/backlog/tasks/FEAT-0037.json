@@ -1,0 +1,79 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0037",
+  "title": "Riesgo del plan como codigo de salida",
+  "type": "feature",
+  "status": "done",
+  "priority": "critical",
+  "size": "M",
+  "parent": "EPIC-0009",
+  "description": "El comando de implementacion dice que pare si el riesgo del plan es alto, y eso depende de que el modelo lo lea y lo obedezca. Con front-matter estructurado en el plan y en el informe de verificacion, el harness puede decidirlo el mismo.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "El plan y el informe de verificacion llevan front-matter estructurado",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/workspace.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "front-matter con risk y areas leido por readPlan"
+    },
+    {
+      "id": "AC2",
+      "must": "Un comando devuelve codigo de precondicion cuando el riesgo del plan es alto",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/workspace.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "harness plan-risk sale con 3 ante riesgo alto o mas de un area"
+    },
+    {
+      "id": "AC3",
+      "must": "Un plan sin front-matter se trata como riesgo desconocido y tambien detiene",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/workspace.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "sin front-matter el riesgo es desconocido y tambien detiene; tests/workspace.test.mjs"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "blocked_reason": null,
+  "labels": [
+    "mejora"
+  ],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T16:07:14Z",
+  "branch": "feat/0037-riesgo-del-plan-como-codigo-de",
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "61",
+      "url": null,
+      "issue": 61,
+      "drifted": false,
+      "remote_hash": "280c90134e4e8214",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XIB4",
+      "content_hash": "8ae9d47a0741866d",
+      "last_synced_at": "2026-08-20T18:39:10Z"
+    }
+  },
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T18:39:10Z"
+}

@@ -76,15 +76,21 @@ export function lintBacklog(ctx, { tasks = null } = {}) {
     // A task claiming a status it does not qualify for is the most dangerous drift:
     // /implement trusts `ready`.
     if (t.status === 'ready') {
-      const problems = transitionProblems(ctx, { ...t, status: 'backlog' }, 'ready', { allTasks: all });
+      const problems = transitionProblems(ctx, { ...t, status: 'backlog' }, 'ready', { allTasks: all, skipGates: true });
       for (const p of problems) {
         if (p === 'already ready') continue;
         findings.push({ level: 'error', id: t.id, message: `marked ready but: ${p}` });
       }
     }
-    if (t.status === 'in_progress') {
+    // An epic is `in_progress` because a child is, not because anybody claimed it: it has
+    // no branch and no assignee by design, and demanding them would make the derived status
+    // permanently invalid.
+    if (t.status === 'in_progress' && t.type !== 'epic') {
       if (!t.branch) findings.push({ level: 'error', id: t.id, message: 'in_progress without a branch' });
       if (!t.assignee) findings.push({ level: 'error', id: t.id, message: 'in_progress without an assignee' });
+    }
+    if (t.type === 'epic' && (t.branch || t.assignee)) {
+      findings.push({ level: 'warn', id: t.id, message: 'an epic should have neither a branch nor an assignee' });
     }
     if (t.status === 'blocked' && !t.blocked_reason) {
       findings.push({ level: 'error', id: t.id, message: 'blocked without blocked_reason' });

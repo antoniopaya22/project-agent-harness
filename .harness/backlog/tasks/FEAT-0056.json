@@ -1,0 +1,63 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0056",
+  "title": "Registrar coste y duracion por tarea",
+  "type": "feature",
+  "status": "ready",
+  "priority": "medium",
+  "size": "S",
+  "parent": "EPIC-0013",
+  "description": "Toda la tesis es que el harness ahorra contexto y mejora el trabajo, y no hay ni un numero que lo respalde. Registrar duracion y consumo por tarea daria la respuesta al cabo de veinte tareas, y podria decir que no.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Cada tarea acumula duracion y consumo por etapa",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/metrics.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "Existe un informe agregado que permite comparar entre areas y tipos de tarea",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/metrics.test.mjs"
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "80",
+      "url": null,
+      "issue": 80,
+      "drifted": false,
+      "remote_hash": "755be08e055c46f1",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XIxc",
+      "content_hash": "9e3977ad8025f6ff",
+      "last_synced_at": "2026-08-20T18:41:09Z"
+    }
+  },
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T18:41:09Z"
+}

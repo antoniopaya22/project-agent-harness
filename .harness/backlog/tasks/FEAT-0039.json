@@ -1,0 +1,73 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0039",
+  "title": "Bloquear la edicion de ficheros generados con automatismos del proveedor",
+  "type": "feature",
+  "status": "ready",
+  "priority": "high",
+  "size": "M",
+  "parent": "EPIC-0009",
+  "description": "La prohibicion de editar un fichero generado esta escrita en tres sitios y no la impide nada. Donde el proveedor ofrece automatismos ante eventos, la regla puede pasar de recordatorio a mecanismo.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Intentar editar un fichero con cabecera de generado queda bloqueado",
+      "check": {
+        "type": "manual",
+        "run": null
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "Editar un fichero de tarea dispara la validacion de esquema",
+      "check": {
+        "type": "manual",
+        "run": null
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC3",
+      "must": "Los automatismos se generan desde la configuracion y editar un fichero generado queda bloqueado en la practica",
+      "check": {
+        "type": "manual",
+        "run": null
+      },
+      "status": "pending",
+      "baseline": "pass"
+    }
+  ],
+  "context": {
+    "area": "adapters",
+    "docs": [],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "63",
+      "url": null,
+      "issue": 63,
+      "drifted": false,
+      "remote_hash": "298f6e7d8e4a6e81",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XIGU",
+      "content_hash": "a1cf73567d3b9a37",
+      "last_synced_at": "2026-08-20T18:39:22Z"
+    }
+  },
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T18:39:22Z"
+}

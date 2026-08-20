@@ -51,6 +51,13 @@ test('the index computes blocked from dependencies, and names the next task', ()
   assert.equal(index.counts.open, 3);
 });
 
+test('the index does not carry updated_at, so an unrelated edit does not make it stale', () => {
+  // Recording a criterion's verdict bumps updated_at and changes nothing the index shows.
+  // Including it made every such edit leave the index stale and doctor red for no reason.
+  const [entry] = buildIndex(SAMPLE).tasks;
+  assert.equal(entry.updated_at, undefined);
+});
+
 test('the index is sorted by id so diffs stay reviewable', () => {
   const shuffled = [SAMPLE[2], SAMPLE[0], SAMPLE[3], SAMPLE[1]];
   const ids = buildIndex(shuffled).tasks.map((t) => t.id);

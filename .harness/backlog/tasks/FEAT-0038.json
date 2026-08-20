@@ -1,0 +1,79 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0038",
+  "title": "Probar que la comprobacion de un criterio fallaba antes del cambio",
+  "type": "feature",
+  "status": "done",
+  "priority": "critical",
+  "size": "L",
+  "parent": "EPIC-0009",
+  "description": "El prompt de quien implementa dice que escriba primero el test que falla, y nada lo verifica. Registrando el resultado de cada comprobacion de tipo comando antes de implementar, el verificador puede demostrar que el test no estaba pasando ya. Cierra el mas grave de los tres modos en que un resultado verde puede mentir.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Se puede registrar el resultado de cada comprobacion antes de implementar",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/baseline.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "harness task ac-baseline registra fail/error/pass por criterio antes del cambio"
+    },
+    {
+      "id": "AC2",
+      "must": "Una comprobacion que ya pasaba antes del cambio se marca como no valida y se explica",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/baseline.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "una comprobacion que ya pasaba sale con 1 y marcarla pass se rehusa salvo --force"
+    },
+    {
+      "id": "AC3",
+      "must": "El informe de verificacion incluye la comparacion con la linea base",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pass",
+      "evidence": "commands/implement.md etapa 6 exige la linea base antes de implementar"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "blocked_reason": null,
+  "labels": [
+    "mejora"
+  ],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T16:08:38Z",
+  "branch": "feat/0038-probar-que-la-comprobacion-de-un",
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "62",
+      "url": null,
+      "issue": 62,
+      "drifted": false,
+      "remote_hash": "bf529ccf4abd8ae0",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XIEQ",
+      "content_hash": "a3062252ba9837a5",
+      "last_synced_at": "2026-08-20T18:39:17Z"
+    }
+  },
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T18:39:17Z"
+}

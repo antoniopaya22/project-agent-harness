@@ -1,0 +1,7 @@
+{"at":"2026-08-18T19:00:00Z","by":"harness","event":"created","note":"sembrada desde docs/HARNESS-PLAN.md §12"}
+{"at":"2026-08-20T18:24:58Z","by":"harness","event":"status_changed","note":"ready -> in_progress (derivado de sus hijas)"}
+{"at":"2026-08-20T18:28:08Z","by":"harness","event":"status_changed","note":"in_progress -> ready (derivado de sus hijas)"}
+{"at":"2026-08-20T18:28:52Z","by":"harness","event":"status_changed","note":"ready -> in_progress (derivado de sus hijas)"}
+{"at":"2026-08-20T18:29:59Z","by":"harness","event":"status_changed","note":"in_progress -> ready (derivado de sus hijas)"}
+{"at":"2026-08-20T20:06:23Z","by":"harness","event":"status_changed","note":"ready -> in_progress (derivado de sus hijas)"}
+{"at":"2026-08-20T20:06:32Z","by":"harness","event":"status_changed","note":"in_progress -> ready (derivado de sus hijas)"}

@@ -64,6 +64,12 @@ taskSchema }`. No hay estado global.
   convenciones en un subcomando nuevo, una entrada válida se descartará en silencio.
 - **`spawnSync` con `shell: true`** usa `cmd.exe` en Windows y `sh` en POSIX. Los comandos de gate
   tienen que funcionar en los dos: nada de `&&`, `$(...)` ni comillas simples anidadas.
+- **`node --test --test-name-pattern` falla en abierto**: si el patrón no casa con ningún test, sale
+  con 0, porque cero pruebas ejecutadas cuenta como éxito. **Nunca sirve como comprobación de un
+  criterio de aceptación** — parece acotarla y en realidad la vacía. Un fichero de test dedicado que
+  todavía no existe sí falla, y es la forma correcta de escribir esa comprobación.
+- **`node --test <directorio>` no funciona** en Node 22 en Windows: hay que pasar un glob entre
+  comillas (`node --test "tests/*.test.mjs"`).
 - El validador de `schema.mjs` **avisa de palabras clave que no soporta** en lugar de ignorarlas
   silenciosamente. Si añades una palabra clave a un esquema, añádela también a `KNOWN`.
 - `slugify` normaliza acentos; los títulos en español producen ramas ASCII limpias. No cambies eso sin

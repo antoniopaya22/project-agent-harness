@@ -1,0 +1,81 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0034",
+  "title": "Gates con alcance por area",
+  "type": "feature",
+  "status": "done",
+  "priority": "high",
+  "size": "M",
+  "parent": "EPIC-0008",
+  "description": "Ejecutar la suite completa en cada vuelta del bucle de verificacion es el cuello de botella real en un repositorio grande. Un gate puede declarar una plantilla con hueco para rutas, y el harness rellenarla con las del area de la tarea.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Un gate puede declararse con plantilla de rutas y ejecutarse acotado a un area",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/gates.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "run_scoped con hueco {paths}; solo los ficheros del area entran"
+    },
+    {
+      "id": "AC2",
+      "must": "Un gate sin plantilla acotada sigue ejecutandose completo, sin fallar",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/gates.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "un gate sin plantilla se ejecuta completo con aviso, no falla ni comprueba menos"
+    },
+    {
+      "id": "AC3",
+      "must": "La verificacion final antes de revision ejecuta siempre el alcance completo",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pass",
+      "evidence": "el paso de verificacion previo a revision usa alcance completo por defecto"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [
+    "FEAT-0033"
+  ],
+  "blocked_reason": null,
+  "labels": [
+    "mejora"
+  ],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T16:04:13Z",
+  "branch": "feat/0034-gates-con-alcance-por-area",
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "58",
+      "url": null,
+      "issue": 58,
+      "drifted": false,
+      "remote_hash": "c854d84f90ddc2c3",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XH3o",
+      "content_hash": "5c10077b1017068e",
+      "last_synced_at": "2026-08-20T18:38:52Z"
+    }
+  },
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T18:38:52Z"
+}

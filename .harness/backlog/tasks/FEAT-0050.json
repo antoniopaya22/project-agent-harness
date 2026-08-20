@@ -1,0 +1,79 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0050",
+  "title": "Arranque para un proyecto nuevo",
+  "type": "feature",
+  "status": "done",
+  "priority": "critical",
+  "size": "M",
+  "parent": "EPIC-0012",
+  "description": "Hay un comando planeado para adoptar un proyecto existente y, para uno nuevo, una lista de pasos manuales en la guia. Es el hueco mas evidente del conjunto: copiar la plantilla, vaciar el backlog, describir el proyecto, declarar gates y areas y generar los adaptadores deberia ser un comando.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Un solo comando deja un proyecto nuevo con el harness listo y el autodiagnostico en verde",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/init.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "harness init deja doctor en verde en un proyecto Node de prueba; 11 tests en tests/init.test.mjs"
+    },
+    {
+      "id": "AC2",
+      "must": "Pregunta solo lo que no puede deducir, y deja marcado lo que el humano debe rellenar",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pass",
+      "evidence": "gates solo desde scripts existentes; purpose marcado [RELLENAR]; informe enumera lo pendiente"
+    },
+    {
+      "id": "AC3",
+      "must": "No sobrescribe ningun fichero preexistente",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/init.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "ningun fichero preexistente se sobrescribe y el informe dice cuales respeto"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "blocked_reason": null,
+  "labels": [
+    "mejora"
+  ],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T16:16:52Z",
+  "branch": "feat/0050-arranque-para-un-proyecto-nuevo",
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "74",
+      "url": null,
+      "issue": 74,
+      "drifted": false,
+      "remote_hash": "6e7be10ac2d4d9c7",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XIj0",
+      "content_hash": "603726f42f56b809",
+      "last_synced_at": "2026-08-20T18:40:34Z"
+    }
+  },
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T18:40:34Z"
+}

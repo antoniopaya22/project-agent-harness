@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
-import { countLines, listFiles } from '../.harness/bin/lib/util.mjs';
+import { countTokens, estimateTokens, listFiles } from '../.harness/bin/lib/util.mjs';
 import { repoCtx } from './helpers.mjs';
 
 const ctx = repoCtx();
@@ -23,25 +23,43 @@ test('the read path is declared, and it is short', () => {
   assert.ok(readPath.length <= 5, `the cold-start path is ${readPath.length} entries; it must stay small`);
 });
 
-test('every file in the read path exists and is inside its line budget', () => {
+test('every file in the read path exists and is inside its token budget', () => {
   for (const entry of ctx.project.read_path) {
     const files = expand(entry.path);
     assert.ok(files.length > 0, `${entry.path} expands to nothing`);
     for (const file of files) {
-      const lines = countLines(file);
+      const tokens = countTokens(file);
       const rel = path.relative(ctx.root, file);
-      assert.notEqual(lines, null, `${rel} does not exist`);
+      assert.notEqual(tokens, null, `${rel} does not exist`);
       assert.ok(
-        lines <= entry.max_lines,
-        `${rel} is ${lines} lines, budget ${entry.max_lines}. Move content out — do not raise the budget.`,
+        tokens <= entry.max_tokens,
+        `${rel} costs ~${tokens} tokens, budget ${entry.max_tokens}. Move content out — do not raise the budget.`,
       );
     }
   }
 });
 
 test('the whole cold start fits in a budget a model can actually hold', () => {
-  const worst = ctx.project.read_path.reduce((sum, e) => sum + e.max_lines, 0);
-  assert.ok(worst <= 900, `worst-case cold start is ${worst} lines; keep it under 900`);
+  const cap = ctx.project.read_path_total_max_tokens;
+  assert.ok(cap, 'project.json must declare read_path_total_max_tokens');
+  const worst = ctx.project.read_path.reduce((sum, e) => sum + e.max_tokens, 0);
+  assert.ok(worst <= cap, `worst-case cold start is ${worst} tokens, cap is ${cap}`);
+});
+
+test('budgets are declared in tokens, never in lines', () => {
+  // Lines rank files wrongly: dense JSON costs far less per line than prose, so a line
+  // budget protects the wrong files. This test stops the old unit creeping back.
+  for (const entry of ctx.project.read_path) {
+    assert.equal(typeof entry.max_tokens, 'number', `${entry.path} has no token budget`);
+    assert.equal(entry.max_lines, undefined, `${entry.path} still carries a line budget`);
+  }
+});
+
+test('the token estimate is the documented chars/4 and is monotonic', () => {
+  assert.equal(estimateTokens('abcd'), 1);
+  assert.equal(estimateTokens('abcde'), 2);
+  assert.equal(estimateTokens(''), 0);
+  assert.ok(estimateTokens('x'.repeat(400)) > estimateTokens('x'.repeat(200)));
 });
 
 test('every area declares a doc, and every doc is declared by an area', () => {

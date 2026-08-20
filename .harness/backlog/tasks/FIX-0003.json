@@ -3,7 +3,7 @@
   "id": "FIX-0003",
   "title": "El emparejado de rutas fallaba fuera de Windows",
   "type": "fix",
-  "status": "in_review",
+  "status": "done",
   "priority": "high",
   "description": "matchesAny normalizaba separadores con path.sep, que en POSIX ya es la barra, asi que una ruta con barras invertidas no se convertia y no casaba con ningun glob. El defecto solo aparecia fuera de Windows, y la integracion continua no lo cubria porque solo ejecutaba en Linux mientras el desarrollo ocurre en Windows.",
   "acceptance_criteria": [
@@ -51,62 +51,18 @@
     "issue": null,
     "commits": []
   },
-  "worklog": [
-    {
-      "at": "2026-08-20T15:15:13Z",
-      "by": "harness",
-      "event": "created",
-      "note": null
-    },
-    {
-      "at": "2026-08-20T15:15:13Z",
-      "by": "human",
-      "event": "groomed",
-      "note": "AC1 set"
-    },
-    {
-      "at": "2026-08-20T15:15:14Z",
-      "by": "human",
-      "event": "groomed",
-      "note": "AC2 set"
-    },
-    {
-      "at": "2026-08-20T15:15:14Z",
-      "by": "human",
-      "event": "groomed",
-      "note": "file+.harness/bin/lib/util.mjs file+.github/workflows/harness.yml"
-    },
-    {
-      "at": "2026-08-20T15:15:14Z",
-      "by": "planner",
-      "event": "status_changed",
-      "note": "backlog -> ready"
-    },
-    {
-      "at": "2026-08-20T15:15:14Z",
-      "by": "implementer",
-      "event": "claimed",
-      "note": "branch fix/0003-el-emparejado-de-rutas-fallaba-fuera"
-    },
-    {
-      "at": "2026-08-20T15:15:14Z",
-      "by": "human",
-      "event": "verified",
-      "note": "AC1 -> pass"
-    },
-    {
-      "at": "2026-08-20T15:15:14Z",
-      "by": "human",
-      "event": "verified",
-      "note": "AC2 -> pass"
-    },
-    {
-      "at": "2026-08-20T15:15:14Z",
-      "by": "tester",
-      "event": "status_changed",
-      "note": "in_progress -> in_review"
+  "external": {
+    "github": {
+      "id": "83",
+      "url": null,
+      "issue": 83,
+      "drifted": false,
+      "remote_hash": "473b0591fc12c42f",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XI5E",
+      "content_hash": "91773939b22f86e0",
+      "last_synced_at": "2026-08-20T18:41:30Z"
     }
-  ],
+  },
   "created_at": "2026-08-20T15:15:13Z",
-  "updated_at": "2026-08-20T15:15:14Z"
+  "updated_at": "2026-08-20T18:41:30Z"
 }

@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
 import { EXIT } from '../.harness/bin/lib/util.mjs';
-import { REPO } from './helpers.mjs';
+import { REPO, makeTask, tempHarness } from './helpers.mjs';
 
 const ENTRY = path.join(REPO, '.harness', 'bin', 'harness.mjs');
 
@@ -102,13 +102,31 @@ test('index is idempotent when invoked through the CLI', () => {
 });
 
 test('an illegal transition exits with the precondition code, so hooks can branch on it', () => {
-  const res = run(['task', 'set-status', 'FEAT-0017', 'done']);
-  assert.equal(res.status, EXIT.PRECONDITION);
-  assert.match(res.stdout, /not allowed/);
+  // Against a fixture, not a real task: asserting on the live backlog made this test fail
+  // the moment that task legitimately advanced.
+  const { ctx, cleanup } = tempHarness({ tasks: [makeTask({ id: 'FEAT-0001', status: 'backlog' })] });
+  try {
+    const res = run(['task', 'set-status', 'FEAT-0001', 'done'], ctx.root);
+    assert.equal(res.status, EXIT.PRECONDITION);
+    assert.match(res.stdout, /not allowed/);
+    assert.match(res.stdout, /ready, blocked, cancelled/, 'and it says where you may go');
+  } finally {
+    cleanup();
+  }
 });
 
-test('sync is optional: with no credentials it succeeds and says why it did nothing', () => {
-  const res = run(['sync']);
-  assert.equal(res.status, EXIT.OK, 'the harness must work without any integration');
-  assert.match(res.stdout, /disabled/);
+test('sync is optional, and a test must never perform a real projection', () => {
+  // This test used to run `harness sync` bare. That was harmless while sync was a stub and
+  // became a live mutation the moment the GitHub sink landed — it created two dozen issues
+  // in the real repository before the timeout stopped it. A test that can reach the network
+  // with write intent is a bug in the test, so this one asserts on the plan only.
+  const res = run(['sync', '--dry-run']);
+  assert.equal(res.status, EXIT.OK, 'the harness must work whatever the integrations say');
+  assert.match(res.stdout, /would|no sink|disabled|dry run/i);
+  assert.ok(!/^OK (created|updated)/m.test(res.stdout), 'a dry run must not report having changed anything');
+});
+
+test('listing the sinks never writes anything', () => {
+  const res = run(['sinks']);
+  assert.equal(res.status, EXIT.OK);
 });

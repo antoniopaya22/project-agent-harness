@@ -4,7 +4,7 @@
   "title": "Cliente de sincronización en una sola dirección",
   "type": "feature",
   "status": "backlog",
-  "priority": "medium",
+  "priority": "low",
   "size": "M",
   "parent": "EPIC-0006",
   "description": "Proyecta el backlog a la herramienta externa. Sin credencial avisa y sale bien; si detecta que alguien editó una tarjeta a mano lo avisa sin intentar mezclar nada.",
@@ -39,14 +39,13 @@
   ],
   "context": {
     "area": "integrations",
-    "docs": [
-      "docs/HARNESS-PLAN.md"
-    ],
+    "docs": [],
     "files": [],
     "out_of_scope": []
   },
   "depends_on": [
-    "FEAT-0027"
+    "FEAT-0027",
+    "FEAT-0046"
   ],
   "labels": [],
   "assignee": null,
@@ -57,20 +56,18 @@
     "issue": null,
     "commits": []
   },
-  "worklog": [
-    {
-      "at": "2026-08-18T19:00:00Z",
-      "by": "harness",
-      "event": "created",
-      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
-    },
-    {
-      "at": "2026-08-18T18:05:21Z",
-      "by": "human",
-      "event": "status_changed",
-      "note": "depends_on=FEAT-0027"
+  "external": {
+    "github": {
+      "id": "52",
+      "url": null,
+      "issue": 52,
+      "drifted": false,
+      "remote_hash": "e02de1c25829c3df",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XHf4",
+      "content_hash": "32d41f37c21c0fba",
+      "last_synced_at": "2026-08-20T18:38:10Z"
     }
-  ],
+  },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-18T18:05:21Z"
+  "updated_at": "2026-08-20T18:38:10Z"
 }

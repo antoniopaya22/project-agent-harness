@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { EXIT, fail, listFiles, nowIso, readJson, writeJson } from './util.mjs';
 import { validate } from './schema.mjs';
+import { runAllGates, summarize } from './gates.mjs';
 
 /** type <-> id prefix. The prefix is frozen once a task leaves `backlog` (see §5.1). */
 export const TYPE_PREFIX = {
@@ -104,7 +105,7 @@ const KEY_ORDER = [
   '$schema', 'id', 'title', 'type', 'status', 'priority', 'size', 'parent',
   'description', 'acceptance_criteria', 'context', 'depends_on', 'blocked_reason',
   'resolution', 'labels', 'assignee', 'claimed_at', 'branch', 'estimate_hours',
-  'links', 'worklog', 'external', 'created_at', 'updated_at',
+  'links', 'external', 'created_at', 'updated_at',
 ];
 
 export function orderTask(task) {
@@ -191,24 +192,51 @@ export function newTask({ id, title, type, priority = 'medium', description, are
     claimed_at: null,
     branch: null,
     links: { pr: null, issue: null, commits: [] },
-    worklog: [{ at, by: 'harness', event: 'created', note: null }],
     created_at: at,
     updated_at: at,
   });
 }
 
-export function addWorklog(task, by, event, note = null) {
-  if (!Array.isArray(task.worklog)) task.worklog = [];
-  task.worklog.push({ at: nowIso(), by, event, note });
-  // Bounded on purpose: the full history belongs in workspace/<ID>/worklog.md
-  if (task.worklog.length > 20) task.worklog = task.worklog.slice(-20);
+export function worklogFile(ctx, id) {
+  return path.join(ctx.harnessDir, 'backlog', 'worklog', `${id}.jsonl`);
+}
+
+/**
+ * The history lives beside the task, not inside it.
+ *
+ * It used to be an array in the task file — which sits at step 2 of the cold-start read
+ * path, so every implementation paid for twenty history entries that are useless for
+ * implementing. Append-only JSONL also means concurrent writers never rewrite each
+ * other's lines, unlike a JSON array.
+ */
+export function logEvent(ctx, id, by, event, note = null) {
+  const file = worklogFile(ctx, id);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.appendFileSync(file, `${JSON.stringify({ at: nowIso(), by, event, note })}\n`, 'utf8');
+}
+
+/** @returns the last `limit` entries, oldest first */
+export function readWorklog(ctx, id, limit = 10) {
+  const file = worklogFile(ctx, id);
+  if (!fs.existsSync(file)) return [];
+  const lines = fs.readFileSync(file, 'utf8').split('\n').filter(Boolean);
+  return lines
+    .slice(-limit)
+    .map((l) => {
+      try {
+        return JSON.parse(l);
+      } catch {
+        return null;
+      }
+    })
+    .filter(Boolean);
 }
 
 /**
  * The guards behind each status. Returns the list of unmet requirements;
  * empty means the transition is allowed.
  */
-export function transitionProblems(ctx, task, to, { actorKind = 'human', allTasks = null } = {}) {
+export function transitionProblems(ctx, task, to, { actorKind = 'human', allTasks = null, skipGates = false } = {}) {
   const problems = [];
   const from = task.status;
 
@@ -275,6 +303,14 @@ export function transitionProblems(ctx, task, to, { actorKind = 'human', allTask
     if (failed.length > 0) {
       problems.push(`${failed.length} acceptance criteria failing: ${failed.map((a) => a.id).join(', ')}`);
     }
+    // ENTRYPOINT.md has always said `in_review` requires the required gates green, and
+    // nothing enforced it: running the choreography by hand closed a task with a red test
+    // suite. A documented entry condition that no code checks is not a condition.
+    // Affordable because the gate cache makes an unchanged tree nearly free.
+    if (!skipGates) {
+      const red = summarize(runAllGates(ctx, { capture: true })).requiredFailed;
+      for (const gate of red) problems.push(`required gate "${gate.name}" is red (exit ${gate.code})`);
+    }
   }
 
   if (to === 'cancelled' && !task.resolution) {
@@ -295,21 +331,131 @@ export function isBlockedByDeps(task, byId) {
  */
 const PRIORITY_RANK = { critical: 0, high: 1, medium: 2, low: 3 };
 
-export function pickNext(tasks) {
+/**
+ * How many open tasks each task is holding up, counted transitively.
+ *
+ * This is the critical path. Sorting only by priority means an isolated task can outrank one
+ * that five others are waiting on, which is how a queue looks busy while nothing gets
+ * unblocked.
+ */
+export function unblockCounts(tasks) {
+  const dependents = new Map(tasks.map((t) => [t.id, []]));
+  for (const t of tasks) {
+    for (const dep of t.depends_on || []) {
+      if (dependents.has(dep)) dependents.get(dep).push(t.id);
+    }
+  }
+  const open = new Set(tasks.filter((t) => OPEN_STATUSES.includes(t.status)).map((t) => t.id));
+  const counts = new Map();
+
+  const walk = (id, seen) => {
+    let total = 0;
+    for (const child of dependents.get(id) || []) {
+      if (seen.has(child)) continue; // a cycle is a lint error; here it must simply terminate
+      seen.add(child);
+      if (open.has(child)) total += 1;
+      total += walk(child, seen);
+    }
+    return total;
+  };
+
+  for (const t of tasks) counts.set(t.id, walk(t.id, new Set([t.id])));
+  return counts;
+}
+
+export function workable(tasks) {
   const byId = new Map(tasks.map((t) => [t.id, t]));
-  const candidates = tasks.filter(
-    // Epics are containers, never work items: they complete when their children do.
+  // Epics are containers, never work items: they complete when their children do.
+  return tasks.filter(
     (t) => t.type !== 'epic' && t.status === 'ready' && !isBlockedByDeps(t, byId) && !t.assignee,
   );
-  candidates.sort((a, b) => {
+}
+
+/**
+ * The queue, best first. Declared priority still dominates — a critical task stays first
+ * even if it unblocks nothing — and how much a task unblocks breaks the tie.
+ */
+export function rankNext(tasks) {
+  const unblocks = unblockCounts(tasks);
+  return workable(tasks).sort((a, b) => {
     const pa = PRIORITY_RANK[a.priority] ?? 2;
     const pb = PRIORITY_RANK[b.priority] ?? 2;
     if (pa !== pb) return pa - pb;
+    const ua = unblocks.get(a.id) ?? 0;
+    const ub = unblocks.get(b.id) ?? 0;
+    if (ua !== ub) return ub - ua;
     return a.id.localeCompare(b.id);
   });
-  return candidates[0] || null;
+}
+
+export function pickNext(tasks) {
+  return rankNext(tasks)[0] || null;
+}
+
+/**
+ * Two tasks are not safely parallel when they would edit the same things: overlapping
+ * `context.files`, or the same area. Both are ready and unblocked, so nothing else stops an
+ * agent taking them at once — and finding out at merge time is the expensive way.
+ */
+export function conflictsWith(a, b) {
+  const filesA = (a.context?.files || []).map(String);
+  const filesB = (b.context?.files || []).map(String);
+  const shared = filesB.filter((f) => filesA.includes(f));
+  if (shared.length) return [`same files: ${shared.join(', ')}`];
+
+  // When both tasks name their files and the sets are disjoint, that finer signal wins over
+  // the area. Otherwise a project where one area dominates — as this one does — would report
+  // that nothing is ever parallel, which is true but useless.
+  if (filesA.length > 0 && filesB.length > 0) return [];
+
+  if (a.context?.area && a.context.area === b.context?.area) {
+    return [`same area (${a.context.area}) and at least one of them does not say which files`];
+  }
+  return [];
+}
+
+/**
+ * A queue of tasks that can genuinely be worked at the same time, plus the ones that were
+ * set aside and why.
+ */
+export function pickParallel(tasks, count = 3) {
+  const ranked = rankNext(tasks);
+  const chosen = [];
+  const deferred = [];
+  for (const task of ranked) {
+    if (chosen.length >= count) break;
+    const clash = chosen.map((c) => ({ id: c.id, reasons: conflictsWith(c, task) })).find((x) => x.reasons.length);
+    if (clash) deferred.push({ task, against: clash.id, reasons: clash.reasons });
+    else chosen.push(task);
+  }
+  return { chosen, deferred };
 }
 
 export function priorityRank(p) {
   return PRIORITY_RANK[p] ?? 2;
+}
+
+/**
+ * How long a task has been in its current status, from the worklog.
+ *
+ * Not from `updated_at`, which moves on any edit — a task nobody has advanced in nine days
+ * would look fresh because somebody fixed a typo in it. For a reader outside the project,
+ * "in progress for nine days" is worth more than "in progress".
+ */
+export function timeInStatus(ctx, task) {
+  const events = readWorklog(ctx, task.id, 200);
+  const marker = `-> ${task.status}`;
+  for (let i = events.length - 1; i >= 0; i -= 1) {
+    const e = events[i];
+    const isChange = typeof e.note === 'string' && e.note.includes(marker);
+    const isClaim = task.status === 'in_progress' && e.event === 'claimed';
+    if (isChange || isClaim) return { since: e.at, days: daysSince(e.at) };
+  }
+  return { since: task.created_at ?? null, days: task.created_at ? daysSince(task.created_at) : null };
+}
+
+function daysSince(iso) {
+  const then = new Date(iso).getTime();
+  if (Number.isNaN(then)) return null;
+  return Math.floor((Date.now() - then) / 86400000);
 }

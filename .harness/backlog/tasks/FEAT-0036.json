@@ -1,0 +1,79 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0036",
+  "title": "Validar el fichero de traspaso contra un esquema",
+  "type": "feature",
+  "status": "done",
+  "priority": "critical",
+  "size": "M",
+  "parent": "EPIC-0009",
+  "description": "El comando de implementacion confia en el campo de etapa del traspaso para saltarse trabajo ya hecho. Un traspaso optimista o malformado hace que se salte trabajo que nunca ocurrio, y hoy nada lo valida. Es la pieza mas critica del harness sin comprobacion.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Existe esquema del fichero de traspaso y un comando que lo valida",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/handoff.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "handoff.schema.json y harness handoff read/write/validate/resume"
+    },
+    {
+      "id": "AC2",
+      "must": "Un traspaso malformado se rechaza antes de que nadie confie en su etapa",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/handoff.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "un traspaso malformado rehusa dar etapa en lugar de adivinar; escribir uno invalido se rehusa"
+    },
+    {
+      "id": "AC3",
+      "must": "El comando de implementacion valida el traspaso antes de reanudar",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pass",
+      "evidence": "commands/implement.md etapa 0 usa handoff resume y para si sale distinto de cero"
+    }
+  ],
+  "context": {
+    "area": "definitions",
+    "docs": [],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "blocked_reason": null,
+  "labels": [
+    "mejora"
+  ],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T16:07:14Z",
+  "branch": "feat/0036-validar-el-fichero-de-traspaso-contra",
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "60",
+      "url": null,
+      "issue": 60,
+      "drifted": false,
+      "remote_hash": "d8e018199693ddf5",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XH_Q",
+      "content_hash": "7d64c1a8c1031cdd",
+      "last_synced_at": "2026-08-20T18:39:04Z"
+    }
+  },
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T18:39:04Z"
+}

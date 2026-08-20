@@ -14,7 +14,24 @@ Requisitos: Node ≥ 20 y git. Sin instalación de dependencias.
 
 ## Camino A — proyecto nuevo
 
-### 1. Copiar el harness
+Un comando:
+
+```bash
+node <ruta-al-harness>/.harness/bin/harness.mjs init . --name mi-proyecto   --purpose "Un párrafo: para qué existe esto y quién lo usa."
+```
+
+Instala el harness, detecta tu stack **desde la evidencia** (los scripts que de verdad
+existen en `package.json`, la configuración real de `pyproject.toml`), propone áreas a
+partir de los directorios que hay, crea el documento de cada una, genera los adaptadores y
+deja `harness doctor` en verde. Lo que no puede deducir lo deja marcado `[RELLENAR]` y lo
+enumera al final: un propósito inventado que suena plausible es peor que un hueco visible.
+
+Nunca sobrescribe un fichero que ya existiera, y dice cuáles respetó.
+
+Después, rellena lo que te señaló y sigue en el paso 5. Los pasos manuales de abajo quedan
+como referencia de qué hace el comando por dentro.
+
+### 1. Copiar el harness (manual, si prefieres verlo)
 
 ```bash
 git clone <este-repo> mi-proyecto

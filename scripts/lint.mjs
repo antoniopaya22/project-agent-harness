@@ -32,8 +32,10 @@ for (const file of files) {
 }
 
 // A second, cheap invariant: no source file may exceed a size where nobody reads it.
+// Test files are exempt: a suite grows legitimately as behaviour accumulates, and the
+// warning would be pure noise there.
 const MAX_LINES = 600;
-for (const file of files) {
+for (const file of files.filter((f) => !path.relative(ROOT, f).startsWith('tests'))) {
   const lines = fs.readFileSync(file, 'utf8').split('\n').length;
   if (lines > MAX_LINES) {
     failed += 1;

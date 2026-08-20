@@ -18,17 +18,12 @@ node .harness/bin/harness.mjs gates
 node .harness/bin/harness.mjs task show $1
 ```
 
-Then invoke the **tester**, whose defining constraint is that it cannot fix the code. It:
+Then invoke the **tester**, whose defining constraint is that it cannot fix the code. Its
+procedure is its own — do not restate it here; read `.harness/agents/tester.md` if you need it.
+What this command guarantees is only the framing: gates first, then a verdict per criterion with
+quotable evidence, then `.harness/workspace/$1/verification.md`.
 
-1. records every gate result verbatim, exit codes included;
-2. takes each acceptance criterion in turn and produces `pass` / `fail` / `unverifiable`, with
-   evidence that can be quoted — for a `command` check, the command and its output; for a `review`
-   check, the specific lines;
-3. actively looks for green results that lie: a test that would pass without the change, a test that
-   asserts the implementation instead of the outcome, a criterion satisfied only on the happy path.
-   Any of those is a `fail`, not a `pass` with a note;
-4. records each verdict with `harness task ac $1 <ACn> <verdict> --evidence "..."`;
-5. writes `.harness/workspace/$1/verification.md`.
+{{include:never-fake-green}}
 
 If everything passes and the required gates are green:
 

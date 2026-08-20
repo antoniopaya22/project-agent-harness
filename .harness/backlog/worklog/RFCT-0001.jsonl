@@ -1,0 +1,6 @@
+{"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
+{"at":"2026-08-20T15:52:43Z","by":"implementer","event":"claimed","note":"branch refactor/0001-sacar-el-historial-de-trabajo-del"}
+{"at":"2026-08-20T15:52:43Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-20T15:52:43Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-20T15:52:43Z","by":"tester","event":"status_changed","note":"in_progress -> in_review"}
+{"at":"2026-08-20T16:01:16Z","by":"human","event":"completed","note":"in_review -> done"}

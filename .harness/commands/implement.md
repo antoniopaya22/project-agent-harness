@@ -17,13 +17,27 @@ stages in order, and at each one first check whether it is already done.
 ## 0 — Load, and resume if there is something to resume
 
 ```bash
-node .harness/bin/harness.mjs read-path $1
-node .harness/bin/harness.mjs task show $1
+node .harness/bin/harness.mjs brief $1
 ```
 
-Read exactly the files `read-path` lists. Then check `.harness/workspace/$1/handoff.json`:
-if it exists, **jump to the stage after its `stage` field** (`claimed` → 5, `planned` → 6,
-`implemented` → 7, `verified` → 8, `reviewed` → 10). Say which stage you resumed from.
+That single call returns the whole cold-start read path as one payload, with the task and
+the project config projected down to what implementing actually needs — four reads become
+one, and the projected surface costs about 46% less. Use `--with-files` when you want the
+work files inlined too, and `read-path $1` when you want to see the cost breakdown per
+file rather than the content.
+
+Read nothing beyond it unless the work forces you to. Then ask where to resume:
+
+```bash
+node .harness/bin/harness.mjs handoff resume $1
+```
+
+It prints the last **completed** stage, and you continue from the one after it (`claimed` → 5,
+`planned` → 6, `implemented` → 7, `verified` → 8, `reviewed` → 10). Say which stage you resumed
+from.
+
+If it exits non-zero the handoff is malformed: **do not guess a stage.** A broken handoff that
+gets read as "start over" silently redoes work and hides the breakage. Report it and stop.
 
 ## 1 — Guard: is this task workable?
 
@@ -59,7 +73,18 @@ confirm the approach before implementing.** Otherwise continue. Update the hando
 
 ## 6 — Implement
 
-Invoke the **implementer**. It reads only the read path plus the plan. Update the handoff to
+First record what each command check does *before* any change:
+
+```bash
+node .harness/bin/harness.mjs task ac-baseline $1
+```
+
+Exit 0 means every check fails today, which is what makes it evidence. **A non-zero exit
+means some check already passes**, so it cannot prove its criterion — either the work is
+already done or the check tests the wrong thing. Stop and regroom; do not implement against
+a criterion that cannot be proven.
+
+Then invoke the **implementer**. It reads only the read path plus the plan. Update the handoff to
 `implemented`.
 
 ## 7 — Verify
@@ -67,9 +92,9 @@ Invoke the **implementer**. It reads only the read path plus the plan. Update th
 Invoke the **tester**. It runs `harness gates` and gives a verdict per criterion with evidence.
 
 - All criteria pass → continue.
-- Something fails → back to stage 6 with the tester's findings. **Maximum two loops.** After the
-  second failed verification, stop, report exactly what is failing and why, and let the human decide.
-  Do not keep trying.
+- Something fails → back to stage 6 with the tester's findings. **Maximum {{config:implement.max_verify_loops}} loops.**
+  After the last failed verification, stop, report exactly what is failing and why, and let the human
+  decide. Do not keep trying.
 
 Update the handoff to `verified`.
 

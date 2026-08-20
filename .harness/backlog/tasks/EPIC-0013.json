@@ -1,0 +1,55 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "EPIC-0013",
+  "title": "Preguntas abiertas y medicion honesta",
+  "type": "epic",
+  "status": "ready",
+  "priority": "medium",
+  "description": "Tres cosas que no se resolvieron y que conviene decidir a conciencia en lugar de por omision.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Todas las tareas hijas están en done.",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": null,
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [
+    "fase",
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "24",
+      "url": null,
+      "issue": 24,
+      "drifted": false,
+      "content_hash": "a1134ef0ce5ae25e",
+      "last_synced_at": "2026-08-20T20:05:07Z",
+      "remote_hash": "e760908d13138abf",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XxkQ"
+    }
+  },
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T20:05:07Z"
+}

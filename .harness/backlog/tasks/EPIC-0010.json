@@ -1,0 +1,55 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "EPIC-0010",
+  "title": "Anti-podredumbre: que la estructura se defienda sola",
+  "type": "epic",
+  "status": "ready",
+  "priority": "high",
+  "description": "Las comprobaciones mecanicas que faltan para que la documentacion y el backlog no se separen de la realidad sin que nadie se entere.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Todas las tareas hijas están en done.",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": null,
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [
+    "fase",
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "21",
+      "url": null,
+      "issue": 21,
+      "drifted": false,
+      "content_hash": "8b342e07b6807e2f",
+      "last_synced_at": "2026-08-20T20:05:02Z",
+      "remote_hash": "be764ef090a62855",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XxfE"
+    }
+  },
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T20:05:02Z"
+}

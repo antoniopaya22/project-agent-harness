@@ -3,15 +3,22 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { countLines, listFiles, matchesAny, parseFrontMatter, toPosixPath } from './util.mjs';
+import { countLines, countTokens, listFiles, matchesAny, parseFrontMatter, toPosixPath } from './util.mjs';
 import { loadAll, validateTask } from './tasks.mjs';
 import { lintBacklog } from './lint.mjs';
 import { git } from './git.mjs';
+import { budgetProblems } from './readpath.mjs';
 import * as generate from './generate.mjs';
 import { buildIndex, indexPath, boardPath, renderBoard } from './board.mjs';
 import { validate } from './schema.mjs';
 
 /** @typedef {{level:'error'|'warn', check:string, message:string}} Issue */
+
+/** Every check name, so `--only` can validate its argument instead of silently matching nothing. */
+export const CHECKS = [
+  'project-schema', 'task-schema', 'backlog', 'index', 'adapters', 'read-path',
+  'areas', 'codemap', 'definitions', 'secrets', 'git-visibility', 'orphans', 'templates',
+];
 
 export function runDoctor(ctx, { fix = false } = {}) {
   /** @type {Issue[]} */
@@ -73,18 +80,41 @@ export function runDoctor(ctx, { fix = false } = {}) {
     }
   }
 
-  // 6. the read-path budget. This is the mechanical guard on "read the minimum" (§4).
+  // 6. the read-path budget, in tokens. This is the mechanical guard on "read the
+  // minimum" (§4), and the only number the central claim of the design rests on.
   for (const entry of ctx.project.read_path || []) {
     for (const file of expandReadPath(ctx, entry.path)) {
-      const lines = countLines(file);
-      if (lines === null) {
+      const tokens = countTokens(file);
+      if (tokens === null) {
         issues.push({ level: 'error', check: 'read-path', message: `${rel(ctx, file)} does not exist` });
-      } else if (lines > entry.max_lines) {
+      } else if (tokens > entry.max_tokens) {
         issues.push({
           level: 'error',
           check: 'read-path',
-          message: `${rel(ctx, file)} is ${lines} lines, budget is ${entry.max_lines}`,
+          message:
+            `${rel(ctx, file)} costs ~${tokens} tokens, budget is ${entry.max_tokens}. ` +
+            'Move content out — raising the budget is how the read path stops being short.',
         });
+      }
+    }
+  }
+  const totalCap = ctx.project.read_path_total_max_tokens;
+  if (totalCap) {
+    const worstCase = (ctx.project.read_path || []).reduce((sum, e) => sum + e.max_tokens, 0);
+    if (worstCase > totalCap) {
+      issues.push({
+        level: 'error',
+        check: 'read-path',
+        message: `the declared budgets add up to ${worstCase} tokens, over the cap of ${totalCap}`,
+      });
+    }
+    // Per-file budgets are not enough: a task can stay inside every one of them and still
+    // be unworkable because `context.docs` points at something enormous. This checks the
+    // cold start an agent would *actually* pay for each task.
+    for (const t of tasks) {
+      if (t.type === 'epic') continue; // never implemented directly, so it has no read path
+      for (const p of budgetProblems(ctx, t)) {
+        issues.push({ level: 'error', check: 'read-path', message: `${t.id}: ${p}` });
       }
     }
   }
@@ -156,11 +186,51 @@ export function runDoctor(ctx, { fix = false } = {}) {
   // to the machine where the files still exist.
   issues.push(...checkGitVisibility(ctx));
 
+  // 12. generated files whose canonical source is gone. Renaming an agent leaves its old
+  // projection behind for ever, and a ghost agent stays available to the provider — a role
+  // with nobody maintaining it, which is worse than no role. `generate` does not delete, so
+  // somebody has to look.
+  {
+    const wanted = new Set(generate.plan(ctx).map((item) => toPosixPath(item.path)));
+    const sweep = ['.claude/agents', '.claude/commands', 'docs/runbooks'];
+    for (const dir of sweep) {
+      const full = path.join(ctx.root, ...dir.split('/'));
+      if (!fs.existsSync(full)) continue;
+      for (const file of listFiles(full, '.md')) {
+        const relPath = toPosixPath(path.relative(ctx.root, file));
+        if (wanted.has(relPath)) continue;
+        if (fix) {
+          fs.rmSync(file);
+          fixed.push(`removed orphan generated file ${relPath}`);
+        } else {
+          issues.push({
+            level: 'error',
+            check: 'orphans',
+            message: `${relPath} is generated but nothing in .harness/ produces it any more — its source was renamed or deleted`,
+          });
+        }
+      }
+    }
+  }
+
+  // 13. no template left unresolved in a generated prompt. A `{{include:x}}` that never
+  // resolved is a missing instruction, and it is invisible unless something looks for it.
+  for (const item of generate.plan(ctx)) {
+    for (const m of item.content.matchAll(/\{\{(config|include):([A-Za-z0-9_.-]+)\}\}/g)) {
+      issues.push({
+        level: 'error',
+        check: 'templates',
+        message: `${item.path} still contains ${m[0]} — the ${m[1] === 'config' ? 'config path does not exist' : 'include file is missing'}`,
+      });
+    }
+  }
+
   return { issues, fixed, counts: tally(issues) };
 }
 
 /** Paths under .harness/ that are ignored on purpose (secrets, scratch, audit logs). */
 const INTENTIONALLY_IGNORED = [
+  '.harness/.cache/**',
   '.harness/integrations/*/sync.log.jsonl',
   '.harness/workspace/*/COMMIT_MSG.txt',
   '.harness/workspace/*/PR_BODY.md',
