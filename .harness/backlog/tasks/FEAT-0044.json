@@ -3,7 +3,7 @@
   "id": "FEAT-0044",
   "title": "Derivar el estado de una epica de sus tareas hijas",
   "type": "feature",
-  "status": "in_progress",
+  "status": "done",
   "priority": "medium",
   "size": "S",
   "parent": "EPIC-0010",
@@ -39,6 +39,7 @@
     "out_of_scope": []
   },
   "depends_on": [],
+  "blocked_reason": null,
   "labels": [
     "mejora"
   ],
@@ -54,5 +55,5 @@
     "commits": []
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T17:53:16Z"
+  "updated_at": "2026-08-20T17:54:36Z"
 }

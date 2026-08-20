@@ -5,6 +5,7 @@ import path from 'node:path';
 import test from 'node:test';
 import { deriveEpicStatus, regenerate } from '../.harness/bin/lib/board.mjs';
 import { EXIT } from '../.harness/bin/lib/util.mjs';
+import { lintBacklog } from '../.harness/bin/lib/lint.mjs';
 import { REPO, makeTask, tempHarness } from './helpers.mjs';
 
 const epic = (over = {}) => makeTask({ id: 'EPIC-0001', type: 'epic', status: 'backlog', ...over });
@@ -79,6 +80,33 @@ test('an epic cannot be claimed, because it is a container and not work', () => 
     assert.equal(res.status, EXIT.PRECONDITION);
     assert.match(res.stdout, /is an epic/);
     assert.match(res.stdout, /children instead/, 'and it says what to do instead');
+  } finally {
+    cleanup();
+  }
+});
+
+test('an epic in progress is not required to have a branch or an assignee', () => {
+  // The two features collided the first time: derivation puts an epic in_progress because a
+  // child is, and the backlog lint demanded a branch — which an epic never has, so the
+  // derived status was permanently invalid.
+  const { ctx, cleanup } = tempHarness({
+    tasks: [epic({ status: 'in_progress' }), child('FEAT-0001', 'in_progress')],
+  });
+  try {
+    const findings = lintBacklog(ctx).filter((f) => f.id === 'EPIC-0001');
+    assert.ok(!findings.some((f) => /without a branch|without an assignee/.test(f.message)), JSON.stringify(findings));
+  } finally {
+    cleanup();
+  }
+});
+
+test('an epic that somehow has a branch is a warning, because nothing should give it one', () => {
+  const { ctx, cleanup } = tempHarness({
+    tasks: [epic({ status: 'in_progress', branch: 'chore/0001-x' }), child('FEAT-0001', 'in_progress')],
+  });
+  try {
+    const findings = lintBacklog(ctx).filter((f) => f.id === 'EPIC-0001');
+    assert.ok(findings.some((f) => f.level === 'warn' && /neither a branch nor an assignee/.test(f.message)));
   } finally {
     cleanup();
   }

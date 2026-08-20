@@ -3,7 +3,7 @@
   "id": "CHORE-0006",
   "title": "Afinar el autodiagnostico y el limite de tamano de fichero",
   "type": "chore",
-  "status": "in_progress",
+  "status": "done",
   "priority": "low",
   "size": "XS",
   "parent": "EPIC-0012",
@@ -37,6 +37,7 @@
     "out_of_scope": []
   },
   "depends_on": [],
+  "blocked_reason": null,
   "labels": [
     "mejora"
   ],
@@ -62,5 +63,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T17:53:16Z"
+  "updated_at": "2026-08-20T17:54:49Z"
 }

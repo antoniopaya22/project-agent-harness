@@ -2,3 +2,5 @@
 {"at":"2026-08-20T17:53:16Z","by":"implementer","event":"claimed","note":"branch chore/0006-afinar-el-autodiagnostico-y-el-limite"}
 {"at":"2026-08-20T17:53:16Z","by":"human","event":"verified","note":"AC1 -> pass"}
 {"at":"2026-08-20T17:53:16Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-20T17:54:49Z","by":"tester","event":"status_changed","note":"in_progress -> in_review"}
+{"at":"2026-08-20T17:54:49Z","by":"human","event":"completed","note":"in_review -> done"}
