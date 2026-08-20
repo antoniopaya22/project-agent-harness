@@ -35,6 +35,7 @@ import * as init from './lib/init.mjs';
 import * as syncLib from './lib/sync.mjs';
 import * as surveyLib from './lib/survey.mjs';
 import * as layoutsLib from './lib/layouts.mjs';
+import * as restructureLib from './lib/restructure.mjs';
 import { lintBacklog } from './lib/lint.mjs';
 
 function actorId(ctx, flags) {
@@ -60,6 +61,9 @@ function loadContext() {
 // commands
 // ---------------------------------------------------------------------------
 
+/** Markdown fence, kept as a constant so writing it never fights with template literals. */
+const FENCE = '```';
+
 const commands = {};
 
 commands.help = () => {
@@ -71,6 +75,7 @@ commands.help = () => {
         ['init [dir]', 'install the harness into a project that does not have one'],
         ['survey [dir]', 'read-only report of what a project actually contains [--baseline]'],
         ['layouts [id]', 'the declared target structures a reorganisation may move towards'],
+        ['restructure [dir]', 'move the code to the declared layout, in verified batches [--dry-run]'],
         ['status', 'one-screen situational awareness'],
         ['brief <ID>', 'the whole cold-start read path as one payload, projected'],
         ['read-path <ID>', 'the exact files to read to work on a task, with their cost'],
@@ -86,7 +91,7 @@ commands.help = () => {
         ['plan-risk <ID>', 'exit 3 when the plan needs a human checkpoint before coding'],
         ['commit [--task ID]', 'conventional commit + push (+ PR when the task is in_review)'],
         ['sinks', 'which projections are installed, and whether each can run'],
-        ['sync [--dry-run]', 'project the backlog to every enabled sink'],
+        ['sync [--dry-run] [--limit n]', 'project the backlog to every enabled sink'],
         ['version', 'print the harness version'],
       ],
       ['COMMAND', 'WHAT IT DOES'],
@@ -191,6 +196,61 @@ commands.layouts = (ctx, { positional, flags }) => {
   say('');
   info(`este proyecto usa: ${ctx.project.layout || layoutsLib.AS_IS}`);
   return EXIT.OK;
+};
+
+commands.restructure = (ctx, { positional, flags }) => {
+  const target = path.resolve(positional[0] || ctx.root);
+  const layout = layoutsLib.loadLayout(ctx, typeof flags.layout === 'string' ? flags.layout : undefined);
+  if (!layout) {
+    info(`layout "${ctx.project.layout || layoutsLib.AS_IS}": no se mueve ningún fichero. Declara otro perfil para reorganizar.`);
+    return EXIT.OK;
+  }
+
+  // The oracle has to exist before anything moves, so it is taken here rather than trusted.
+  const stack = surveyLib.detectStack(target);
+  const baseline = surveyLib.gateBaseline(target, stack);
+  const safetyNet = surveyLib.hasSafetyNet(baseline);
+  say(c.bold('Línea base'));
+  for (const [name, b] of Object.entries(baseline)) {
+    say(`  ${b.state === 'pass' ? c.green('PASS') : c.red(b.state.toUpperCase())} ${name.padEnd(10)} ${c.gray(b.command)}`);
+  }
+  if (Object.keys(baseline).length === 0) say(c.gray('  (ningún gate con evidencia)'));
+  say('');
+
+  const result = restructureLib.restructure(ctx, target, {
+    layout,
+    baseline,
+    safetyNet,
+    dryRun: Boolean(flags['dry-run']),
+    batchSize: flags.batch ? Number(flags.batch) : 10,
+    packageName: typeof flags.package === 'string' ? flags.package : null,
+  });
+  restructureLib.printReport(result);
+
+  if (flags['dry-run'] && result.report.length) {
+    const planFile = path.join(ctx.harnessDir, 'adoption', 'RESTRUCTURE-PLAN.md');
+    fs.mkdirSync(path.dirname(planFile), { recursive: true });
+    const body = ['# Plan de reorganización', '', FENCE, ...result.report, FENCE, ''].join('\n');
+    fs.writeFileSync(planFile, body, 'utf8');
+    say('');
+    ok(`plan escrito en ${path.relative(ctx.root, planFile)}`);
+  }
+
+  // Condition 4: whatever survived becomes one commit, so reverting is one command.
+  if (!flags['dry-run'] && result.commits > 1) {
+    restructureLib.squashInto(ctx, result.commits, 'chore(restructure): mover el código al layout declarado');
+    ok('lotes combinados en un único commit revertible');
+  }
+
+  if (result.aborted?.asTasks) {
+    say('');
+    info('tareas que emitir en su lugar:');
+    for (const t of restructureLib.movesAsTasks(restructureLib.planMoves(target, layout), safetyNet)) {
+      say(`   ${t.type.padEnd(9)} ${t.title}`);
+    }
+    return EXIT.PRECONDITION;
+  }
+  return result.aborted ? EXIT.CHECK_FAILED : EXIT.OK;
 };
 
 commands.status = (ctx, { flags }) => {
@@ -477,6 +537,7 @@ commands.sync = async (ctx, { flags }) => {
   const results = await syncLib.runSync(ctx, {
     dryRun: Boolean(flags['dry-run']),
     only: typeof flags.sink === 'string' ? flags.sink : null,
+    limit: flags.limit ? Number(flags.limit) : null,
   });
   return results.some((r) => r.failed > 0) ? EXIT.CHECK_FAILED : EXIT.OK;
 };

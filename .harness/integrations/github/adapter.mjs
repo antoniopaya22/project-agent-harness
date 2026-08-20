@@ -11,6 +11,7 @@
 // build. Verified against the GraphQL schema on 2026-08-20 (see docs/areas/integrations.md).
 
 import { spawnSync } from 'node:child_process';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -118,6 +119,11 @@ export function issueBody(ctx, task) {
   return lines.join('\n');
 }
 
+/** Hash of a body we wrote, so a later comparison can tell an edit from an update. */
+export function bodyHash(text) {
+  return crypto.createHash('sha256').update(String(text).trim()).digest('hex').slice(0, 16);
+}
+
 export function labelsFor(task) {
   const labels = [`type:${task.type}`];
   if (task.priority) labels.push(`priority:${task.priority}`);
@@ -130,19 +136,47 @@ export function isClosed(task) {
   return task.status === 'done' || task.status === 'cancelled';
 }
 
-function findIssueByTitle(ctx, task) {
-  const res = gh(
-    ctx,
-    ['issue', 'list', '--state', 'all', '--limit', '200', '--search', task.id, '--json', 'number,title,state,body'],
-    { allowFail: true },
-  );
-  if (res.code !== 0 || !res.out) return null;
-  try {
-    const issues = JSON.parse(res.out);
-    return issues.find((i) => i.title.startsWith(`${task.id} `) || i.title.startsWith(`${task.id}·`)) || null;
-  } catch {
-    return null;
+/**
+ * Every issue, fetched once.
+ *
+ * The first version searched the API per task. On a backlog of ninety that is ninety
+ * searches — measured at roughly half a minute each, so the projection would have taken half
+ * an hour. One list plus a lookup table is the same information for one round trip.
+ */
+let issueIndex = null;
+
+function loadIssueIndex(ctx) {
+  const index = new Map();
+  for (let page = 0; page < 20; page += 1) {
+    const res = gh(
+      ctx,
+      ['issue', 'list', '--state', 'all', '--limit', '1000', '--json', 'number,title,state,body,id'],
+      { allowFail: true },
+    );
+    if (res.code !== 0 || !res.out) break;
+    let issues;
+    try {
+      issues = JSON.parse(res.out);
+    } catch {
+      break;
+    }
+    for (const issue of issues) {
+      const id = String(issue.title).split(' ')[0];
+      if (/^[A-Z]+-\d{4}$/.test(id)) index.set(id, issue);
+    }
+    break; // `gh issue list` caps at its limit; 1000 covers any backlog this tool is for
   }
+  return index;
+}
+
+function findIssueByTitle(ctx, task) {
+  if (!issueIndex) issueIndex = loadIssueIndex(ctx);
+  return issueIndex.get(task.id) || null;
+}
+
+/** Keeps the table honest after a create, so a re-run inside one session does not duplicate. */
+function rememberIssue(task, issue) {
+  if (issueIndex) issueIndex.set(task.id, issue);
 }
 
 // ---------------------------------------------------------------------------
@@ -213,20 +247,31 @@ export function prepare(ctx, { dryRun = false } = {}) {
     projectDisabledReason = 'the credential has no `project` scope (gh auth refresh -s project, or a PAT in CI)';
     return;
   }
-  if (dryRun) {
-    projectDisabledReason = null;
-    return;
-  }
+  // A dry run discovers too: the queries are read-only, and a plan that could not see the
+  // board would report nothing to do for every task already missing from it.
   if (cfg.project.project_id && cfg.project.status_field_id) {
     projectIds = cfg.project;
     return;
   }
   projectIds = { ...cfg.project, ...discoverProject(ctx, cfg.project) };
-  writeConfig(ctx, { ...cfg, project: projectIds });
+  if (!dryRun) writeConfig(ctx, { ...cfg, project: projectIds });
 }
 
 export function projectSkipReason() {
   return projectDisabledReason;
+}
+
+/**
+ * What this sink still owes for a task whose content is already current.
+ *
+ * Without this, a task that gained its issue before the board was configured stayed off
+ * the board for ever: its content hash was up to date, so the engine skipped it.
+ */
+export function incompleteReason(ctx, task) {
+  const state = task.external?.github || {};
+  if (!state.issue) return null; // nothing projected yet; the engine will create it
+  if (projectIds && !state.project_item_id) return "not on the project board yet";
+  return null;
 }
 
 export async function apply(ctx, { op, task }) {
@@ -237,25 +282,41 @@ export async function apply(ctx, { op, task }) {
   let drifted = false;
 
   if (!existing) {
-    const res = gh(ctx, ['issue', 'create', '--title', title, '--body', body]);
-    const match = res.out.match(/\/issues\/(\d+)/);
-    number = match ? Number(match[1]) : null;
+    // Labels go in the create call: one round trip instead of one per label.
+    const res = gh(ctx, ['issue', 'create', '--title', title, '--body', body, '--label', labelsFor(task).join(',')], {
+      allowFail: true,
+    });
+    if (res.code !== 0) {
+      // A label that does not exist yet makes the whole create fail, so retry without them
+      // and add them after: losing a label is better than losing the issue.
+      const bare = gh(ctx, ['issue', 'create', '--title', title, '--body', body]);
+      number = Number((bare.out.match(/\/issues\/(\d+)/) || [])[1]) || null;
+      if (number) gh(ctx, ['issue', 'edit', String(number), '--add-label', labelsFor(task).join(',')], { allowFail: true });
+    } else {
+      number = Number((res.out.match(/\/issues\/(\d+)/) || [])[1]) || null;
+    }
+    if (number) rememberIssue(task, { number, title, state: 'OPEN', body });
   } else {
-    // Somebody edited the issue by hand. The repository wins (D6), but say so.
-    if (existing.body && existing.body.trim() !== body.trim() && op === 'update') drifted = true;
+    // Drift means "somebody edited this", not "the task changed". Comparing the remote body
+    // to the *new* one flags every legitimate update, so the comparison is against a hash of
+    // the body we last wrote. Without that record there is nothing to compare and no claim
+    // to make.
+    const lastWritten = task.external?.github?.remote_hash;
+    if (op === 'update' && lastWritten && existing.body) {
+      drifted = bodyHash(existing.body) !== lastWritten;
+    }
     gh(ctx, ['issue', 'edit', String(number), '--title', title, '--body', body], { allowFail: true });
   }
 
-  for (const label of labelsFor(task)) {
-    gh(ctx, ['issue', 'edit', String(number), '--add-label', label], { allowFail: true });
-  }
-  if (isClosed(task)) gh(ctx, ['issue', 'close', String(number)], { allowFail: true });
-  else if (existing?.state === 'CLOSED') gh(ctx, ['issue', 'reopen', String(number)], { allowFail: true });
+  if (isClosed(task) && existing?.state !== 'CLOSED') gh(ctx, ['issue', 'close', String(number)], { allowFail: true });
+  else if (!isClosed(task) && existing?.state === 'CLOSED') gh(ctx, ['issue', 'reopen', String(number)], { allowFail: true });
 
-  const state = { id: String(number), url: null, issue: number, drifted };
+  const state = { id: String(number), url: null, issue: number, drifted, remote_hash: bodyHash(body) };
 
   if (projectIds) {
-    const contentId = gh(ctx, ['issue', 'view', String(number), '--json', 'id'], { allowFail: true });
+    // The node id comes from the list when we have it: one fewer round trip per task.
+    const knownNodeId = existing?.id;
+    const contentId = knownNodeId ? { code: 0, out: JSON.stringify({ id: knownNodeId }) } : gh(ctx, ['issue', 'view', String(number), '--json', 'id'], { allowFail: true });
     if (contentId.code === 0) {
       const nodeId = JSON.parse(contentId.out).id;
       const remembered = task.external?.github?.project_item_id;

@@ -169,3 +169,79 @@ test('sinks are independent: each keeps its own state on the task', async () => 
     cleanup();
   }
 });
+
+test('prepare runs before the plan, so the sink can say what is still missing', async () => {
+  // The other order made every plan claim there was nothing to do: the sink had not yet
+  // learnt what it was connected to when it was asked what it owed.
+  const { ctx, cleanup } = tempHarness({ tasks: [makeTask()] });
+  try {
+    const order = [];
+    const sink = {
+      id: 'fake',
+      module: {
+        isEnabled: () => ({ enabled: true, reason: 'test' }),
+        prepare: () => order.push('prepare'),
+        incompleteReason: () => {
+          order.push('plan');
+          return null;
+        },
+        apply: async () => ({ id: 'r1' }),
+      },
+    };
+    const task = makeTask();
+    task.external = { fake: { id: 'r1', content_hash: contentHash(task) } };
+    await runSink(ctx, sink, [task], {});
+    assert.deepEqual(order, ['prepare', 'plan']);
+  } finally {
+    cleanup();
+  }
+});
+
+test('an unchanged task with incomplete remote state is updated, not skipped', async () => {
+  // Half a projection landing before the board existed left those tasks off it for ever,
+  // because their content hash was already current.
+  const { ctx, cleanup } = tempHarness({ tasks: [makeTask()] });
+  try {
+    const calls = [];
+    const sink = {
+      id: 'fake',
+      module: {
+        isEnabled: () => ({ enabled: true, reason: 'test' }),
+        incompleteReason: (_c, t) => (t.external?.fake?.extra ? null : 'not on the board yet'),
+        apply: async (_c, op) => {
+          calls.push(op.op);
+          return { id: 'r1', extra: true };
+        },
+      },
+    };
+    const task = makeTask();
+    task.external = { fake: { id: 'r1', content_hash: contentHash(task) } };
+
+    const result = await runSink(ctx, sink, [task], {});
+    assert.equal(result.applied, 1, 'the hash was current, but the state was not complete');
+    assert.deepEqual(calls, ['update']);
+  } finally {
+    cleanup();
+  }
+});
+
+test('a sink with nothing outstanding still skips', async () => {
+  const { ctx, cleanup } = tempHarness({ tasks: [makeTask()] });
+  try {
+    const sink = {
+      id: 'fake',
+      module: {
+        isEnabled: () => ({ enabled: true, reason: 'test' }),
+        incompleteReason: () => null,
+        apply: async () => ({ id: 'r1' }),
+      },
+    };
+    const task = makeTask();
+    task.external = { fake: { id: 'r1', content_hash: contentHash(task) } };
+    const result = await runSink(ctx, sink, [task], {});
+    assert.equal(result.applied, 0);
+    assert.equal(result.skipped, 1);
+  } finally {
+    cleanup();
+  }
+});

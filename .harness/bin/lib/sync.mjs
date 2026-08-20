@@ -70,8 +70,16 @@ export function planFor(ctx, sink, tasks) {
     if (task.type === 'epic' && sink.module.skipEpics) continue;
     const remembered = state(task);
     const hash = contentHash(task);
+
+    // An unchanged task can still have incomplete remote state — half of a projection
+    // landing before the board was configured, say. Deciding `skip` from the content hash
+    // alone left those tasks off the board permanently, because the hash was already
+    // current. The sink is the only thing that knows what "complete" means for it.
+    const incomplete = sink.module.incompleteReason ? sink.module.incompleteReason(ctx, task) : null;
+
     if (!remembered.id) operations.push({ op: 'create', task, hash });
     else if (remembered.content_hash !== hash) operations.push({ op: 'update', task, hash, remoteId: remembered.id });
+    else if (incomplete) operations.push({ op: 'update', task, hash, remoteId: remembered.id, because: incomplete });
     else operations.push({ op: 'skip', task, hash, remoteId: remembered.id });
   }
   return operations;
@@ -81,22 +89,31 @@ export function planFor(ctx, sink, tasks) {
  * Runs one sink. Never throws: a broken sink is reported and the others continue.
  * @returns {{id:string, applied:number, skipped:number, failed:number, drifted:string[], errors:string[]}}
  */
-export async function runSink(ctx, sink, tasks, { dryRun = false } = {}) {
+export async function runSink(ctx, sink, tasks, { dryRun = false, limit = null } = {}) {
   const result = { id: sink.id, applied: 0, skipped: 0, failed: 0, drifted: [], errors: [] };
   let operations;
   try {
-    operations = planFor(ctx, sink, tasks);
+    // Prepare first: the plan asks the sink what is still missing, and it cannot answer that
+    // before it knows what it is connected to. The other order made every plan claim there
+    // was nothing to do.
     if (sink.module.prepare) await sink.module.prepare(ctx, { dryRun });
+    operations = planFor(ctx, sink, tasks);
   } catch (e) {
     result.errors.push(`prepare failed: ${e.message}`);
     return result;
   }
 
+  let applied = 0;
   for (const operation of operations) {
+    if (limit !== null && applied >= limit) {
+      result.skipped += 1;
+      continue;
+    }
     if (operation.op === 'skip') {
       result.skipped += 1;
       continue;
     }
+    applied += 1;
     if (dryRun) {
       result.applied += 1;
       say(c.gray(`   would ${operation.op} ${operation.task.id} — ${operation.task.title}`));
@@ -134,7 +151,7 @@ export function appendAuditLog(ctx, sinkId, entry) {
 }
 
 /** The whole projection. Returns per-sink results; prints as it goes. */
-export async function runSync(ctx, { dryRun = false, only = null } = {}) {
+export async function runSync(ctx, { dryRun = false, only = null, limit = null } = {}) {
   const sinks = await loadSinks(ctx);
   const described = describeSinks(ctx, sinks);
   const results = [];
@@ -153,7 +170,7 @@ export async function runSync(ctx, { dryRun = false, only = null } = {}) {
       continue;
     }
     say(c.bold(`${sink.id}${dryRun ? c.gray('  (dry run)') : ''}`));
-    const result = await runSink(ctx, sink, tasks, { dryRun });
+    const result = await runSink(ctx, sink, tasks, { dryRun, limit });
     results.push(result);
     if (!dryRun) appendAuditLog(ctx, sink.id, result);
 
