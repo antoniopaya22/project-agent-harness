@@ -2,14 +2,14 @@
   "harness_version": "1.0.0",
   "counts": {
     "backlog": 11,
-    "ready": 47,
+    "ready": 44,
     "in_progress": 0,
-    "in_review": 31,
+    "in_review": 0,
     "blocked": 0,
-    "done": 0,
+    "done": 34,
     "cancelled": 0,
     "total": 89,
-    "open": 89
+    "open": 55
   },
   "next": "FEAT-0036",
   "tasks": [
@@ -17,7 +17,7 @@
       "id": "CHORE-0001",
       "title": "Sembrar el backlog del propio harness desde el plan",
       "type": "chore",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "definitions",
@@ -26,7 +26,7 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:16Z"
     },
     {
       "id": "CHORE-0002",
@@ -68,7 +68,7 @@
       "id": "CHORE-0004",
       "title": "Autopruebas e integración continua",
       "type": "chore",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "cli",
@@ -77,7 +77,7 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:16Z"
     },
     {
       "id": "CHORE-0005",
@@ -113,7 +113,7 @@
       "id": "DOCS-0001",
       "title": "Fichero de entrada en frío y camino de lectura",
       "type": "docs",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "S",
       "area": "docs",
@@ -122,13 +122,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:16Z"
     },
     {
       "id": "DOCS-0002",
       "title": "Set documental: arquitectura, mapa, convenciones, entorno y glosario",
       "type": "docs",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "L",
       "area": "docs",
@@ -137,13 +137,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:17Z"
     },
     {
       "id": "DOCS-0003",
       "title": "Convenciones de git y plantilla de solicitud de cambios",
       "type": "docs",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "S",
       "area": "docs",
@@ -152,13 +152,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:17Z"
     },
     {
       "id": "DOCS-0004",
       "title": "Puerta de entrada y guía de arranque",
       "type": "docs",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "S",
       "area": "docs",
@@ -167,13 +167,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:17Z"
     },
     {
       "id": "EPIC-0001",
       "title": "Cimientos: esquemas, entrada en frío y set documental",
       "type": "epic",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": null,
       "area": null,
@@ -182,13 +182,13 @@
       "blocked": false,
       "assignee": null,
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:17Z"
     },
     {
       "id": "EPIC-0002",
       "title": "CLI núcleo: el ejecutable determinista",
       "type": "epic",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": null,
       "area": null,
@@ -197,13 +197,13 @@
       "blocked": false,
       "assignee": null,
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:17Z"
     },
     {
       "id": "EPIC-0003",
       "title": "Agentes, comandos y proyección a Claude Code",
       "type": "epic",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": null,
       "area": null,
@@ -212,7 +212,7 @@
       "blocked": false,
       "assignee": null,
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:17Z"
     },
     {
       "id": "EPIC-0004",
@@ -368,7 +368,7 @@
       "id": "FEAT-0001",
       "title": "Esquema JSON de tarea",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "M",
       "area": "definitions",
@@ -377,13 +377,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:17Z"
     },
     {
       "id": "FEAT-0002",
       "title": "Esquema JSON de proyecto y configuración de ejemplo",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "M",
       "area": "definitions",
@@ -392,13 +392,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:18Z"
     },
     {
       "id": "FEAT-0003",
       "title": "Ejecutable principal y equivalentes para PowerShell y POSIX",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "M",
       "area": "cli",
@@ -407,13 +407,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:18Z"
     },
     {
       "id": "FEAT-0004",
       "title": "Validación de tareas contra el esquema",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "S",
       "area": "cli",
@@ -422,13 +422,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:18Z"
     },
     {
       "id": "FEAT-0005",
       "title": "Generación del índice y del tablero legible",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "cli",
@@ -437,13 +437,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:18Z"
     },
     {
       "id": "FEAT-0006",
       "title": "Revisión de higiene del backlog",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "cli",
@@ -452,13 +452,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:18Z"
     },
     {
       "id": "FEAT-0007",
       "title": "Operaciones de backlog validadas",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "L",
       "area": "cli",
@@ -467,13 +467,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:18Z"
     },
     {
       "id": "FEAT-0008",
       "title": "Ejecución de gates y resolución de áreas",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "S",
       "area": "cli",
@@ -482,13 +482,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:19Z"
     },
     {
       "id": "FEAT-0009",
       "title": "Los seis agentes especializados",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "L",
       "area": "definitions",
@@ -497,13 +497,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:19Z"
     },
     {
       "id": "FEAT-0010",
       "title": "Generación del adaptador de Claude Code",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "M",
       "area": "adapters",
@@ -512,13 +512,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:19Z"
     },
     {
       "id": "FEAT-0011",
       "title": "Formato canónico de comando y su proyección",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "S",
       "area": "definitions",
@@ -527,13 +527,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:19Z"
     },
     {
       "id": "FEAT-0012",
       "title": "Comandos de backlog, situación y autodiagnóstico",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "cli",
@@ -542,13 +542,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:19Z"
     },
     {
       "id": "FEAT-0013",
       "title": "Comandos de planificación y verificación",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "definitions",
@@ -557,13 +557,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:19Z"
     },
     {
       "id": "FEAT-0014",
       "title": "Comando de implementación reanudable",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "L",
       "area": "definitions",
@@ -572,13 +572,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:20Z"
     },
     {
       "id": "FEAT-0015",
       "title": "Comando de commit con apertura de solicitud de cambios",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "L",
       "area": "cli",
@@ -587,13 +587,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:20Z"
     },
     {
       "id": "FEAT-0016",
       "title": "Comandos de revisión y de traspaso",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "S",
       "area": "definitions",
@@ -602,7 +602,7 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:20Z"
     },
     {
       "id": "FEAT-0017",
@@ -726,7 +726,7 @@
       "id": "FEAT-0024",
       "title": "Adaptador universal y degradación a guías ejecutables",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "medium",
       "size": "M",
       "area": "adapters",
@@ -735,7 +735,7 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "updated_at": "2026-08-20T16:01:20Z"
     },
     {
       "id": "FEAT-0025",
@@ -824,7 +824,7 @@
       "id": "FEAT-0030",
       "title": "Medir el camino de lectura en tokens y no en líneas",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": "M",
       "area": "cli",
@@ -833,13 +833,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": "feat/0030-medir-el-camino-de-lectura-en",
-      "updated_at": "2026-08-20T15:51:25Z"
+      "updated_at": "2026-08-20T16:01:15Z"
     },
     {
       "id": "FEAT-0031",
       "title": "Un solo payload en lugar de cuatro lecturas",
       "type": "feature",
-      "status": "ready",
+      "status": "done",
       "priority": "critical",
       "size": "M",
       "area": "cli",
@@ -848,10 +848,10 @@
         "FEAT-0030",
         "RFCT-0001"
       ],
-      "blocked": true,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:55:37Z"
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0031-un-solo-payload-en-lugar-de",
+      "updated_at": "2026-08-20T16:04:34Z"
     },
     {
       "id": "FEAT-0032",
@@ -874,22 +874,22 @@
       "id": "FEAT-0033",
       "title": "Cachear el resultado de los gates por huella del arbol",
       "type": "feature",
-      "status": "ready",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "cli",
       "parent": "EPIC-0008",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "assignee": "agent:implementer",
+      "branch": "feat/0033-cachear-el-resultado-de-los-gates",
+      "updated_at": "2026-08-20T16:04:13Z"
     },
     {
       "id": "FEAT-0034",
       "title": "Gates con alcance por area",
       "type": "feature",
-      "status": "ready",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "cli",
@@ -897,10 +897,10 @@
       "depends_on": [
         "FEAT-0033"
       ],
-      "blocked": true,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:40:17Z"
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0034-gates-con-alcance-por-area",
+      "updated_at": "2026-08-20T16:04:13Z"
     },
     {
       "id": "FEAT-0035",
@@ -1034,7 +1034,7 @@
       "depends_on": [
         "FEAT-0031"
       ],
-      "blocked": true,
+      "blocked": false,
       "assignee": null,
       "branch": null,
       "updated_at": "2026-08-20T15:40:18Z"
@@ -1248,7 +1248,7 @@
       "id": "FIX-0001",
       "title": "El CLI llegaba incompleto al repositorio remoto",
       "type": "fix",
-      "status": "in_review",
+      "status": "done",
       "priority": "critical",
       "size": null,
       "area": "cli",
@@ -1257,13 +1257,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": "fix/0001-el-cli-llegaba-incompleto-al-repositorio",
-      "updated_at": "2026-08-20T15:12:24Z"
+      "updated_at": "2026-08-20T16:01:20Z"
     },
     {
       "id": "FIX-0002",
       "title": "Las opciones repetidas se descartaban en silencio",
       "type": "fix",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": null,
       "area": "cli",
@@ -1272,13 +1272,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": "fix/0002-las-opciones-repetidas-se-descartaban-en",
-      "updated_at": "2026-08-20T15:12:51Z"
+      "updated_at": "2026-08-20T16:01:20Z"
     },
     {
       "id": "FIX-0003",
       "title": "El emparejado de rutas fallaba fuera de Windows",
       "type": "fix",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": null,
       "area": "cli",
@@ -1287,13 +1287,13 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": "fix/0003-el-emparejado-de-rutas-fallaba-fuera",
-      "updated_at": "2026-08-20T15:15:14Z"
+      "updated_at": "2026-08-20T16:01:21Z"
     },
     {
       "id": "RFCT-0001",
       "title": "Sacar el historial de trabajo del fichero de tarea",
       "type": "refactor",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "S",
       "area": "cli",
@@ -1302,7 +1302,7 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": "refactor/0001-sacar-el-historial-de-trabajo-del",
-      "updated_at": "2026-08-20T15:52:43Z"
+      "updated_at": "2026-08-20T16:01:16Z"
     },
     {
       "id": "RFCT-0002",

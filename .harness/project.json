@@ -37,7 +37,8 @@
       "run": "node scripts/lint.mjs",
       "check": "node scripts/lint.mjs",
       "status": "configured",
-      "required": true
+      "required": true,
+      "run_scoped": null
     },
     "typecheck": {
       "run": null,
@@ -47,7 +48,8 @@
     "test": {
       "run": "node --test \"tests/*.test.mjs\"",
       "status": "configured",
-      "required": true
+      "required": true,
+      "run_scoped": "node --test {paths}"
     },
     "build": {
       "run": null,

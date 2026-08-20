@@ -3,7 +3,7 @@
   "id": "FIX-0001",
   "title": "El CLI llegaba incompleto al repositorio remoto",
   "type": "fix",
-  "status": "in_review",
+  "status": "done",
   "priority": "critical",
   "description": "El .gitignore heredado de la plantilla de Python traia el patron lib/ sin anclar, que casa con cualquier directorio lib/ a cualquier profundidad e incluia .harness/bin/lib/. git add omite ficheros ignorados sin avisar, asi que doce de los trece modulos del CLI no se subieron y el fallo solo aparecio en integracion continua, sobre un clon limpio.",
   "acceptance_criteria": [
@@ -63,5 +63,5 @@
     "commits": []
   },
   "created_at": "2026-08-20T15:11:17Z",
-  "updated_at": "2026-08-20T15:12:24Z"
+  "updated_at": "2026-08-20T16:01:20Z"
 }

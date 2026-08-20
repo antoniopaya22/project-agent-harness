@@ -3,7 +3,7 @@
   "id": "EPIC-0002",
   "title": "CLI núcleo: el ejecutable determinista",
   "type": "epic",
-  "status": "in_review",
+  "status": "done",
   "priority": "critical",
   "description": "El backlog está validado, el tablero se genera y las transiciones de estado las fuerza una máquina.",
   "acceptance_criteria": [
@@ -26,6 +26,7 @@
     "out_of_scope": []
   },
   "depends_on": [],
+  "blocked_reason": null,
   "labels": [
     "fase"
   ],
@@ -38,5 +39,5 @@
     "commits": []
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-18T19:00:00Z"
+  "updated_at": "2026-08-20T16:01:17Z"
 }

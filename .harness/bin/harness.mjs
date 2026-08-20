@@ -63,7 +63,7 @@ commands.help = () => {
         ['brief <ID>', 'the whole cold-start read path as one payload, projected'],
         ['read-path <ID>', 'the exact files to read to work on a task, with their cost'],
         ['task <sub>', 'list | show | next | new | claim | unclaim | set-status | ac | retype | split | edit'],
-        ['gate <name>', 'run a declared quality gate (format|lint|typecheck|test|build|start)'],
+        ['gate <name>', 'run a gate (format|lint|typecheck|test|build|start) [--scope area] [--no-cache]'],
         ['gates', 'run every blocking gate and summarise'],
         ['validate', 'every task against the schema'],
         ['lint-backlog', 'cross-task hygiene: cycles, orphans, unready "ready"'],
@@ -244,14 +244,26 @@ commands.doctor = (ctx, { flags }) => {
 
 commands.gate = (ctx, { positional, flags }) => {
   const name = gates.requireGateName(positional[0]);
-  const r = gates.runGate(ctx, name, { check: Boolean(flags.check), capture: false });
+  const r = gates.runGate(ctx, name, {
+    check: Boolean(flags.check),
+    capture: false,
+    scope: typeof flags.scope === 'string' ? flags.scope : null,
+    cache: !flags['no-cache'],
+  });
   gates.printGateResults([r]);
   if (r.state === 'fail') return EXIT.CHECK_FAILED;
   return EXIT.OK;
 };
 
 commands.gates = (ctx, { flags }) => {
-  const summary = gates.summarize(gates.runAllGates(ctx, { check: Boolean(flags.check), capture: true }));
+  const summary = gates.summarize(
+    gates.runAllGates(ctx, {
+      check: Boolean(flags.check),
+      capture: true,
+      scope: typeof flags.scope === 'string' ? flags.scope : null,
+      cache: !flags['no-cache'],
+    }),
+  );
   gates.printGateResults(summary.results);
   if (flags.json) say(JSON.stringify(summary.map, null, 2));
   return summary.ok ? EXIT.OK : EXIT.CHECK_FAILED;

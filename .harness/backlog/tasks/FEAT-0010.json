@@ -3,7 +3,7 @@
   "id": "FEAT-0010",
   "title": "Generación del adaptador de Claude Code",
   "type": "feature",
-  "status": "in_review",
+  "status": "done",
   "priority": "critical",
   "size": "M",
   "parent": "EPIC-0003",
@@ -47,6 +47,7 @@
     "out_of_scope": []
   },
   "depends_on": [],
+  "blocked_reason": null,
   "labels": [],
   "assignee": {
     "kind": "agent",
@@ -60,5 +61,5 @@
     "commits": []
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-18T19:00:00Z"
+  "updated_at": "2026-08-20T16:01:19Z"
 }

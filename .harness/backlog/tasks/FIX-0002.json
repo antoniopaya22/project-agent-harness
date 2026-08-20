@@ -3,7 +3,7 @@
   "id": "FIX-0002",
   "title": "Las opciones repetidas se descartaban en silencio",
   "type": "fix",
-  "status": "in_review",
+  "status": "done",
   "priority": "high",
   "description": "El parseador de argumentos sobrescribia una opcion repetida en lugar de acumularla, asi que en task context solo se guardaba el ultimo --file o --doc. El resto se perdia sin aviso, y la documentacion del area afirmaba lo contrario. Se descubrio al usar el propio harness para registrar la correccion anterior.",
   "acceptance_criteria": [
@@ -52,5 +52,5 @@
     "commits": []
   },
   "created_at": "2026-08-20T15:12:51Z",
-  "updated_at": "2026-08-20T15:12:51Z"
+  "updated_at": "2026-08-20T16:01:20Z"
 }

@@ -1,2 +1,8 @@
 {"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
 {"at":"2026-08-20T15:40:17Z","by":"human","event":"status_changed","note":"depends_on=FEAT-0033"}
+{"at":"2026-08-20T16:04:13Z","by":"implementer","event":"claimed","note":"branch feat/0034-gates-con-alcance-por-area"}
+{"at":"2026-08-20T16:04:13Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-20T16:04:13Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-20T16:04:13Z","by":"human","event":"verified","note":"AC3 -> pass"}
+{"at":"2026-08-20T16:04:13Z","by":"tester","event":"status_changed","note":"in_progress -> in_review"}
+{"at":"2026-08-20T16:04:13Z","by":"human","event":"completed","note":"in_review -> done"}

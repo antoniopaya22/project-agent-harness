@@ -3,7 +3,7 @@
   "id": "EPIC-0001",
   "title": "Cimientos: esquemas, entrada en frío y set documental",
   "type": "epic",
-  "status": "in_review",
+  "status": "done",
   "priority": "critical",
   "description": "Un agente puede implementar una tarea creada a mano leyendo cuatro ficheros.",
   "acceptance_criteria": [
@@ -26,6 +26,7 @@
     "out_of_scope": []
   },
   "depends_on": [],
+  "blocked_reason": null,
   "labels": [
     "fase"
   ],
@@ -38,5 +39,5 @@
     "commits": []
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-18T19:00:00Z"
+  "updated_at": "2026-08-20T16:01:17Z"
 }

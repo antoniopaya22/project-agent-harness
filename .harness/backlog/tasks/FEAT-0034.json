@@ -3,7 +3,7 @@
   "id": "FEAT-0034",
   "title": "Gates con alcance por area",
   "type": "feature",
-  "status": "ready",
+  "status": "done",
   "priority": "high",
   "size": "M",
   "parent": "EPIC-0008",
@@ -16,7 +16,8 @@
         "type": "command",
         "run": "node --test tests/gates.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "run_scoped con hueco {paths}; solo los ficheros del area entran"
     },
     {
       "id": "AC2",
@@ -25,7 +26,8 @@
         "type": "command",
         "run": "node --test tests/gates.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "un gate sin plantilla se ejecuta completo con aviso, no falla ni comprueba menos"
     },
     {
       "id": "AC3",
@@ -34,7 +36,8 @@
         "type": "review",
         "run": null
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "el paso de verificacion previo a revision usa alcance completo por defecto"
     }
   ],
   "context": {
@@ -46,17 +49,21 @@
   "depends_on": [
     "FEAT-0033"
   ],
+  "blocked_reason": null,
   "labels": [
     "mejora"
   ],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T16:04:13Z",
+  "branch": "feat/0034-gates-con-alcance-por-area",
   "links": {
     "pr": null,
     "issue": null,
     "commits": []
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T15:40:17Z"
+  "updated_at": "2026-08-20T16:04:13Z"
 }

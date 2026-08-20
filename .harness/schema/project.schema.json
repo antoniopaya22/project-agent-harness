@@ -5,9 +5,17 @@
   "description": "The single place a project declares how it is built, tested and organised. Read by every agent and command.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["harness_version", "project", "git", "gates", "areas"],
+  "required": [
+    "harness_version",
+    "project",
+    "git",
+    "gates",
+    "areas"
+  ],
   "properties": {
-    "$schema": { "type": "string" },
+    "$schema": {
+      "type": "string"
+    },
     "harness_version": {
       "type": "string",
       "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
@@ -16,45 +24,72 @@
     "project": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "purpose", "output_language"],
+      "required": [
+        "name",
+        "purpose",
+        "output_language"
+      ],
       "properties": {
-        "name": { "type": "string", "minLength": 1 },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
         "purpose": {
           "type": "string",
           "minLength": 20,
           "description": "One paragraph: what this project is for and who uses it. Asked of the human, never invented."
         },
         "task_prefix": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "pattern": "^[A-Z][A-Z0-9]{1,9}$",
           "description": "Project tag used only at the external-tracker boundary, e.g. PANGEA. Local ids stay type-prefixed."
         },
         "output_language": {
           "type": "string",
           "description": "BCP-47-ish language tag for generated deliverables (docs, tasks, agent replies). Prompts stay in English.",
-          "enum": ["es", "en"]
+          "enum": [
+            "es",
+            "en"
+          ]
         }
       }
     },
     "git": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["default_branch", "auto_pr"],
+      "required": [
+        "default_branch",
+        "auto_pr"
+      ],
       "properties": {
-        "default_branch": { "type": "string", "default": "main" },
+        "default_branch": {
+          "type": "string",
+          "default": "main"
+        },
         "protected_branches": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "`harness` refuses to commit directly on these."
         },
         "commit_scopes": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Allowed conventional-commit scopes. Empty means any scope is accepted."
         },
         "auto_pr": {
           "type": "string",
-          "enum": ["ready", "draft", "never"],
+          "enum": [
+            "ready",
+            "draft",
+            "never"
+          ],
           "default": "ready",
           "description": "What /commit does when a task reaches in_review. Merging is never automatic."
         }
@@ -65,12 +100,24 @@
       "additionalProperties": false,
       "description": "The only place build/test commands are declared. Agents never guess a command.",
       "properties": {
-        "format": { "$ref": "#/$defs/gate" },
-        "lint": { "$ref": "#/$defs/gate" },
-        "typecheck": { "$ref": "#/$defs/gate" },
-        "test": { "$ref": "#/$defs/gate" },
-        "build": { "$ref": "#/$defs/gate" },
-        "start": { "$ref": "#/$defs/gate" }
+        "format": {
+          "$ref": "#/$defs/gate"
+        },
+        "lint": {
+          "$ref": "#/$defs/gate"
+        },
+        "typecheck": {
+          "$ref": "#/$defs/gate"
+        },
+        "test": {
+          "$ref": "#/$defs/gate"
+        },
+        "build": {
+          "$ref": "#/$defs/gate"
+        },
+        "start": {
+          "$ref": "#/$defs/gate"
+        }
       }
     },
     "areas": {
@@ -79,12 +126,29 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "globs", "doc"],
+        "required": [
+          "id",
+          "globs",
+          "doc"
+        ],
         "properties": {
-          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
-          "title": { "type": "string" },
-          "globs": { "type": "array", "minItems": 1, "items": { "type": "string" } },
-          "doc": { "type": "string" }
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "globs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "doc": {
+            "type": "string"
+          }
         }
       }
     },
@@ -98,10 +162,22 @@
       "additionalProperties": false,
       "description": "Which adapter directories `harness generate` writes.",
       "properties": {
-        "claude": { "type": "boolean", "default": true },
-        "agents_md": { "type": "boolean", "default": true },
-        "cursor": { "type": "boolean", "default": false },
-        "copilot": { "type": "boolean", "default": false }
+        "claude": {
+          "type": "boolean",
+          "default": true
+        },
+        "agents_md": {
+          "type": "boolean",
+          "default": true
+        },
+        "cursor": {
+          "type": "boolean",
+          "default": false
+        },
+        "copilot": {
+          "type": "boolean",
+          "default": false
+        }
       }
     },
     "integrations": {
@@ -112,16 +188,31 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "enabled": { "type": "boolean", "default": false },
-            "list_id": { "type": ["string", "null"] },
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "list_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "custom_fields": {
               "type": "object",
-              "additionalProperties": { "type": "string" },
+              "additionalProperties": {
+                "type": "string"
+              },
               "description": "Field name -> ClickUp field id."
             },
             "users": {
               "type": "object",
-              "additionalProperties": { "type": ["string", "number"] },
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              },
               "description": "Harness assignee id -> ClickUp user id."
             }
           }
@@ -134,11 +225,20 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["path"],
+        "required": [
+          "path"
+        ],
         "properties": {
-          "path": { "type": "string" },
-          "layout": { "type": "string" },
-          "gates": { "type": "object", "additionalProperties": true }
+          "path": {
+            "type": "string"
+          },
+          "layout": {
+            "type": "string"
+          },
+          "gates": {
+            "type": "object",
+            "additionalProperties": true
+          }
         }
       }
     },
@@ -148,7 +248,10 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["path", "max_tokens"],
+        "required": [
+          "path",
+          "max_tokens"
+        ],
         "properties": {
           "path": {
             "type": "string",
@@ -159,7 +262,9 @@
             "minimum": 1,
             "description": "Estimated tokens (chars/4). When exceeded, move content out — do not raise the budget."
           },
-          "note": { "type": "string" }
+          "note": {
+            "type": "string"
+          }
         }
       }
     },
@@ -175,11 +280,17 @@
       "additionalProperties": false,
       "properties": {
         "run": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "The command. null means there is none."
         },
         "check": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "Non-mutating variant, for CI (e.g. `ruff format --check .`)."
         },
         "required": {
@@ -189,11 +300,29 @@
         },
         "status": {
           "type": "string",
-          "enum": ["configured", "not-configured", "n/a"],
+          "enum": [
+            "configured",
+            "not-configured",
+            "n/a"
+          ],
           "default": "configured",
           "description": "not-configured and n/a are skipped with a warning and never block."
         },
-        "coverage_min": { "type": ["number", "null"], "minimum": 0, "maximum": 100 }
+        "coverage_min": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "run_scoped": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Command template with a {paths} placeholder, for running the gate over one area only. Without it, --scope runs the gate whole rather than silently checking less."
+        }
       }
     }
   }

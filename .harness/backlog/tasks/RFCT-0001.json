@@ -3,7 +3,7 @@
   "id": "RFCT-0001",
   "title": "Sacar el historial de trabajo del fichero de tarea",
   "type": "refactor",
-  "status": "in_review",
+  "status": "done",
   "priority": "high",
   "size": "S",
   "parent": "EPIC-0008",
@@ -53,5 +53,5 @@
     "commits": []
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T15:52:43Z"
+  "updated_at": "2026-08-20T16:01:16Z"
 }

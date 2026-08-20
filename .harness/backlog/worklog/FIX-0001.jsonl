@@ -10,3 +10,4 @@
 {"at":"2026-08-20T15:11:18Z","by":"human","event":"verified","note":"AC3 -> pass"}
 {"at":"2026-08-20T15:11:18Z","by":"tester","event":"status_changed","note":"in_progress -> in_review"}
 {"at":"2026-08-20T15:12:24Z","by":"human","event":"groomed","note":"file+.gitignore file+.harness/bin/lib/doctor.mjs file+.harness/bin/lib/util.mjs"}
+{"at":"2026-08-20T16:01:20Z","by":"human","event":"completed","note":"in_review -> done"}

@@ -3,7 +3,7 @@
   "id": "FIX-0003",
   "title": "El emparejado de rutas fallaba fuera de Windows",
   "type": "fix",
-  "status": "in_review",
+  "status": "done",
   "priority": "high",
   "description": "matchesAny normalizaba separadores con path.sep, que en POSIX ya es la barra, asi que una ruta con barras invertidas no se convertia y no casaba con ningun glob. El defecto solo aparecia fuera de Windows, y la integracion continua no lo cubria porque solo ejecutaba en Linux mientras el desarrollo ocurre en Windows.",
   "acceptance_criteria": [
@@ -52,5 +52,5 @@
     "commits": []
   },
   "created_at": "2026-08-20T15:15:13Z",
-  "updated_at": "2026-08-20T15:15:14Z"
+  "updated_at": "2026-08-20T16:01:21Z"
 }

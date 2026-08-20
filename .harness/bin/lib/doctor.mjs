@@ -185,6 +185,7 @@ export function runDoctor(ctx, { fix = false } = {}) {
 
 /** Paths under .harness/ that are ignored on purpose (secrets, scratch, audit logs). */
 const INTENTIONALLY_IGNORED = [
+  '.harness/.cache/**',
   '.harness/integrations/*/sync.log.jsonl',
   '.harness/workspace/*/COMMIT_MSG.txt',
   '.harness/workspace/*/PR_BODY.md',
