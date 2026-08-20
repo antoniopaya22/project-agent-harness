@@ -29,6 +29,7 @@ import * as doctorLib from './lib/doctor.mjs';
 import * as statusLib from './lib/status.mjs';
 import * as commitLib from './lib/commit.mjs';
 import { SUBCOMMANDS, taskCommand, next as taskNext } from './lib/task-cmd.mjs';
+import * as readpath from './lib/readpath.mjs';
 import { lintBacklog } from './lib/lint.mjs';
 
 function loadContext() {
@@ -59,7 +60,8 @@ commands.help = () => {
     table(
       [
         ['status', 'one-screen situational awareness'],
-        ['read-path <ID>', 'the exact files to read to work on a task'],
+        ['brief <ID>', 'the whole cold-start read path as one payload, projected'],
+        ['read-path <ID>', 'the exact files to read to work on a task, with their cost'],
         ['task <sub>', 'list | show | next | new | claim | unclaim | set-status | ac | retype | split | edit'],
         ['gate <name>', 'run a declared quality gate (format|lint|typecheck|test|build|start)'],
         ['gates', 'run every blocking gate and summarise'],
@@ -140,6 +142,31 @@ commands['read-path'] = (ctx, { positional, flags }) => {
   const verdict = cap && total > cap ? c.red(`over the ${cap} cap`) : c.gray(`cap ${cap ?? 'n/a'}`);
   say(`${c.gray(`${entries.length} files, ~${total} tokens`)}  ${verdict}`);
   say(c.gray('Read nothing else unless the work forces you to.'));
+  return EXIT.OK;
+};
+
+commands.brief = (ctx, { positional, flags }) => {
+  const id = positional[0];
+  if (!id) fail('usage: harness brief <TASK-ID> [--with-files] [--json]', EXIT.USAGE);
+  const task = tasksLib.load(ctx, id);
+  const { body, stats } = readpath.renderBrief(ctx, task, { withFiles: Boolean(flags['with-files']) });
+  if (flags.json) {
+    say(JSON.stringify({ task: task.id, stats, body }, null, 2));
+    return EXIT.OK;
+  }
+  process.stdout.write(body);
+  if (!flags.quiet) {
+    const saved = stats.naiveTokens > 0 ? Math.round((1 - stats.briefTokens / stats.naiveTokens) * 100) : 0;
+    say(
+      c.gray(
+        `
+===== brief =====
+~${stats.briefTokens} tokens in 1 call ` +
+          `(vs ~${stats.naiveTokens} in ${stats.naiveCalls} reads: ${saved >= 0 ? '-' : '+'}${Math.abs(saved)}% context, ` +
+          `-${stats.naiveCalls - 1} calls)`,
+      ),
+    );
+  }
   return EXIT.OK;
 };
 

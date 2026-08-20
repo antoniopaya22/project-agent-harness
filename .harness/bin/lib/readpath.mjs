@@ -3,7 +3,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { countTokens, toPosixPath } from './util.mjs';
+import { countTokens, estimateTokens, toPosixPath } from './util.mjs';
 
 /**
  * Two kinds of cost, and the distinction is load-bearing:
@@ -52,6 +52,109 @@ function entry(ctx, relPath, why) {
     tokens: countTokens(full),
     lines: text.split('\n').length,
     missing: false,
+  };
+}
+
+/**
+ * The task, reduced to what implementing it requires.
+ *
+ * Dropped: bookkeeping the agent cannot act on (timestamps, commit list, external tracker
+ * ids) and fields that describe *who is doing it* rather than *what to do*.
+ */
+export function projectTask(task) {
+  const out = {
+    id: task.id,
+    title: task.title,
+    type: task.type,
+    status: task.status,
+    priority: task.priority,
+    description: task.description,
+    acceptance_criteria: (task.acceptance_criteria || []).map((ac) => ({
+      id: ac.id,
+      must: ac.must,
+      check: ac.check,
+      status: ac.status,
+    })),
+    context: task.context,
+  };
+  if (task.size) out.size = task.size;
+  if (task.parent) out.parent = task.parent;
+  if (task.depends_on?.length) out.depends_on = task.depends_on;
+  if (task.blocked_reason) out.blocked_reason = task.blocked_reason;
+  return out;
+}
+
+/**
+ * The project config, reduced to what implementing *this* task requires: how to run the
+ * gates, the git conventions, and only the task's own area. Other areas' globs, the
+ * provider flags, the tracker config and the read-path budgets are harness plumbing —
+ * true, and irrelevant to writing the code.
+ */
+export function projectConfig(ctx, task) {
+  const p = ctx.project;
+  const area = (p.areas || []).find((a) => a.id === task.context?.area);
+  return {
+    project: { name: p.project?.name, purpose: p.project?.purpose, output_language: p.project?.output_language },
+    git: p.git,
+    gates: p.gates,
+    area: area ?? null,
+  };
+}
+
+const SEP = (label) => `\n===== ${label} =====\n`;
+
+/** One payload instead of four reads. */
+export function renderBrief(ctx, task, { withFiles = false } = {}) {
+  const rp = readPathFor(ctx, task);
+  const parts = [];
+
+  const entrypoint = rp.orientation.find((e) => e.path.endsWith('ENTRYPOINT.md'));
+  if (entrypoint && !entrypoint.missing) {
+    parts.push(SEP(entrypoint.path) + fs.readFileSync(path.join(ctx.root, entrypoint.path), 'utf8').trimEnd());
+  }
+
+  parts.push(SEP(`task ${task.id} (projection)`) + JSON.stringify(projectTask(task), null, 2));
+  parts.push(SEP('project config (projection)') + JSON.stringify(projectConfig(ctx, task), null, 2));
+
+  if (rp.area) {
+    parts.push(SEP(rp.area.doc) + fs.readFileSync(path.join(ctx.root, rp.area.doc), 'utf8').trimEnd());
+  } else {
+    parts.push(SEP('area') + 'This task has no area. It is under-groomed: run /plan before implementing.');
+  }
+
+  for (const doc of task.context?.docs || []) {
+    const full = path.join(ctx.root, doc);
+    parts.push(SEP(doc) + (fs.existsSync(full) ? fs.readFileSync(full, 'utf8').trimEnd() : '(missing)'));
+  }
+
+  const files = task.context?.files || [];
+  if (files.length) {
+    if (withFiles) {
+      for (const f of files) {
+        const full = path.join(ctx.root, f);
+        parts.push(SEP(f) + (fs.existsSync(full) ? fs.readFileSync(full, 'utf8').trimEnd() : '(missing)'));
+      }
+    } else {
+      // The work payload is listed, not inlined: read only what you actually touch.
+      parts.push(
+        SEP('files to work on (not inlined)') +
+          files.map((f) => `- ${f}`).join('\n') +
+          '\n\nRead these as you need them, or re-run with --with-files.',
+      );
+    }
+  }
+
+  const body = `${parts.join('\n')}\n`;
+  return {
+    body,
+    stats: {
+      briefTokens: estimateTokens(body),
+      naiveTokens: rp.orientationTokens + (withFiles ? rp.workTokens : 0),
+      orientationTokens: rp.orientationTokens,
+      workTokens: rp.workTokens,
+      calls: 1,
+      naiveCalls: rp.orientation.filter((e) => !e.missing).length + (withFiles ? rp.work.length : 0),
+    },
   };
 }
 

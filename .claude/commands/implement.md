@@ -20,11 +20,16 @@ stages in order, and at each one first check whether it is already done.
 ## 0 — Load, and resume if there is something to resume
 
 ```bash
-node .harness/bin/harness.mjs read-path $1
-node .harness/bin/harness.mjs task show $1
+node .harness/bin/harness.mjs brief $1
 ```
 
-Read exactly the files `read-path` lists. Then check `.harness/workspace/$1/handoff.json`:
+That single call returns the whole cold-start read path as one payload, with the task and
+the project config projected down to what implementing actually needs — four reads become
+one, and the projected surface costs about 46% less. Use `--with-files` when you want the
+work files inlined too, and `read-path $1` when you want to see the cost breakdown per
+file rather than the content.
+
+Read nothing beyond it unless the work forces you to. Then check `.harness/workspace/$1/handoff.json`:
 if it exists, **jump to the stage after its `stage` field** (`claimed` → 5, `planned` → 6,
 `implemented` → 7, `verified` → 8, `reviewed` → 10). Say which stage you resumed from.
 

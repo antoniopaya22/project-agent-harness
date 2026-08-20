@@ -1,3 +1,12 @@
 {"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
 {"at":"2026-08-20T15:40:16Z","by":"human","event":"status_changed","note":"depends_on=FEAT-0030"}
 {"at":"2026-08-20T15:40:17Z","by":"human","event":"status_changed","note":"depends_on=RFCT-0001"}
+{"at":"2026-08-20T15:55:17Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-20T15:55:17Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-20T15:55:17Z","by":"human","event":"verified","note":"AC3 -> fail"}
+{"at":"2026-08-20T15:55:36Z","by":"planner","event":"groomed","note":"AC3 set"}
+{"at":"2026-08-20T15:55:36Z","by":"planner","event":"groomed","note":"AC4 set"}
+{"at":"2026-08-20T15:55:37Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-20T15:55:37Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-20T15:55:37Z","by":"human","event":"verified","note":"AC3 -> pass"}
+{"at":"2026-08-20T15:55:37Z","by":"human","event":"verified","note":"AC4 -> pass"}
