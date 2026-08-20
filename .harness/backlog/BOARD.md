@@ -2,13 +2,13 @@
 
 # Tablero — project-agent-harness
 
-46 tareas · 46 abiertas · 0 hechas
+48 tareas · 48 abiertas · 0 hechas
 
 | Columna | Tareas |
 |---------|--------|
 | Backlog | 11 |
 | Listas para empezar | 9 |
-| En revisión | 26 |
+| En revisión | 28 |
 
 ## Backlog (11)
 
@@ -40,7 +40,7 @@
 | `FEAT-0022` | Reescritura de referencias tras mover ficheros | critical | L | cli | espera FEAT-0021 · de EPIC-0004 |
 | `FEAT-0023` | Motor de reorganización por lotes verificados | critical | L | cli | espera FEAT-0017, FEAT-0021, FEAT-0022 · de EPIC-0004 |
 
-## En revisión (26)
+## En revisión (28)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -70,6 +70,8 @@
 | `FEAT-0015` | Comando de commit con apertura de solicitud de cambios | critical | L | cli | agent:implementer · de EPIC-0003 |
 | `FEAT-0016` | Comandos de revisión y de traspaso | high | S | definitions | agent:implementer · de EPIC-0003 |
 | `FEAT-0024` | Adaptador universal y degradación a guías ejecutables | medium | M | adapters | agent:implementer · de EPIC-0005 |
+| `FIX-0001` | El CLI llegaba incompleto al repositorio remoto | critical | — | cli | agent:implementer |
+| `FIX-0002` | Las opciones repetidas se descartaban en silencio | high | — | cli | agent:implementer |
 
 ---
 

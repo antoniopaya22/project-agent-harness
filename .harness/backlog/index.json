@@ -4,12 +4,12 @@
     "backlog": 11,
     "ready": 9,
     "in_progress": 0,
-    "in_review": 26,
+    "in_review": 28,
     "blocked": 0,
     "done": 0,
     "cancelled": 0,
-    "total": 46,
-    "open": 46
+    "total": 48,
+    "open": 48
   },
   "next": "FEAT-0017",
   "tasks": [
@@ -696,6 +696,36 @@
       "assignee": null,
       "branch": null,
       "updated_at": "2026-08-18T19:00:00Z"
+    },
+    {
+      "id": "FIX-0001",
+      "title": "El CLI llegaba incompleto al repositorio remoto",
+      "type": "fix",
+      "status": "in_review",
+      "priority": "critical",
+      "size": null,
+      "area": "cli",
+      "parent": null,
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "fix/0001-el-cli-llegaba-incompleto-al-repositorio",
+      "updated_at": "2026-08-20T15:12:24Z"
+    },
+    {
+      "id": "FIX-0002",
+      "title": "Las opciones repetidas se descartaban en silencio",
+      "type": "fix",
+      "status": "in_review",
+      "priority": "high",
+      "size": null,
+      "area": "cli",
+      "parent": null,
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "fix/0002-las-opciones-repetidas-se-descartaban-en",
+      "updated_at": "2026-08-20T15:12:51Z"
     },
     {
       "id": "SPIKE-0001",

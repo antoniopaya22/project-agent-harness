@@ -1,0 +1,141 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FIX-0001",
+  "title": "El CLI llegaba incompleto al repositorio remoto",
+  "type": "fix",
+  "status": "in_review",
+  "priority": "critical",
+  "description": "El .gitignore heredado de la plantilla de Python traia el patron lib/ sin anclar, que casa con cualquier directorio lib/ a cualquier profundidad e incluia .harness/bin/lib/. git add omite ficheros ignorados sin avisar, asi que doce de los trece modulos del CLI no se subieron y el fallo solo aparecio en integracion continua, sobre un clon limpio.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Ningun fichero que el harness necesita queda oculto para git",
+      "check": {
+        "type": "command",
+        "run": "node .harness/bin/harness.mjs doctor"
+      },
+      "status": "pass",
+      "evidence": "doctor en verde; 100 autotests en verde"
+    },
+    {
+      "id": "AC2",
+      "must": "El autodiagnostico detecta el problema en local, nombrando la regla culpable y el arreglo",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/doctor.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "doctor en verde; 100 autotests en verde"
+    },
+    {
+      "id": "AC3",
+      "must": "Los patrones de entorno virtual quedan anclados a la raiz del repositorio",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pass",
+      "evidence": "doctor en verde; 100 autotests en verde"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [],
+    "files": [
+      ".harness/bin/lib/doctor.mjs",
+      ".gitignore",
+      ".harness/bin/lib/util.mjs"
+    ],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "blocked_reason": null,
+  "labels": [],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T15:11:17Z",
+  "branch": "fix/0001-el-cli-llegaba-incompleto-al-repositorio",
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-20T15:11:17Z",
+      "by": "harness",
+      "event": "created",
+      "note": null
+    },
+    {
+      "at": "2026-08-20T15:11:17Z",
+      "by": "human",
+      "event": "groomed",
+      "note": "AC1 set"
+    },
+    {
+      "at": "2026-08-20T15:11:17Z",
+      "by": "human",
+      "event": "groomed",
+      "note": "AC2 set"
+    },
+    {
+      "at": "2026-08-20T15:11:17Z",
+      "by": "human",
+      "event": "groomed",
+      "note": "AC3 set"
+    },
+    {
+      "at": "2026-08-20T15:11:17Z",
+      "by": "human",
+      "event": "groomed",
+      "note": "file+.harness/bin/lib/doctor.mjs"
+    },
+    {
+      "at": "2026-08-20T15:11:17Z",
+      "by": "planner",
+      "event": "status_changed",
+      "note": "backlog -> ready"
+    },
+    {
+      "at": "2026-08-20T15:11:17Z",
+      "by": "implementer",
+      "event": "claimed",
+      "note": "branch fix/0001-el-cli-llegaba-incompleto-al-repositorio"
+    },
+    {
+      "at": "2026-08-20T15:11:17Z",
+      "by": "human",
+      "event": "verified",
+      "note": "AC1 -> pass"
+    },
+    {
+      "at": "2026-08-20T15:11:17Z",
+      "by": "human",
+      "event": "verified",
+      "note": "AC2 -> pass"
+    },
+    {
+      "at": "2026-08-20T15:11:18Z",
+      "by": "human",
+      "event": "verified",
+      "note": "AC3 -> pass"
+    },
+    {
+      "at": "2026-08-20T15:11:18Z",
+      "by": "tester",
+      "event": "status_changed",
+      "note": "in_progress -> in_review"
+    },
+    {
+      "at": "2026-08-20T15:12:24Z",
+      "by": "human",
+      "event": "groomed",
+      "note": "file+.gitignore file+.harness/bin/lib/doctor.mjs file+.harness/bin/lib/util.mjs"
+    }
+  ],
+  "created_at": "2026-08-20T15:11:17Z",
+  "updated_at": "2026-08-20T15:12:24Z"
+}
