@@ -9,6 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { EXIT, HARNESS_VERSION, fail, listFiles, ok, say, toPosixPath, warn, writeFileIfChanged, writeJson } from './util.mjs';
 import * as generate from './generate.mjs';
+import { detectAreas, detectStack } from './survey.mjs';
 import * as board from './board.mjs';
 
 /** Directories and files copied verbatim from the template's .harness/. */
@@ -27,75 +28,9 @@ const NEVER_COPY = ['backlog', 'workspace', 'project.json', '.cache', 'adoption'
 
 export const NEEDS_HUMAN = '[RELLENAR]';
 
-/** Evidence-based stack detection. No guessing: absent means absent. */
-export function detectStack(dir) {
-  const has = (f) => fs.existsSync(path.join(dir, f));
-  const readJsonIf = (f) => {
-    try {
-      return has(f) ? JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')) : null;
-    } catch {
-      return null;
-    }
-  };
+// La detección vive en survey.mjs: init y /adopt tienen que ver exactamente lo mismo.
+export { detectAreas, detectStack };
 
-  const pkg = readJsonIf('package.json');
-  const stack = { language: null, packageManager: null, gates: {}, evidence: [] };
-
-  if (pkg) {
-    stack.language = has('tsconfig.json') ? 'typescript' : 'javascript';
-    stack.evidence.push('package.json');
-    stack.packageManager = has('pnpm-lock.yaml') ? 'pnpm' : has('yarn.lock') ? 'yarn' : 'npm';
-    const scripts = pkg.scripts || {};
-    const runner = stack.packageManager === 'npm' ? 'npm run' : stack.packageManager;
-    // Only scripts that actually exist become gates. A gate whose command is invented is
-    // worse than one declared not-configured.
-    for (const [gate, names] of Object.entries({
-      lint: ['lint'],
-      test: ['test'],
-      typecheck: ['typecheck', 'tsc', 'types'],
-      build: ['build'],
-      format: ['format', 'fmt'],
-      start: ['dev', 'start'],
-    })) {
-      const found = names.find((n) => scripts[n]);
-      if (found) stack.gates[gate] = { run: `${runner} ${found}`, evidence: `package.json scripts.${found}` };
-    }
-  } else if (has('pyproject.toml') || has('setup.py') || has('requirements.txt')) {
-    stack.language = 'python';
-    stack.evidence.push(has('pyproject.toml') ? 'pyproject.toml' : has('setup.py') ? 'setup.py' : 'requirements.txt');
-    const pyproject = has('pyproject.toml') ? fs.readFileSync(path.join(dir, 'pyproject.toml'), 'utf8') : '';
-    if (/\[tool\.ruff/.test(pyproject)) stack.gates.lint = { run: 'ruff check .', evidence: 'pyproject.toml [tool.ruff]' };
-    if (/\[tool\.pytest/.test(pyproject) || has('pytest.ini') || fs.existsSync(path.join(dir, 'tests'))) {
-      stack.gates.test = { run: 'pytest -q', evidence: /\[tool\.pytest/.test(pyproject) ? 'pyproject.toml [tool.pytest]' : 'tests/ exists' };
-    }
-    if (/\[tool\.mypy/.test(pyproject)) stack.gates.typecheck = { run: 'mypy .', evidence: 'pyproject.toml [tool.mypy]' };
-  }
-
-  return stack;
-}
-
-/** Source directories worth proposing as areas, from what is actually on disk. */
-export function detectAreas(dir) {
-  const candidates = ['src', 'lib', 'app', 'api', 'packages', 'services'];
-  const found = [];
-  for (const name of candidates) {
-    const full = path.join(dir, name);
-    if (!fs.existsSync(full) || !fs.statSync(full).isDirectory()) continue;
-    const children = fs
-      .readdirSync(full, { withFileTypes: true })
-      .filter((e) => e.isDirectory() && !e.name.startsWith('.') && e.name !== 'node_modules');
-    if (children.length >= 2 && children.length <= 8) {
-      for (const child of children) found.push({ id: slug(child.name), globs: [`${name}/${child.name}/**`] });
-    } else {
-      found.push({ id: slug(name), globs: [`${name}/**`] });
-    }
-  }
-  return found.slice(0, 6);
-}
-
-function slug(s) {
-  return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'core';
-}
 
 function copyTree(from, to, report) {
   if (!fs.existsSync(from)) return;

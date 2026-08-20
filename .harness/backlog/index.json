@@ -2,16 +2,16 @@
   "harness_version": "1.0.0",
   "counts": {
     "backlog": 11,
-    "ready": 24,
-    "in_progress": 2,
+    "ready": 21,
+    "in_progress": 4,
     "in_review": 0,
     "blocked": 1,
-    "done": 51,
+    "done": 52,
     "cancelled": 0,
     "total": 89,
-    "open": 38
+    "open": 37
   },
-  "next": "FEAT-0017",
+  "next": "FEAT-0022",
   "tasks": [
     {
       "id": "CHORE-0001",
@@ -218,7 +218,7 @@
       "id": "EPIC-0004",
       "title": "Adopción de un proyecto ya existente",
       "type": "epic",
-      "status": "ready",
+      "status": "in_progress",
       "priority": "high",
       "size": null,
       "area": null,
@@ -227,7 +227,7 @@
       "blocked": false,
       "assignee": null,
       "branch": null,
-      "updated_at": "2026-08-20T16:33:33Z"
+      "updated_at": "2026-08-20T18:24:58Z"
     },
     {
       "id": "EPIC-0005",
@@ -608,16 +608,16 @@
       "id": "FEAT-0017",
       "title": "Reconocimiento del proyecto y línea base de calidad",
       "type": "feature",
-      "status": "ready",
+      "status": "in_progress",
       "priority": "high",
       "size": "M",
       "area": "cli",
       "parent": "EPIC-0004",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "assignee": "agent:implementer",
+      "branch": "feat/0017-reconocimiento-del-proyecto-y-linea-base",
+      "updated_at": "2026-08-20T18:25:00Z"
     },
     {
       "id": "FEAT-0018",
@@ -675,16 +675,16 @@
       "id": "FEAT-0021",
       "title": "Perfiles de estructura destino por lenguaje",
       "type": "feature",
-      "status": "ready",
+      "status": "done",
       "priority": "high",
       "size": "S",
       "area": "definitions",
       "parent": "EPIC-0004",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "assignee": "agent:implementer",
+      "branch": "feat/0021-perfiles-de-estructura-destino-por-lenguaje",
+      "updated_at": "2026-08-20T18:25:14Z"
     },
     {
       "id": "FEAT-0022",
@@ -698,7 +698,7 @@
       "depends_on": [
         "FEAT-0021"
       ],
-      "blocked": true,
+      "blocked": false,
       "assignee": null,
       "branch": null,
       "updated_at": "2026-08-18T18:05:21Z"

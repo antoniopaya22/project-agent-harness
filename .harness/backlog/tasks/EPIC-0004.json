@@ -3,7 +3,7 @@
   "id": "EPIC-0004",
   "title": "Adopción de un proyecto ya existente",
   "type": "epic",
-  "status": "ready",
+  "status": "in_progress",
   "priority": "high",
   "description": "Un repositorio real queda adoptado: documentado con evidencia, con backlog sembrado y con el código movido a la estructura del harness.",
   "acceptance_criteria": [
@@ -48,5 +48,5 @@
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-20T16:33:33Z"
+  "updated_at": "2026-08-20T18:24:58Z"
 }

@@ -1,1 +1,6 @@
 {"at":"2026-08-18T19:00:00Z","by":"harness","event":"created","note":"sembrada desde docs/HARNESS-PLAN.md §12"}
+{"at":"2026-08-20T18:24:59Z","by":"implementer","event":"claimed","note":"branch feat/0021-perfiles-de-estructura-destino-por-lenguaje"}
+{"at":"2026-08-20T18:25:00Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-20T18:25:00Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-20T18:25:14Z","by":"tester","event":"status_changed","note":"in_progress -> in_review"}
+{"at":"2026-08-20T18:25:14Z","by":"human","event":"completed","note":"in_review -> done"}

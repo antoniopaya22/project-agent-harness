@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "FEAT-0017",
+  "stage": "claimed",
+  "by": "implementer",
+  "branch": "feat/0017-reconocimiento-del-proyecto-y-linea-base",
+  "summary": "Tarea reclamada por agent:implementer. Rama feat/0017-reconocimiento-del-proyecto-y-linea-base. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-20T18:24:58Z"
+}

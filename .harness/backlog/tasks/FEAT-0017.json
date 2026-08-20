@@ -3,7 +3,7 @@
   "id": "FEAT-0017",
   "title": "Reconocimiento del proyecto y línea base de calidad",
   "type": "feature",
-  "status": "ready",
+  "status": "in_progress",
   "priority": "high",
   "size": "M",
   "parent": "EPIC-0004",
@@ -16,7 +16,8 @@
         "type": "command",
         "run": "node --test tests/adopt.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "detecta stack y gates reales de un proyecto Node y de uno Python, cada uno con su evidencia; tests/adopt.test.mjs"
     },
     {
       "id": "AC2",
@@ -25,7 +26,8 @@
         "type": "command",
         "run": "node --test tests/adopt.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "el test compara el arbol y git status antes y despues: la encuesta no escribe nada"
     },
     {
       "id": "AC3",
@@ -34,7 +36,8 @@
         "type": "review",
         "run": null
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "gateBaseline registra estado, codigo y extracto por gate; hasSafetyNet decide si se puede mover"
     }
   ],
   "context": {
@@ -45,14 +48,17 @@
   },
   "depends_on": [],
   "labels": [],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T18:24:58Z",
+  "branch": "feat/0017-reconocimiento-del-proyecto-y-linea-base",
   "links": {
     "pr": null,
     "issue": null,
     "commits": []
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-18T19:00:00Z"
+  "updated_at": "2026-08-20T18:25:00Z"
 }
