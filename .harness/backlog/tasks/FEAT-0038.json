@@ -1,0 +1,70 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0038",
+  "title": "Probar que la comprobacion de un criterio fallaba antes del cambio",
+  "type": "feature",
+  "status": "ready",
+  "priority": "critical",
+  "size": "L",
+  "parent": "EPIC-0009",
+  "description": "El prompt de quien implementa dice que escriba primero el test que falla, y nada lo verifica. Registrando el resultado de cada comprobacion de tipo comando antes de implementar, el verificador puede demostrar que el test no estaba pasando ya. Cierra el mas grave de los tres modos en que un resultado verde puede mentir.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Se puede registrar el resultado de cada comprobacion antes de implementar",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/baseline.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "Una comprobacion que ya pasaba antes del cambio se marca como no valida y se explica",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/baseline.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC3",
+      "must": "El informe de verificacion incluye la comparacion con la linea base",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-20T15:30:00Z",
+      "by": "planner",
+      "event": "created",
+      "note": "revision del harness construido"
+    }
+  ],
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T15:30:00Z"
+}

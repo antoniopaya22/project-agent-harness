@@ -1,0 +1,78 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0046",
+  "title": "Motor de proyeccion con varios sumideros",
+  "type": "feature",
+  "status": "ready",
+  "priority": "critical",
+  "size": "M",
+  "parent": "EPIC-0011",
+  "description": "La sincronizacion deja de ser un cliente de una herramienta concreta y pasa a ser una proyeccion con varios destinos. Cada sumidero reconcilia contra el repositorio por su cuenta y ninguno habla con otro, de modo que dos espejos no pueden entrar en conflicto: solo pueden estar cada uno mas o menos fresco.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "La sincronizacion recorre los sumideros habilitados de forma independiente",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/sync.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "El fallo de un sumidero no impide que los demas se completen, y se reporta",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/sync.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC3",
+      "must": "Sin ningun sumidero habilitado, la sincronizacion sale bien y explica que no hizo nada",
+      "check": {
+        "type": "command",
+        "run": "node .harness/bin/harness.mjs sync"
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "integrations",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [
+    "SPIKE-0003"
+  ],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-20T15:30:00Z",
+      "by": "planner",
+      "event": "created",
+      "note": "revision del harness construido"
+    },
+    {
+      "at": "2026-08-20T15:40:17Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "depends_on=SPIKE-0003"
+    }
+  ],
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T15:40:17Z"
+}

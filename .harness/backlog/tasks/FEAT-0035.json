@@ -1,0 +1,61 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0035",
+  "title": "Sugerir el nivel de modelo segun el tamano de la tarea",
+  "type": "feature",
+  "status": "ready",
+  "priority": "medium",
+  "size": "S",
+  "parent": "EPIC-0008",
+  "description": "El nivel de modelo se asigna hoy por rol y es fijo. Usar el nivel mas caro para una tarea de mantenimiento de tamano minimo es dinero quemado, y usar el mas barato para un diseno delicado es peor.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "El harness sugiere un nivel de modelo a partir del tipo, tamano y riesgo de la tarea",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/tasks.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "La sugerencia es informativa y no impide elegir otro nivel",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "definitions",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-20T15:30:00Z",
+      "by": "planner",
+      "event": "created",
+      "note": "revision del harness construido"
+    }
+  ],
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T15:30:00Z"
+}

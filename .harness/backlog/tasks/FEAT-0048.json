@@ -1,0 +1,85 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0048",
+  "title": "Sumidero del tablero de GitHub",
+  "type": "feature",
+  "status": "ready",
+  "priority": "high",
+  "size": "M",
+  "parent": "EPIC-0011",
+  "description": "El tablero visual, con un campo de estado cuyas opciones son exactamente los estados del harness, de modo que la traduccion sea la identidad y desaparezca una clase entera de errores. Los identificadores de campos y opciones se descubren una vez y se guardan en configuracion.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "El campo de estado del tablero replica los estados del harness uno a uno",
+      "check": {
+        "type": "manual",
+        "run": null
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "Los identificadores de campos y opciones se descubren y se guardan, no se escriben a mano",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/sync-github.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC3",
+      "must": "Una tarea nueva aparece en el tablero en la columna correcta",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/sync-github.test.mjs"
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "integrations",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [
+    "FEAT-0046",
+    "SPIKE-0003"
+  ],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-20T15:30:00Z",
+      "by": "planner",
+      "event": "created",
+      "note": "revision del harness construido"
+    },
+    {
+      "at": "2026-08-20T15:40:17Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "depends_on=FEAT-0046"
+    },
+    {
+      "at": "2026-08-20T15:40:17Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "depends_on=SPIKE-0003"
+    }
+  ],
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T15:40:17Z"
+}

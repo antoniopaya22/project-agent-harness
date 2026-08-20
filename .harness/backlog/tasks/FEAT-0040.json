@@ -1,0 +1,61 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0040",
+  "title": "Gate de secretos sobre el cambio completo",
+  "type": "feature",
+  "status": "ready",
+  "priority": "high",
+  "size": "S",
+  "parent": "EPIC-0009",
+  "description": "El autodiagnostico busca credenciales en los ficheros de tarea y en la configuracion. Un token puede entrar por cualquier fichero, y el momento de detectarlo es antes de commitear, no despues.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "El commit rehusa cuando el cambio contiene algo con forma de credencial",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/secrets.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "Existe forma explicita y registrada de saltarse la comprobacion ante un falso positivo",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/secrets.test.mjs"
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-20T15:30:00Z",
+      "by": "planner",
+      "event": "created",
+      "note": "revision del harness construido"
+    }
+  ],
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T15:30:00Z"
+}

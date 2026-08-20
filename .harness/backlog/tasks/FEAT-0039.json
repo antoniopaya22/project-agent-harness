@@ -1,0 +1,70 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0039",
+  "title": "Bloquear la edicion de ficheros generados con automatismos del proveedor",
+  "type": "feature",
+  "status": "ready",
+  "priority": "high",
+  "size": "M",
+  "parent": "EPIC-0009",
+  "description": "La prohibicion de editar un fichero generado esta escrita en tres sitios y no la impide nada. Donde el proveedor ofrece automatismos ante eventos, la regla puede pasar de recordatorio a mecanismo.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Intentar editar un fichero con cabecera de generado queda bloqueado",
+      "check": {
+        "type": "manual",
+        "run": null
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "Editar un fichero de tarea dispara la validacion de esquema",
+      "check": {
+        "type": "manual",
+        "run": null
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC3",
+      "must": "Los automatismos se generan desde la configuracion, no se escriben a mano",
+      "check": {
+        "type": "command",
+        "run": "node .harness/bin/harness.mjs generate --check"
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "adapters",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-20T15:30:00Z",
+      "by": "planner",
+      "event": "created",
+      "note": "revision del harness construido"
+    }
+  ],
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T15:30:00Z"
+}

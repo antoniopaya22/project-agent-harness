@@ -1,0 +1,69 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0032",
+  "title": "Cerrar una tarea en una sola llamada",
+  "type": "feature",
+  "status": "ready",
+  "priority": "high",
+  "size": "M",
+  "parent": "EPIC-0008",
+  "description": "El cierre de una tarea son hoy cuatro llamadas seguidas y siempre las mismas: verificar, documentar, cambiar de estado y commitear. Un comando que las encadene ahorra viajes y elimina la posibilidad de olvidarse una.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Un solo comando ejecuta la secuencia de cierre y se detiene en el primer fallo",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/finish.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "Si algun criterio no esta resuelto, rehusa y dice cual",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/finish.test.mjs"
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [
+    "FEAT-0037"
+  ],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-20T15:30:00Z",
+      "by": "planner",
+      "event": "created",
+      "note": "revision del harness construido"
+    },
+    {
+      "at": "2026-08-20T15:40:17Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "depends_on=FEAT-0037"
+    }
+  ],
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T15:40:17Z"
+}

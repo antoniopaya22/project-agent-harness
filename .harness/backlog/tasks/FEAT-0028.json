@@ -4,7 +4,7 @@
   "title": "Cliente de sincronización en una sola dirección",
   "type": "feature",
   "status": "backlog",
-  "priority": "medium",
+  "priority": "low",
   "size": "M",
   "parent": "EPIC-0006",
   "description": "Proyecta el backlog a la herramienta externa. Sin credencial avisa y sale bien; si detecta que alguien editó una tarjeta a mano lo avisa sin intentar mezclar nada.",
@@ -46,7 +46,8 @@
     "out_of_scope": []
   },
   "depends_on": [
-    "FEAT-0027"
+    "FEAT-0027",
+    "FEAT-0046"
   ],
   "labels": [],
   "assignee": null,
@@ -69,8 +70,20 @@
       "by": "human",
       "event": "status_changed",
       "note": "depends_on=FEAT-0027"
+    },
+    {
+      "at": "2026-08-20T15:40:19Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "priority=low"
+    },
+    {
+      "at": "2026-08-20T15:40:19Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "depends_on=FEAT-0046"
     }
   ],
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-18T18:05:21Z"
+  "updated_at": "2026-08-20T15:40:19Z"
 }

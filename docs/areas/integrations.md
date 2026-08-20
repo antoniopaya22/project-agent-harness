@@ -13,11 +13,20 @@ owner: Antonio Payá
 
 ## Qué hace esta área
 
-Proyecta el backlog a una herramienta visual para que perfiles no técnicos vean el estado del proyecto.
-ClickUp es la implementación de referencia.
+Proyecta el backlog a herramientas externas para que se vea el estado del proyecto sin tocar el
+repositorio. **No es un cliente de una herramienta: es una proyección con N sumideros** (D9).
+
+| Nivel | Destino | Coste de configuración |
+|-------|---------|------------------------|
+| **1, por defecto y siempre activo** | GitHub Issues + Projects | Ninguno: el transporte es `gh`, ya autenticado. **Cero secretos en el proyecto** |
+| **2, opcional** | ClickUp, Jira, Linear… | Token, configuración y activación explícita |
 
 Su límite: **una sola dirección**. El repositorio es la fuente de verdad, porque para cambiar el estado
-de una tarea hay que tocar el código. Nadie edita tarjetas.
+de una tarea hay que tocar el código. Fuera se consulta, no se edita.
+
+Cada sumidero reconcilia contra el repositorio por su cuenta y **ninguno habla con otro**: dos espejos
+no pueden entrar en conflicto, solo pueden estar cada uno más o menos fresco. El fallo de un sumidero no
+impide que los demás se completen.
 
 ## La interfaz de adaptador
 
@@ -34,6 +43,28 @@ Un adaptador vive en `.harness/integrations/<proveedor>/adapter.mjs` y exporta:
 | `unmapStatus(remote)` | La inversa, para detectar deriva |
 
 Añadir Jira o Linear significa escribir otro directorio con estas funciones, sin tocar el núcleo.
+Con GitHub y ClickUp la interfaz tiene **dos implementaciones reales**, que es la única forma de saber
+si una abstracción está bien puesta.
+
+### GitHub: el sumidero por defecto
+
+Transporte: `gh` y `gh api graphql`, porque **los tableros de GitHub son solo GraphQL** — la API REST de
+los proyectos clásicos está retirada. Requiere el scope `project` en el token
+(`gh auth refresh -s project`); el token habitual solo trae `repo` y `workflow`.
+
+| Harness | GitHub |
+|---------|--------|
+| tarea | incidencia, con los criterios como lista de comprobación |
+| `id` | prefijo del título: `FEAT-0042 · …` |
+| `status` | campo de selección única del tablero, **mapeo identidad** con los siete estados |
+| `type`, `priority`, `context.area` | etiquetas |
+| `parent` (épica) | sub-issue — **[VERIFY]** superficie exacta de la API |
+| `branch`, `links.pr` | referencias cruzadas nativas |
+
+**[VERIFY]** antes de implementar: descubrimiento de los identificadores de campo y de opción del
+tablero (hay que hacerlo una vez y guardarlos), y si el token de Actions puede escribir en un tablero —
+es un recurso de usuario u organización, no del repositorio, así que probablemente haga falta un PAT o
+una App.
 
 ## Mapeo de campos a ClickUp
 

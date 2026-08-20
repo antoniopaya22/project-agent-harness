@@ -1,11 +1,11 @@
 {
   "$schema": "../../schema/task.schema.json",
-  "id": "EPIC-0006",
-  "title": "Proyección del backlog a ClickUp",
+  "id": "EPIC-0010",
+  "title": "Anti-podredumbre: que la estructura se defienda sola",
   "type": "epic",
-  "status": "backlog",
-  "priority": "low",
-  "description": "Perfiles no técnicos ven el estado del proyecto sin tocar el repositorio, y nada del núcleo depende de ello.",
+  "status": "ready",
+  "priority": "high",
+  "description": "Las comprobaciones mecanicas que faltan para que la documentacion y el backlog no se separen de la realidad sin que nadie se entere.",
   "acceptance_criteria": [
     {
       "id": "AC1",
@@ -27,7 +27,8 @@
   },
   "depends_on": [],
   "labels": [
-    "fase"
+    "fase",
+    "mejora"
   ],
   "assignee": null,
   "claimed_at": null,
@@ -39,18 +40,12 @@
   },
   "worklog": [
     {
-      "at": "2026-08-18T19:00:00Z",
-      "by": "harness",
+      "at": "2026-08-20T15:30:00Z",
+      "by": "planner",
       "event": "created",
-      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
-    },
-    {
-      "at": "2026-08-20T15:40:18Z",
-      "by": "human",
-      "event": "status_changed",
-      "note": "priority=low"
+      "note": "revision del harness construido"
     }
   ],
-  "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-20T15:40:18Z"
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T15:30:00Z"
 }

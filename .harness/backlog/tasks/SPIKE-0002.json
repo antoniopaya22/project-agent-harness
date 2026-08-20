@@ -4,7 +4,7 @@
   "title": "Verificar la interfaz de programación de ClickUp",
   "type": "spike",
   "status": "backlog",
-  "priority": "medium",
+  "priority": "low",
   "size": "S",
   "parent": "EPIC-0006",
   "description": "Confirmar contra la documentación oficial los puntos de acceso, la autorización, el límite de peticiones, la paginación, los campos personalizados y las dependencias. Todo lo marcado como pendiente de verificar en el documento del área.",
@@ -27,7 +27,9 @@
     "files": [],
     "out_of_scope": []
   },
-  "depends_on": [],
+  "depends_on": [
+    "FEAT-0046"
+  ],
   "labels": [],
   "assignee": null,
   "claimed_at": null,
@@ -43,8 +45,20 @@
       "by": "harness",
       "event": "created",
       "note": "sembrada desde docs/HARNESS-PLAN.md §12"
+    },
+    {
+      "at": "2026-08-20T15:40:18Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "priority=low"
+    },
+    {
+      "at": "2026-08-20T15:40:18Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "depends_on=FEAT-0046"
     }
   ],
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-18T19:00:00Z"
+  "updated_at": "2026-08-20T15:40:18Z"
 }

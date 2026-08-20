@@ -1,0 +1,87 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0047",
+  "title": "Sumidero de incidencias de GitHub",
+  "type": "feature",
+  "status": "ready",
+  "priority": "high",
+  "size": "M",
+  "parent": "EPIC-0011",
+  "description": "Cada tarea se proyecta como una incidencia con sus criterios de aceptacion como lista de comprobacion. Sin ningun secreto: el transporte es la herramienta de linea de comandos de GitHub, que ya esta autenticada. Es el destino por defecto justamente porque cuesta cero configurar.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Una tarea se proyecta como incidencia con sus criterios como lista de comprobacion",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/sync-github.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "Dos ejecuciones seguidas no producen cambios remotos en la segunda",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/sync-github.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC3",
+      "must": "La proyeccion no requiere ningun secreto en el proyecto",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC4",
+      "must": "Una edicion manual en remoto se avisa sin intentar mezclarla",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/sync-github.test.mjs"
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "integrations",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [
+    "FEAT-0046"
+  ],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-20T15:30:00Z",
+      "by": "planner",
+      "event": "created",
+      "note": "revision del harness construido"
+    },
+    {
+      "at": "2026-08-20T15:40:17Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "depends_on=FEAT-0046"
+    }
+  ],
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T15:40:17Z"
+}

@@ -1,0 +1,85 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0031",
+  "title": "Un solo payload en lugar de cuatro lecturas",
+  "type": "feature",
+  "status": "ready",
+  "priority": "critical",
+  "size": "M",
+  "parent": "EPIC-0008",
+  "description": "Un agente hace hoy cuatro llamadas de herramienta para montar el camino de lectura. Un comando que lo concatene con separadores claros convierte cuatro viajes en uno, y de paso puede emitir una proyeccion de la tarea que omita los campos que a quien implementa no le sirven de nada: historial, enlaces, bloques de sincronizacion externa y fechas.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Un unico comando devuelve el camino de lectura completo con separadores por fichero",
+      "check": {
+        "type": "command",
+        "run": "node .harness/bin/harness.mjs brief FEAT-0017"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "La proyeccion de la tarea omite historial, enlaces, sincronizacion externa y fechas",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/brief.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC3",
+      "must": "El payload resultante es al menos un treinta por ciento menor que la suma de los ficheros originales",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/brief.test.mjs"
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [
+    "FEAT-0030",
+    "RFCT-0001"
+  ],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-20T15:30:00Z",
+      "by": "planner",
+      "event": "created",
+      "note": "revision del harness construido"
+    },
+    {
+      "at": "2026-08-20T15:40:16Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "depends_on=FEAT-0030"
+    },
+    {
+      "at": "2026-08-20T15:40:17Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "depends_on=RFCT-0001"
+    }
+  ],
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T15:40:17Z"
+}

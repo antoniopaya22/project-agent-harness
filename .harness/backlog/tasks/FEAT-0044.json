@@ -1,0 +1,61 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0044",
+  "title": "Derivar el estado de una epica de sus tareas hijas",
+  "type": "feature",
+  "status": "ready",
+  "priority": "medium",
+  "size": "S",
+  "parent": "EPIC-0010",
+  "description": "El criterio de una epica es que todas sus hijas esten hechas, y hoy eso es contabilidad manual que se va a desincronizar en cuanto nadie mire. Es derivable.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "El estado de una epica se calcula a partir de sus hijas al regenerar el indice",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/board.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "Una epica no puede reclamarse ni implementarse directamente",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/tasks.test.mjs"
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-20T15:30:00Z",
+      "by": "planner",
+      "event": "created",
+      "note": "revision del harness construido"
+    }
+  ],
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T15:30:00Z"
+}

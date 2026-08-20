@@ -1,0 +1,61 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0054",
+  "title": "Importar incidencias existentes como tareas",
+  "type": "feature",
+  "status": "ready",
+  "priority": "medium",
+  "size": "S",
+  "parent": "EPIC-0012",
+  "description": "Sembrar un backlog desde las incidencias abiertas de un repositorio, sin necesitar el comando de adopcion completo. Entran sin refinar, porque son ideas y marcarlas como listas seria mentir sobre su estado.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Las incidencias importadas quedan sin refinar y con enlace a su origen",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/import.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "Una segunda importacion no duplica lo ya importado",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/import.test.mjs"
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-20T15:30:00Z",
+      "by": "planner",
+      "event": "created",
+      "note": "revision del harness construido"
+    }
+  ],
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T15:30:00Z"
+}

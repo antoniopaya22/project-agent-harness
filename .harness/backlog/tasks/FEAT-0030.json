@@ -1,0 +1,70 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0030",
+  "title": "Medir el camino de lectura en tokens y no en líneas",
+  "type": "feature",
+  "status": "ready",
+  "priority": "critical",
+  "size": "M",
+  "parent": "EPIC-0008",
+  "description": "Los presupuestos del camino de lectura se declaran en líneas, que es un proxy malo: trescientas líneas pueden ser tres mil o doce mil tokens. Toda la promesa del harness pivota sobre esta medida, así que tiene que ser la correcta. Basta una estimación por caracteres partidos entre cuatro, siempre que sea la que se hace cumplir.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Los presupuestos se declaran y se comprueban en tokens estimados",
+      "check": {
+        "type": "command",
+        "run": "node .harness/bin/harness.mjs doctor"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "El comando de camino de lectura imprime el coste estimado de cada fichero y el total",
+      "check": {
+        "type": "command",
+        "run": "node .harness/bin/harness.mjs read-path FEAT-0017"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC3",
+      "must": "El autodiagnostico falla cuando el arranque en frio completo excede su presupuesto",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/readpath.test.mjs"
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [
+    "mejora"
+  ],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-20T15:30:00Z",
+      "by": "planner",
+      "event": "created",
+      "note": "revision del harness construido"
+    }
+  ],
+  "created_at": "2026-08-20T15:30:00Z",
+  "updated_at": "2026-08-20T15:30:00Z"
+}
