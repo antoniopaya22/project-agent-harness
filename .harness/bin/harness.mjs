@@ -31,6 +31,7 @@ import * as commitLib from './lib/commit.mjs';
 import { SUBCOMMANDS, taskCommand, next as taskNext } from './lib/task-cmd.mjs';
 import * as readpath from './lib/readpath.mjs';
 import * as workspace from './lib/workspace.mjs';
+import * as init from './lib/init.mjs';
 import { lintBacklog } from './lib/lint.mjs';
 
 function actorId(ctx, flags) {
@@ -64,6 +65,7 @@ commands.help = () => {
   say(
     table(
       [
+        ['init [dir]', 'install the harness into a project that does not have one'],
         ['status', 'one-screen situational awareness'],
         ['brief <ID>', 'the whole cold-start read path as one payload, projected'],
         ['read-path <ID>', 'the exact files to read to work on a task, with their cost'],
@@ -91,6 +93,33 @@ commands.help = () => {
 
 commands.version = () => {
   say(HARNESS_VERSION);
+  return EXIT.OK;
+};
+
+commands.init = (_unused, { positional, flags }) => {
+  const target = path.resolve(positional[0] || process.cwd());
+  // The template is the repository this CLI lives in: .harness/bin/ -> repo root.
+  const templateRoot = path.resolve(import.meta.dirname, '..', '..');
+  if (!fs.existsSync(path.join(templateRoot, '.harness', 'ENTRYPOINT.md'))) {
+    fail('cannot locate the harness template to install from', EXIT.NOT_FOUND);
+  }
+  if (!fs.existsSync(target)) fail(`${target} does not exist`, EXIT.NOT_FOUND);
+  if (path.resolve(templateRoot) === target) {
+    fail('refusing to initialise the template into itself', EXIT.PRECONDITION);
+  }
+
+  const result = init.initProject(templateRoot, target, {
+    name: typeof flags.name === 'string' ? flags.name : null,
+    purpose: typeof flags.purpose === 'string' ? flags.purpose : null,
+    language: typeof flags.language === 'string' ? flags.language : 'es',
+    layout: typeof flags.layout === 'string' ? flags.layout : 'as-is',
+    force: Boolean(flags.force),
+  });
+  if (flags.json) {
+    say(JSON.stringify(result, null, 2));
+    return EXIT.OK;
+  }
+  init.printInitReport(target, result);
   return EXIT.OK;
 };
 
@@ -394,7 +423,7 @@ async function main(argv) {
     commands.help();
     return EXIT.USAGE;
   }
-  if (name === 'help' || name === 'version') return fn();
+  if (name === 'help' || name === 'version' || name === 'init') return fn(null, parsed);
   const ctx = loadContext();
   const result = await fn(ctx, parsed);
   return typeof result === 'number' ? result : EXIT.OK;

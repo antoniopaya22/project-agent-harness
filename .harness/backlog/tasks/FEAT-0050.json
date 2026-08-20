@@ -3,7 +3,7 @@
   "id": "FEAT-0050",
   "title": "Arranque para un proyecto nuevo",
   "type": "feature",
-  "status": "ready",
+  "status": "done",
   "priority": "critical",
   "size": "M",
   "parent": "EPIC-0012",
@@ -16,7 +16,8 @@
         "type": "command",
         "run": "node --test tests/init.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "harness init deja doctor en verde en un proyecto Node de prueba; 11 tests en tests/init.test.mjs"
     },
     {
       "id": "AC2",
@@ -25,7 +26,8 @@
         "type": "review",
         "run": null
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "gates solo desde scripts existentes; purpose marcado [RELLENAR]; informe enumera lo pendiente"
     },
     {
       "id": "AC3",
@@ -34,7 +36,8 @@
         "type": "command",
         "run": "node --test tests/init.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "ningun fichero preexistente se sobrescribe y el informe dice cuales respeto"
     }
   ],
   "context": {
@@ -44,17 +47,21 @@
     "out_of_scope": []
   },
   "depends_on": [],
+  "blocked_reason": null,
   "labels": [
     "mejora"
   ],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T16:16:52Z",
+  "branch": "feat/0050-arranque-para-un-proyecto-nuevo",
   "links": {
     "pr": null,
     "issue": null,
     "commits": []
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T15:30:00Z"
+  "updated_at": "2026-08-20T16:16:53Z"
 }
