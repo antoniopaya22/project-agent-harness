@@ -272,6 +272,19 @@
       "type": "integer",
       "minimum": 1,
       "description": "Cap on the worst-case cold start (the sum of every entry's budget). This is the number the whole design rests on."
+    },
+    "implement": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Knobs for /implement that used to live as prose inside its prompt.",
+      "properties": {
+        "max_verify_loops": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 2,
+          "description": "How many times implementation may go round after a failed verification before stopping for a human. The right number depends on the project, so it is not a sentence in a prompt."
+        }
+      }
     }
   },
   "$defs": {

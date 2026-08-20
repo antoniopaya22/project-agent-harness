@@ -8,6 +8,7 @@ import { EXIT, bad, c, fail, info, ok, say, table } from './util.mjs';
 import * as tasksLib from './tasks.mjs';
 import * as board from './board.mjs';
 import { actor } from './actor.mjs';
+import * as git from './git.mjs';
 
 const taskSubs = {};
 
@@ -113,6 +114,20 @@ taskSubs.claim = (ctx, { positional, flags }) => {
   task.claimed_at = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
   task.branch = branch;
   const problems = tasksLib.transitionProblems(ctx, task, 'in_progress', { actorKind: who.kind });
+
+  // Claiming used to be advisory: two agents in two worktrees could both take the same
+  // task and only find out at merge time. A branch already on the remote is the one signal
+  // that somebody else really started, and it costs one network call to check.
+  if (!flags.force && git.hasRemote(ctx)) {
+    const remote = git.git(ctx, ['ls-remote', '--heads', 'origin', branch], { allowFail: true });
+    if (remote.code === 0 && remote.out.trim()) {
+      problems.push(
+        `branch ${branch} already exists on the remote, so somebody has this task. ` +
+          'Coordinate, or pass --force if you know it is stale.',
+      );
+    }
+  }
+
   if (problems.length) {
     for (const p of problems) bad(p);
     return EXIT.PRECONDITION;

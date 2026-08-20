@@ -92,9 +92,9 @@ Then invoke the **implementer**. It reads only the read path plus the plan. Upda
 Invoke the **tester**. It runs `harness gates` and gives a verdict per criterion with evidence.
 
 - All criteria pass → continue.
-- Something fails → back to stage 6 with the tester's findings. **Maximum two loops.** After the
-  second failed verification, stop, report exactly what is failing and why, and let the human decide.
-  Do not keep trying.
+- Something fails → back to stage 6 with the tester's findings. **Maximum 2 loops.**
+  After the last failed verification, stop, report exactly what is failing and why, and let the human
+  decide. Do not keep trying.
 
 Update the handoff to `verified`.
 

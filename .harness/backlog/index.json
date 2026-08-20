@@ -2,14 +2,14 @@
   "harness_version": "1.0.0",
   "counts": {
     "backlog": 11,
-    "ready": 41,
+    "ready": 37,
     "in_progress": 0,
     "in_review": 0,
     "blocked": 0,
-    "done": 37,
+    "done": 41,
     "cancelled": 0,
     "total": 89,
-    "open": 52
+    "open": 48
   },
   "next": "FEAT-0050",
   "tasks": [
@@ -83,16 +83,16 @@
       "id": "CHORE-0005",
       "title": "Configurar el limite de vueltas del bucle de verificacion",
       "type": "chore",
-      "status": "ready",
+      "status": "done",
       "priority": "low",
       "size": "XS",
       "area": "definitions",
       "parent": "EPIC-0009",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "assignee": "agent:implementer",
+      "branch": "chore/0005-configurar-el-limite-de-vueltas-del",
+      "updated_at": "2026-08-20T16:13:34Z"
     },
     {
       "id": "CHORE-0006",
@@ -981,31 +981,31 @@
       "id": "FEAT-0040",
       "title": "Gate de secretos sobre el cambio completo",
       "type": "feature",
-      "status": "ready",
+      "status": "done",
       "priority": "high",
       "size": "S",
       "area": "cli",
       "parent": "EPIC-0009",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "assignee": "agent:implementer",
+      "branch": "feat/0040-gate-de-secretos-sobre-el-cambio",
+      "updated_at": "2026-08-20T16:13:33Z"
     },
     {
       "id": "FEAT-0041",
       "title": "El reclamo de una tarea rehusa si ya hay rama en el remoto",
       "type": "feature",
-      "status": "ready",
+      "status": "done",
       "priority": "medium",
       "size": "S",
       "area": "cli",
       "parent": "EPIC-0009",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "assignee": "agent:implementer",
+      "branch": "feat/0041-el-reclamo-de-una-tarea-rehusa",
+      "updated_at": "2026-08-20T16:13:34Z"
     },
     {
       "id": "FEAT-0042",
@@ -1308,16 +1308,16 @@
       "id": "RFCT-0002",
       "title": "Los comandos referencian a los agentes en vez de reescribirlos",
       "type": "refactor",
-      "status": "ready",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "definitions",
       "parent": "EPIC-0008",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "assignee": "agent:implementer",
+      "branch": "refactor/0002-los-comandos-referencian-a-los-agentes",
+      "updated_at": "2026-08-20T16:13:34Z"
     },
     {
       "id": "SPIKE-0001",

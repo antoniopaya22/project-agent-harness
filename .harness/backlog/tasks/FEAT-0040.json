@@ -3,7 +3,7 @@
   "id": "FEAT-0040",
   "title": "Gate de secretos sobre el cambio completo",
   "type": "feature",
-  "status": "ready",
+  "status": "done",
   "priority": "high",
   "size": "S",
   "parent": "EPIC-0009",
@@ -16,7 +16,8 @@
         "type": "command",
         "run": "node --test tests/secrets.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "el commit escanea solo las lineas anadidas del diff staged y rehusa; 6 tests en tests/secrets.test.mjs"
     },
     {
       "id": "AC2",
@@ -25,7 +26,7 @@
         "type": "command",
         "run": "node --test tests/secrets.test.mjs"
       },
-      "status": "pending"
+      "status": "pass"
     }
   ],
   "context": {
@@ -35,17 +36,21 @@
     "out_of_scope": []
   },
   "depends_on": [],
+  "blocked_reason": null,
   "labels": [
     "mejora"
   ],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T16:13:29Z",
+  "branch": "feat/0040-gate-de-secretos-sobre-el-cambio",
   "links": {
     "pr": null,
     "issue": null,
     "commits": []
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T15:30:00Z"
+  "updated_at": "2026-08-20T16:13:33Z"
 }

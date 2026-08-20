@@ -3,7 +3,7 @@
   "id": "CHORE-0005",
   "title": "Configurar el limite de vueltas del bucle de verificacion",
   "type": "chore",
-  "status": "ready",
+  "status": "done",
   "priority": "low",
   "size": "XS",
   "parent": "EPIC-0009",
@@ -16,7 +16,8 @@
         "type": "command",
         "run": "node .harness/bin/harness.mjs doctor"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "project.json implement.max_verify_loops con esquema; el prompt lo interpola con {{config:}}"
     }
   ],
   "context": {
@@ -26,17 +27,21 @@
     "out_of_scope": []
   },
   "depends_on": [],
+  "blocked_reason": null,
   "labels": [
     "mejora"
   ],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T16:13:31Z",
+  "branch": "chore/0005-configurar-el-limite-de-vueltas-del",
   "links": {
     "pr": null,
     "issue": null,
     "commits": []
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T15:30:00Z"
+  "updated_at": "2026-08-20T16:13:34Z"
 }

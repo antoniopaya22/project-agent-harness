@@ -353,6 +353,7 @@ commands.commit = (ctx, { flags }) => {
     scope: typeof flags.scope === 'string' ? flags.scope : null,
     body: typeof flags.body === 'string' ? flags.body : null,
     noVerify: Boolean(flags['no-verify']),
+    allowSecret: Boolean(flags['allow-secret']),
     push: flags.push !== 'false' && flags['no-push'] !== true,
     closes: Boolean(flags.closes),
   });

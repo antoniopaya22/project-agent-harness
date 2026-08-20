@@ -180,6 +180,18 @@ export function runDoctor(ctx, { fix = false } = {}) {
   // to the machine where the files still exist.
   issues.push(...checkGitVisibility(ctx));
 
+  // 12. no template left unresolved in a generated prompt. A `{{include:x}}` that never
+  // resolved is a missing instruction, and it is invisible unless something looks for it.
+  for (const item of generate.plan(ctx)) {
+    for (const m of item.content.matchAll(/\{\{(config|include):([A-Za-z0-9_.-]+)\}\}/g)) {
+      issues.push({
+        level: 'error',
+        check: 'templates',
+        message: `${item.path} still contains ${m[0]} — the ${m[1] === 'config' ? 'config path does not exist' : 'include file is missing'}`,
+      });
+    }
+  }
+
   return { issues, fixed, counts: tally(issues) };
 }
 

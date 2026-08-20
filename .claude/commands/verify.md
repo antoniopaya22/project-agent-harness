@@ -21,17 +21,26 @@ node .harness/bin/harness.mjs gates
 node .harness/bin/harness.mjs task show $1
 ```
 
-Then invoke the **tester**, whose defining constraint is that it cannot fix the code. It:
+Then invoke the **tester**, whose defining constraint is that it cannot fix the code. Its
+procedure is its own — do not restate it here; read `.harness/agents/tester.md` if you need it.
+What this command guarantees is only the framing: gates first, then a verdict per criterion with
+quotable evidence, then `.harness/workspace/$1/verification.md`.
 
-1. records every gate result verbatim, exit codes included;
-2. takes each acceptance criterion in turn and produces `pass` / `fail` / `unverifiable`, with
-   evidence that can be quoted — for a `command` check, the command and its output; for a `review`
-   check, the specific lines;
-3. actively looks for green results that lie: a test that would pass without the change, a test that
-   asserts the implementation instead of the outcome, a criterion satisfied only on the happy path.
-   Any of those is a `fail`, not a `pass` with a note;
-4. records each verdict with `harness task ac $1 <ACn> <verdict> --evidence "..."`;
-5. writes `.harness/workspace/$1/verification.md`.
+## Never fake a green result
+
+There are exactly three ways a passing check lies, and all three count as a failure, not as
+a pass with a caveat:
+
+- **The check would pass without the change.** `harness task ac-baseline <ID>` records this
+  before implementation; if a check passed at baseline it cannot prove its criterion.
+- **The check asserts the implementation instead of the outcome.** Renaming a private
+  function should not break it.
+- **The check covers the happy path only**, with the error path untested.
+
+And never reach green by weakening the check: no deleting, no `skip`/`xfail`/`.only`, no
+loosened assertion, no widened tolerance, no mocking the thing under test. If a check fails,
+exactly one of two things is true — the code is wrong, or the check is wrong. Say which,
+with evidence, and stop.
 
 If everything passes and the required gates are green:
 

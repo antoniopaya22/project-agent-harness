@@ -151,5 +151,8 @@
       "note": "Solo la rebanada de arquitectura que toca la tarea."
     }
   ],
-  "read_path_total_max_tokens": 6500
+  "read_path_total_max_tokens": 6500,
+  "implement": {
+    "max_verify_loops": 2
+  }
 }
