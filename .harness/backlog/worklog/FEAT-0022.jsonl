@@ -3,3 +3,6 @@
 {"at":"2026-08-20T18:28:52Z","by":"implementer","event":"claimed","note":"branch feat/0022-reescritura-de-referencias-tras-mover-ficheros"}
 {"at":"2026-08-20T18:28:52Z","by":"human","event":"verified","note":"AC1 -> pass"}
 {"at":"2026-08-20T18:28:53Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-20T18:29:40Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-20T18:29:58Z","by":"tester","event":"status_changed","note":"in_progress -> in_review"}
+{"at":"2026-08-20T18:29:59Z","by":"human","event":"completed","note":"in_review -> done"}

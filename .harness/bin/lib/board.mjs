@@ -51,7 +51,10 @@ export function buildIndex(tasks) {
         blocked: isBlockedByDeps(t, byId),
         assignee: t.assignee ? `${t.assignee.kind}:${t.assignee.id}` : null,
         branch: t.branch ?? null,
-        updated_at: t.updated_at,
+        // No `updated_at` on purpose. It moves on every edit, including ones the index does
+        // not reflect — recording a criterion's verdict, for instance — so including it made
+        // the index stale constantly and `doctor` red for no real reason. Nothing decides
+        // anything from it; the worklog is where "when did this change" lives.
       })),
   };
 }

@@ -3,7 +3,7 @@
   "id": "FEAT-0022",
   "title": "Reescritura de referencias tras mover ficheros",
   "type": "feature",
-  "status": "in_progress",
+  "status": "done",
   "priority": "critical",
   "size": "L",
   "parent": "EPIC-0004",
@@ -17,7 +17,7 @@
         "run": "node --test tests/restructure.test.mjs"
       },
       "status": "pass",
-      "evidence": "reescribe importaciones de Python y JS y las 10 familias de configuracion del perfil; 18 tests en tests/restructure.test.mjs"
+      "evidence": "reprueba de estabilidad"
     },
     {
       "id": "AC2",
@@ -39,6 +39,7 @@
   "depends_on": [
     "FEAT-0021"
   ],
+  "blocked_reason": null,
   "labels": [],
   "assignee": {
     "kind": "agent",
@@ -52,5 +53,5 @@
     "commits": []
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-20T18:28:53Z"
+  "updated_at": "2026-08-20T18:29:59Z"
 }

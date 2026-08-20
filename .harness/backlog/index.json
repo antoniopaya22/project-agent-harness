@@ -2,16 +2,16 @@
   "harness_version": "1.0.0",
   "counts": {
     "backlog": 11,
-    "ready": 20,
-    "in_progress": 4,
+    "ready": 21,
+    "in_progress": 2,
     "in_review": 0,
     "blocked": 1,
-    "done": 53,
+    "done": 54,
     "cancelled": 0,
     "total": 89,
-    "open": 36
+    "open": 35
   },
-  "next": "FEAT-0018",
+  "next": "FEAT-0023",
   "tasks": [
     {
       "id": "CHORE-0001",
@@ -25,8 +25,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:32:18Z"
+      "branch": null
     },
     {
       "id": "CHORE-0002",
@@ -43,8 +42,7 @@
       ],
       "blocked": true,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T16:32:23Z"
+      "branch": null
     },
     {
       "id": "CHORE-0003",
@@ -61,8 +59,7 @@
       ],
       "blocked": true,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T16:32:28Z"
+      "branch": null
     },
     {
       "id": "CHORE-0004",
@@ -76,8 +73,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:32:34Z"
+      "branch": null
     },
     {
       "id": "CHORE-0005",
@@ -91,8 +87,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "chore/0005-configurar-el-limite-de-vueltas-del",
-      "updated_at": "2026-08-20T16:32:42Z"
+      "branch": "chore/0005-configurar-el-limite-de-vueltas-del"
     },
     {
       "id": "CHORE-0006",
@@ -106,8 +101,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "chore/0006-afinar-el-autodiagnostico-y-el-limite",
-      "updated_at": "2026-08-20T17:54:49Z"
+      "branch": "chore/0006-afinar-el-autodiagnostico-y-el-limite"
     },
     {
       "id": "DOCS-0001",
@@ -121,8 +115,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:32:53Z"
+      "branch": null
     },
     {
       "id": "DOCS-0002",
@@ -136,8 +129,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:32:59Z"
+      "branch": null
     },
     {
       "id": "DOCS-0003",
@@ -151,8 +143,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:33:05Z"
+      "branch": null
     },
     {
       "id": "DOCS-0004",
@@ -166,8 +157,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:33:11Z"
+      "branch": null
     },
     {
       "id": "EPIC-0001",
@@ -181,8 +171,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T16:33:17Z"
+      "branch": null
     },
     {
       "id": "EPIC-0002",
@@ -196,8 +185,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T16:33:23Z"
+      "branch": null
     },
     {
       "id": "EPIC-0003",
@@ -211,14 +199,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T16:33:29Z"
+      "branch": null
     },
     {
       "id": "EPIC-0004",
       "title": "Adopción de un proyecto ya existente",
       "type": "epic",
-      "status": "in_progress",
+      "status": "ready",
       "priority": "high",
       "size": null,
       "area": null,
@@ -226,8 +213,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T18:28:52Z"
+      "branch": null
     },
     {
       "id": "EPIC-0005",
@@ -241,8 +227,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T16:33:38Z"
+      "branch": null
     },
     {
       "id": "EPIC-0006",
@@ -256,8 +241,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T16:33:43Z"
+      "branch": null
     },
     {
       "id": "EPIC-0007",
@@ -271,8 +255,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T16:33:48Z"
+      "branch": null
     },
     {
       "id": "EPIC-0008",
@@ -286,8 +269,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T16:33:54Z"
+      "branch": null
     },
     {
       "id": "EPIC-0009",
@@ -301,8 +283,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T16:33:59Z"
+      "branch": null
     },
     {
       "id": "EPIC-0010",
@@ -316,8 +297,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T17:54:43Z"
+      "branch": null
     },
     {
       "id": "EPIC-0011",
@@ -331,8 +311,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T16:34:36Z"
+      "branch": null
     },
     {
       "id": "EPIC-0012",
@@ -346,8 +325,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T17:57:53Z"
+      "branch": null
     },
     {
       "id": "EPIC-0013",
@@ -361,8 +339,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T16:34:47Z"
+      "branch": null
     },
     {
       "id": "FEAT-0001",
@@ -376,8 +353,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:34:52Z"
+      "branch": null
     },
     {
       "id": "FEAT-0002",
@@ -391,8 +367,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:01:18Z"
+      "branch": null
     },
     {
       "id": "FEAT-0003",
@@ -406,8 +381,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:01:18Z"
+      "branch": null
     },
     {
       "id": "FEAT-0004",
@@ -421,8 +395,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:01:18Z"
+      "branch": null
     },
     {
       "id": "FEAT-0005",
@@ -436,8 +409,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:01:18Z"
+      "branch": null
     },
     {
       "id": "FEAT-0006",
@@ -451,8 +423,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:01:18Z"
+      "branch": null
     },
     {
       "id": "FEAT-0007",
@@ -466,8 +437,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:01:18Z"
+      "branch": null
     },
     {
       "id": "FEAT-0008",
@@ -481,8 +451,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:01:19Z"
+      "branch": null
     },
     {
       "id": "FEAT-0009",
@@ -496,8 +465,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:01:19Z"
+      "branch": null
     },
     {
       "id": "FEAT-0010",
@@ -511,8 +479,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:01:19Z"
+      "branch": null
     },
     {
       "id": "FEAT-0011",
@@ -526,8 +493,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:01:19Z"
+      "branch": null
     },
     {
       "id": "FEAT-0012",
@@ -541,8 +507,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:01:19Z"
+      "branch": null
     },
     {
       "id": "FEAT-0013",
@@ -556,8 +521,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:01:19Z"
+      "branch": null
     },
     {
       "id": "FEAT-0014",
@@ -571,8 +535,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:01:20Z"
+      "branch": null
     },
     {
       "id": "FEAT-0015",
@@ -586,8 +549,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:01:20Z"
+      "branch": null
     },
     {
       "id": "FEAT-0016",
@@ -601,8 +563,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:01:20Z"
+      "branch": null
     },
     {
       "id": "FEAT-0017",
@@ -616,8 +577,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0017-reconocimiento-del-proyecto-y-linea-base",
-      "updated_at": "2026-08-20T18:28:08Z"
+      "branch": "feat/0017-reconocimiento-del-proyecto-y-linea-base"
     },
     {
       "id": "FEAT-0018",
@@ -633,8 +593,7 @@
       ],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T18:05:20Z"
+      "branch": null
     },
     {
       "id": "FEAT-0019",
@@ -651,8 +610,7 @@
       ],
       "blocked": true,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T18:05:20Z"
+      "branch": null
     },
     {
       "id": "FEAT-0020",
@@ -668,8 +626,7 @@
       ],
       "blocked": true,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T18:05:20Z"
+      "branch": null
     },
     {
       "id": "FEAT-0021",
@@ -683,14 +640,13 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0021-perfiles-de-estructura-destino-por-lenguaje",
-      "updated_at": "2026-08-20T18:25:14Z"
+      "branch": "feat/0021-perfiles-de-estructura-destino-por-lenguaje"
     },
     {
       "id": "FEAT-0022",
       "title": "Reescritura de referencias tras mover ficheros",
       "type": "feature",
-      "status": "in_progress",
+      "status": "done",
       "priority": "critical",
       "size": "L",
       "area": "cli",
@@ -700,8 +656,7 @@
       ],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0022-reescritura-de-referencias-tras-mover-ficheros",
-      "updated_at": "2026-08-20T18:28:53Z"
+      "branch": "feat/0022-reescritura-de-referencias-tras-mover-ficheros"
     },
     {
       "id": "FEAT-0023",
@@ -717,10 +672,9 @@
         "FEAT-0021",
         "FEAT-0022"
       ],
-      "blocked": true,
+      "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T18:05:21Z"
+      "branch": null
     },
     {
       "id": "FEAT-0024",
@@ -734,8 +688,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": null,
-      "updated_at": "2026-08-20T16:01:20Z"
+      "branch": null
     },
     {
       "id": "FEAT-0025",
@@ -749,8 +702,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0026",
@@ -766,8 +718,7 @@
       ],
       "blocked": true,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T18:05:21Z"
+      "branch": null
     },
     {
       "id": "FEAT-0027",
@@ -784,8 +735,7 @@
       ],
       "blocked": true,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:40:18Z"
+      "branch": null
     },
     {
       "id": "FEAT-0028",
@@ -802,8 +752,7 @@
       ],
       "blocked": true,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:40:19Z"
+      "branch": null
     },
     {
       "id": "FEAT-0029",
@@ -817,8 +766,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0030",
@@ -832,8 +780,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0030-medir-el-camino-de-lectura-en",
-      "updated_at": "2026-08-20T16:01:15Z"
+      "branch": "feat/0030-medir-el-camino-de-lectura-en"
     },
     {
       "id": "FEAT-0031",
@@ -850,8 +797,7 @@
       ],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0031-un-solo-payload-en-lugar-de",
-      "updated_at": "2026-08-20T16:04:34Z"
+      "branch": "feat/0031-un-solo-payload-en-lugar-de"
     },
     {
       "id": "FEAT-0032",
@@ -867,8 +813,7 @@
       ],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:40:17Z"
+      "branch": null
     },
     {
       "id": "FEAT-0033",
@@ -882,8 +827,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0033-cachear-el-resultado-de-los-gates",
-      "updated_at": "2026-08-20T16:04:13Z"
+      "branch": "feat/0033-cachear-el-resultado-de-los-gates"
     },
     {
       "id": "FEAT-0034",
@@ -899,8 +843,7 @@
       ],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0034-gates-con-alcance-por-area",
-      "updated_at": "2026-08-20T16:04:13Z"
+      "branch": "feat/0034-gates-con-alcance-por-area"
     },
     {
       "id": "FEAT-0035",
@@ -914,8 +857,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0036",
@@ -929,8 +871,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0036-validar-el-fichero-de-traspaso-contra",
-      "updated_at": "2026-08-20T16:07:15Z"
+      "branch": "feat/0036-validar-el-fichero-de-traspaso-contra"
     },
     {
       "id": "FEAT-0037",
@@ -944,8 +885,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0037-riesgo-del-plan-como-codigo-de",
-      "updated_at": "2026-08-20T16:07:15Z"
+      "branch": "feat/0037-riesgo-del-plan-como-codigo-de"
     },
     {
       "id": "FEAT-0038",
@@ -959,8 +899,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0038-probar-que-la-comprobacion-de-un",
-      "updated_at": "2026-08-20T16:08:38Z"
+      "branch": "feat/0038-probar-que-la-comprobacion-de-un"
     },
     {
       "id": "FEAT-0039",
@@ -974,8 +913,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T16:08:37Z"
+      "branch": null
     },
     {
       "id": "FEAT-0040",
@@ -989,8 +927,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0040-gate-de-secretos-sobre-el-cambio",
-      "updated_at": "2026-08-20T16:13:33Z"
+      "branch": "feat/0040-gate-de-secretos-sobre-el-cambio"
     },
     {
       "id": "FEAT-0041",
@@ -1004,8 +941,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0041-el-reclamo-de-una-tarea-rehusa",
-      "updated_at": "2026-08-20T16:13:34Z"
+      "branch": "feat/0041-el-reclamo-de-una-tarea-rehusa"
     },
     {
       "id": "FEAT-0042",
@@ -1019,8 +955,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0043",
@@ -1036,8 +971,7 @@
       ],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T16:07:56Z"
+      "branch": null
     },
     {
       "id": "FEAT-0044",
@@ -1051,8 +985,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0044-derivar-el-estado-de-una-epica",
-      "updated_at": "2026-08-20T17:54:36Z"
+      "branch": "feat/0044-derivar-el-estado-de-una-epica"
     },
     {
       "id": "FEAT-0045",
@@ -1066,8 +999,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0045-detectar-ficheros-generados-que-ya-no",
-      "updated_at": "2026-08-20T17:54:43Z"
+      "branch": "feat/0045-detectar-ficheros-generados-que-ya-no"
     },
     {
       "id": "FEAT-0046",
@@ -1083,8 +1015,7 @@
       ],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0046-motor-de-proyeccion-con-varios-sumideros",
-      "updated_at": "2026-08-20T16:37:28Z"
+      "branch": "feat/0046-motor-de-proyeccion-con-varios-sumideros"
     },
     {
       "id": "FEAT-0047",
@@ -1100,8 +1031,7 @@
       ],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0047-sumidero-de-incidencias-de-github",
-      "updated_at": "2026-08-20T16:37:36Z"
+      "branch": "feat/0047-sumidero-de-incidencias-de-github"
     },
     {
       "id": "FEAT-0048",
@@ -1118,8 +1048,7 @@
       ],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T16:37:36Z"
+      "branch": null
     },
     {
       "id": "FEAT-0049",
@@ -1136,8 +1065,7 @@
       ],
       "blocked": true,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:40:18Z"
+      "branch": null
     },
     {
       "id": "FEAT-0050",
@@ -1151,8 +1079,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0050-arranque-para-un-proyecto-nuevo",
-      "updated_at": "2026-08-20T16:16:53Z"
+      "branch": "feat/0050-arranque-para-un-proyecto-nuevo"
     },
     {
       "id": "FEAT-0051",
@@ -1166,8 +1093,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0051-la-siguiente-tarea-se-elige-por",
-      "updated_at": "2026-08-20T17:57:55Z"
+      "branch": "feat/0051-la-siguiente-tarea-se-elige-por"
     },
     {
       "id": "FEAT-0052",
@@ -1181,8 +1107,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0052-cola-de-tareas-y-deteccion-de",
-      "updated_at": "2026-08-20T17:58:08Z"
+      "branch": "feat/0052-cola-de-tareas-y-deteccion-de"
     },
     {
       "id": "FEAT-0053",
@@ -1196,8 +1121,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0053-buscar-que-tareas-tocan-una-ruta",
-      "updated_at": "2026-08-20T16:23:57Z"
+      "branch": "feat/0053-buscar-que-tareas-tocan-una-ruta"
     },
     {
       "id": "FEAT-0054",
@@ -1211,8 +1135,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "branch": null
     },
     {
       "id": "FEAT-0055",
@@ -1226,8 +1149,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0055-tiempo-de-ciclo-en-el-informe",
-      "updated_at": "2026-08-20T17:58:15Z"
+      "branch": "feat/0055-tiempo-de-ciclo-en-el-informe"
     },
     {
       "id": "FEAT-0056",
@@ -1241,8 +1163,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "branch": null
     },
     {
       "id": "FIX-0001",
@@ -1256,8 +1177,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "fix/0001-el-cli-llegaba-incompleto-al-repositorio",
-      "updated_at": "2026-08-20T16:01:20Z"
+      "branch": "fix/0001-el-cli-llegaba-incompleto-al-repositorio"
     },
     {
       "id": "FIX-0002",
@@ -1271,8 +1191,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "fix/0002-las-opciones-repetidas-se-descartaban-en",
-      "updated_at": "2026-08-20T16:01:20Z"
+      "branch": "fix/0002-las-opciones-repetidas-se-descartaban-en"
     },
     {
       "id": "FIX-0003",
@@ -1286,8 +1205,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "fix/0003-el-emparejado-de-rutas-fallaba-fuera",
-      "updated_at": "2026-08-20T16:01:21Z"
+      "branch": "fix/0003-el-emparejado-de-rutas-fallaba-fuera"
     },
     {
       "id": "RFCT-0001",
@@ -1301,8 +1219,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "refactor/0001-sacar-el-historial-de-trabajo-del",
-      "updated_at": "2026-08-20T16:01:16Z"
+      "branch": "refactor/0001-sacar-el-historial-de-trabajo-del"
     },
     {
       "id": "RFCT-0002",
@@ -1316,8 +1233,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "refactor/0002-los-comandos-referencian-a-los-agentes",
-      "updated_at": "2026-08-20T16:13:34Z"
+      "branch": "refactor/0002-los-comandos-referencian-a-los-agentes"
     },
     {
       "id": "SPIKE-0001",
@@ -1331,8 +1247,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T19:00:00Z"
+      "branch": null
     },
     {
       "id": "SPIKE-0002",
@@ -1348,8 +1263,7 @@
       ],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:40:18Z"
+      "branch": null
     },
     {
       "id": "SPIKE-0003",
@@ -1363,8 +1277,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:researcher",
-      "branch": "spike/0003-verificar-la-interfaz-de-programacion-de",
-      "updated_at": "2026-08-20T16:37:20Z"
+      "branch": "spike/0003-verificar-la-interfaz-de-programacion-de"
     },
     {
       "id": "SPIKE-0004",
@@ -1378,8 +1291,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "branch": null
     },
     {
       "id": "SPIKE-0005",
@@ -1393,8 +1305,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "branch": null
     }
   ]
 }
