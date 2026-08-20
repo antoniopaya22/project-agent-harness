@@ -2,13 +2,13 @@
 
 # Tablero — project-agent-harness
 
-89 tareas · 47 abiertas · 42 hechas
+89 tareas · 46 abiertas · 43 hechas
 
 | Columna | Tareas |
 |---------|--------|
 | Backlog | 11 |
-| Listas para empezar | 36 |
-| Hechas | 42 |
+| Listas para empezar | 35 |
+| Hechas | 43 |
 
 ## Backlog (11)
 
@@ -26,7 +26,7 @@
 | `SPIKE-0001` | Verificar los formatos reales de Cursor y de Copilot | low | S | adapters | de EPIC-0005 |
 | `SPIKE-0002` | Verificar la interfaz de programación de ClickUp | low | S | integrations | espera FEAT-0046 · de EPIC-0006 |
 
-## Listas para empezar (36)
+## Listas para empezar (35)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -59,7 +59,6 @@
 | `FEAT-0049` | Sincronizar desde integracion continua | medium | S | integrations | espera FEAT-0047, FEAT-0048 · de EPIC-0011 |
 | `FEAT-0051` | La siguiente tarea se elige por camino critico | high | S | cli | de EPIC-0012 |
 | `FEAT-0052` | Cola de tareas y deteccion de trabajo paralelizable | medium | S | cli | de EPIC-0012 |
-| `FEAT-0053` | Buscar que tareas tocan una ruta | medium | XS | cli | de EPIC-0012 |
 | `FEAT-0054` | Importar incidencias existentes como tareas | medium | S | cli | de EPIC-0012 |
 | `FEAT-0055` | Tiempo de ciclo en el informe de situacion | low | S | cli | de EPIC-0012 |
 | `FEAT-0056` | Registrar coste y duracion por tarea | medium | S | cli | de EPIC-0013 |
@@ -67,7 +66,7 @@
 | `SPIKE-0004` | Decidir si una tarea puede pertenecer a varias areas | medium | S | definitions | de EPIC-0013 |
 | `SPIKE-0005` | Como evaluar si un cambio de prompt mejora o empeora | medium | M | definitions | de EPIC-0013 |
 
-## Hechas (42)
+## Hechas (43)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -108,6 +107,7 @@
 | `FEAT-0040` | Gate de secretos sobre el cambio completo | high | S | cli | agent:implementer · de EPIC-0009 |
 | `FEAT-0041` | El reclamo de una tarea rehusa si ya hay rama en el remoto | medium | S | cli | agent:implementer · de EPIC-0009 |
 | `FEAT-0050` | Arranque para un proyecto nuevo | critical | M | cli | agent:implementer · de EPIC-0012 |
+| `FEAT-0053` | Buscar que tareas tocan una ruta | medium | XS | cli | agent:implementer · de EPIC-0012 |
 | `FIX-0001` | El CLI llegaba incompleto al repositorio remoto | critical | — | cli | agent:implementer |
 | `FIX-0002` | Las opciones repetidas se descartaban en silencio | high | — | cli | agent:implementer |
 | `FIX-0003` | El emparejado de rutas fallaba fuera de Windows | high | — | cli | agent:implementer |

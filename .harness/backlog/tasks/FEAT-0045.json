@@ -14,18 +14,20 @@
       "must": "El autodiagnostico detecta ficheros generados sin definicion canonica que los respalde",
       "check": {
         "type": "command",
-        "run": "node --test tests/generate.test.mjs"
+        "run": "node --test tests/orphans.test.mjs"
       },
-      "status": "pending"
+      "status": "pending",
+      "baseline": "not-run"
     },
     {
       "id": "AC2",
       "must": "La reparacion automatica los elimina, y solo a ellos",
       "check": {
         "type": "command",
-        "run": "node --test tests/generate.test.mjs"
+        "run": "node --test tests/orphans.test.mjs"
       },
-      "status": "pending"
+      "status": "pending",
+      "baseline": "not-run"
     }
   ],
   "context": {

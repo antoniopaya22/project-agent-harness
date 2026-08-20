@@ -3,7 +3,7 @@
   "id": "FEAT-0053",
   "title": "Buscar que tareas tocan una ruta",
   "type": "feature",
-  "status": "ready",
+  "status": "done",
   "priority": "medium",
   "size": "XS",
   "parent": "EPIC-0012",
@@ -14,9 +14,11 @@
       "must": "Se pueden listar las tareas cuyo contexto o area incluye una ruta dada",
       "check": {
         "type": "command",
-        "run": "node --test tests/tasks.test.mjs"
+        "run": "node --test tests/touching.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "baseline": "fail",
+      "evidence": "tests/touching.test.mjs: 8 pruebas, incluida la del prefijo parcial y la de separadores"
     }
   ],
   "context": {
@@ -26,17 +28,21 @@
     "out_of_scope": []
   },
   "depends_on": [],
+  "blocked_reason": null,
   "labels": [
     "mejora"
   ],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T16:23:51Z",
+  "branch": "feat/0053-buscar-que-tareas-tocan-una-ruta",
   "links": {
     "pr": null,
     "issue": null,
     "commits": []
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T15:30:00Z"
+  "updated_at": "2026-08-20T16:23:57Z"
 }

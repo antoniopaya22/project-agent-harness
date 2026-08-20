@@ -14,18 +14,20 @@
       "must": "El estado de una epica se calcula a partir de sus hijas al regenerar el indice",
       "check": {
         "type": "command",
-        "run": "node --test tests/board.test.mjs"
+        "run": "node --test tests/epics.test.mjs"
       },
-      "status": "pending"
+      "status": "pending",
+      "baseline": "fail"
     },
     {
       "id": "AC2",
       "must": "Una epica no puede reclamarse ni implementarse directamente",
       "check": {
         "type": "command",
-        "run": "node --test tests/tasks.test.mjs"
+        "run": "node --test tests/epics.test.mjs"
       },
-      "status": "pending"
+      "status": "pending",
+      "baseline": "fail"
     }
   ],
   "context": {
@@ -47,5 +49,5 @@
     "commits": []
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T15:30:00Z"
+  "updated_at": "2026-08-20T16:21:08Z"
 }

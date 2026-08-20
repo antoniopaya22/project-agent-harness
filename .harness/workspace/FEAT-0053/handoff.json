@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "FEAT-0053",
+  "stage": "claimed",
+  "by": "implementer",
+  "summary": "Tarea reclamada por agent:implementer. Rama feat/0053-buscar-que-tareas-tocan-una-ruta. Nada implementado todavía.",
+  "at": "2026-08-20T16:23:51Z",
+  "branch": "feat/0053-buscar-que-tareas-tocan-una-ruta",
+  "next": "planner"
+}

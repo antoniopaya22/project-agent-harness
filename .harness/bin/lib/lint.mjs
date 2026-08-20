@@ -76,7 +76,7 @@ export function lintBacklog(ctx, { tasks = null } = {}) {
     // A task claiming a status it does not qualify for is the most dangerous drift:
     // /implement trusts `ready`.
     if (t.status === 'ready') {
-      const problems = transitionProblems(ctx, { ...t, status: 'backlog' }, 'ready', { allTasks: all });
+      const problems = transitionProblems(ctx, { ...t, status: 'backlog' }, 'ready', { allTasks: all, skipGates: true });
       for (const p of problems) {
         if (p === 'already ready') continue;
         findings.push({ level: 'error', id: t.id, message: `marked ready but: ${p}` });

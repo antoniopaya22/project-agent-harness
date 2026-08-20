@@ -1,1 +1,12 @@
 {"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
+{"at":"2026-08-20T16:19:05Z","by":"implementer","event":"claimed","note":"branch feat/0053-buscar-que-tareas-tocan-una-ruta"}
+{"at":"2026-08-20T16:20:00Z","by":"human","event":"verified","note":"baseline: AC1=pass"}
+{"at":"2026-08-20T16:20:49Z","by":"human","event":"verified","note":"baseline: AC1=pass"}
+{"at":"2026-08-20T16:21:07Z","by":"human","event":"verified","note":"baseline: AC1=fail"}
+{"at":"2026-08-20T16:22:14Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-20T16:22:14Z","by":"tester","event":"status_changed","note":"in_progress -> in_review"}
+{"at":"2026-08-20T16:22:14Z","by":"human","event":"completed","note":"in_review -> done"}
+{"at":"2026-08-20T16:23:51Z","by":"implementer","event":"claimed","note":"branch feat/0053-buscar-que-tareas-tocan-una-ruta"}
+{"at":"2026-08-20T16:23:51Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-20T16:23:57Z","by":"tester","event":"status_changed","note":"in_progress -> in_review"}
+{"at":"2026-08-20T16:23:57Z","by":"human","event":"completed","note":"in_review -> done"}

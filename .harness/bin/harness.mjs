@@ -267,6 +267,11 @@ commands['plan-risk'] = (ctx, { positional, flags }) => {
     say(JSON.stringify(verdict, null, 2));
     return verdict.stop ? EXIT.PRECONDITION : EXIT.OK;
   }
+  if (verdict.missing) {
+    // Not a checkpoint: there is simply nothing to assess yet.
+    info(verdict.reasons[0]);
+    return EXIT.NOT_FOUND;
+  }
   if (!verdict.stop) {
     ok(`plan risk ${verdict.risk} — implementation may proceed without a checkpoint`);
     return EXIT.OK;

@@ -14,18 +14,20 @@
       "must": "Se puede pedir mas de una tarea siguiente",
       "check": {
         "type": "command",
-        "run": "node --test tests/tasks.test.mjs"
+        "run": "node --test tests/parallel.test.mjs"
       },
-      "status": "pending"
+      "status": "pending",
+      "baseline": "not-run"
     },
     {
       "id": "AC2",
       "must": "Se senalan las tareas que no son paralelizables por solaparse en ficheros o area",
       "check": {
         "type": "command",
-        "run": "node --test tests/tasks.test.mjs"
+        "run": "node --test tests/parallel.test.mjs"
       },
-      "status": "pending"
+      "status": "pending",
+      "baseline": "not-run"
     }
   ],
   "context": {

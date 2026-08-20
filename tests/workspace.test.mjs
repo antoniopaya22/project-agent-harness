@@ -73,12 +73,16 @@ test('a plan crossing more than one area stops, even when it claims low risk', (
   }
 });
 
-test('no plan at all stops', () => {
+test('no plan at all is not a checkpoint: it is work to do', () => {
+  // Running the choreography by hand showed why these must not share an exit code. An
+  // agent that reads "no plan" as a checkpoint stops to ask permission when what it should
+  // do is go and write the plan.
   const { ctx, cleanup } = withPlan(null);
   try {
     const v = planNeedsHumanReview(ctx, 'FEAT-0001');
-    assert.equal(v.stop, true);
-    assert.ok(v.reasons.some((r) => /no plan/.test(r)));
+    assert.equal(v.missing, true);
+    assert.equal(v.stop, false, 'nothing to confirm yet');
+    assert.ok(v.reasons.some((r) => /write one/.test(r)));
   } finally {
     cleanup();
   }

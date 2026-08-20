@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { EXIT, fail, listFiles, nowIso, readJson, writeJson } from './util.mjs';
 import { validate } from './schema.mjs';
+import { runAllGates, summarize } from './gates.mjs';
 
 /** type <-> id prefix. The prefix is frozen once a task leaves `backlog` (see §5.1). */
 export const TYPE_PREFIX = {
@@ -235,7 +236,7 @@ export function readWorklog(ctx, id, limit = 10) {
  * The guards behind each status. Returns the list of unmet requirements;
  * empty means the transition is allowed.
  */
-export function transitionProblems(ctx, task, to, { actorKind = 'human', allTasks = null } = {}) {
+export function transitionProblems(ctx, task, to, { actorKind = 'human', allTasks = null, skipGates = false } = {}) {
   const problems = [];
   const from = task.status;
 
@@ -301,6 +302,14 @@ export function transitionProblems(ctx, task, to, { actorKind = 'human', allTask
     const failed = (task.acceptance_criteria || []).filter((ac) => ac.status === 'fail');
     if (failed.length > 0) {
       problems.push(`${failed.length} acceptance criteria failing: ${failed.map((a) => a.id).join(', ')}`);
+    }
+    // ENTRYPOINT.md has always said `in_review` requires the required gates green, and
+    // nothing enforced it: running the choreography by hand closed a task with a red test
+    // suite. A documented entry condition that no code checks is not a condition.
+    // Affordable because the gate cache makes an unchanged tree nearly free.
+    if (!skipGates) {
+      const red = summarize(runAllGates(ctx, { capture: true })).requiredFailed;
+      for (const gate of red) problems.push(`required gate "${gate.name}" is red (exit ${gate.code})`);
     }
   }
 

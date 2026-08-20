@@ -14,9 +14,10 @@
       "must": "La regeneración preserva las regiones marcadas como conservables",
       "check": {
         "type": "command",
-        "run": "node --test tests/generate.test.mjs"
+        "run": "node --test tests/overrides.test.mjs"
       },
-      "status": "pending"
+      "status": "pending",
+      "baseline": "not-run"
     },
     {
       "id": "AC2",

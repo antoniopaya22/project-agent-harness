@@ -14,9 +14,10 @@
       "must": "El harness sugiere un nivel de modelo a partir del tipo, tamano y riesgo de la tarea",
       "check": {
         "type": "command",
-        "run": "node --test tests/tasks.test.mjs"
+        "run": "node --test tests/modeltier.test.mjs"
       },
-      "status": "pending"
+      "status": "pending",
+      "baseline": "not-run"
     },
     {
       "id": "AC2",

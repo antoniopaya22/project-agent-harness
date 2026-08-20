@@ -4,15 +4,36 @@
 
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
-import { EXIT, bad, c, fail, info, ok, say, table } from './util.mjs';
+import { EXIT, bad, c, fail, info, matchesAny, ok, say, table, toPosixPath } from './util.mjs';
 import * as tasksLib from './tasks.mjs';
 import * as board from './board.mjs';
 import { actor } from './actor.mjs';
 import * as git from './git.mjs';
+import { writeHandoff } from './workspace.mjs';
 
 const taskSubs = {};
 
 
+
+/**
+ * Does this task have anything to do with that path?
+ *
+ * Two ways to be relevant, and both matter: the path is named in `context.files`, or it
+ * falls inside the globs of the task's area. Impact analysis before a change, and a cheap
+ * way to see whether two tasks are about to fight over the same files.
+ */
+export function touchesPath(ctx, task, target) {
+  const wanted = toPosixPath(target).replace(/\/+$/, '');
+  for (const file of task.context?.files || []) {
+    const f = toPosixPath(file);
+    // Exact match, or the task names a directory that contains the path (or vice versa).
+    // Compared segment-wise so `src/api` never matches `src/apiary`.
+    if (f === wanted || f.startsWith(`${wanted}/`) || wanted.startsWith(`${f}/`)) return true;
+  }
+  const area = (ctx.project.areas || []).find((a) => a.id === task.context?.area);
+  if (area && matchesAny(wanted, area.globs)) return true;
+  return false;
+}
 
 taskSubs.list = (ctx, { flags }) => {
   let tasks = tasksLib.loadAll(ctx);
@@ -20,6 +41,9 @@ taskSubs.list = (ctx, { flags }) => {
   if (flags.area) tasks = tasks.filter((t) => t.context?.area === flags.area);
   if (flags.type) tasks = tasks.filter((t) => t.type === flags.type);
   if (flags.open) tasks = tasks.filter((t) => tasksLib.OPEN_STATUSES.includes(t.status));
+  if (typeof flags.touching === 'string') {
+    tasks = tasks.filter((t) => touchesPath(ctx, t, flags.touching));
+  }
   tasks.sort((a, b) => tasksLib.priorityRank(a.priority) - tasksLib.priorityRank(b.priority) || a.id.localeCompare(b.id));
   if (flags.json) {
     say(JSON.stringify(tasks.map((t) => ({ id: t.id, title: t.title, status: t.status, priority: t.priority })), null, 2));
@@ -137,7 +161,29 @@ taskSubs.claim = (ctx, { positional, flags }) => {
   tasksLib.save(ctx, task);
   board.regenerate(ctx);
   ok(`${task.id} claimed by ${who.kind}:${who.id}`);
-  info(`branch: ${branch}  (git switch -c ${branch})`);
+
+  // Claiming used to print the branch and the handoff as homework for the agent. Running
+  // the choreography by hand showed the obvious failure: forget either one and the task is
+  // in_progress pointing at a branch that does not exist, which nothing detects.
+  if (flags['no-branch']) {
+    info(`branch not created: ${branch}  (git switch -c ${branch})`);
+  } else if (git.isRepo(ctx)) {
+    if (git.branchExists(ctx, branch)) {
+      git.git(ctx, ['switch', branch]);
+      info(`switched to ${branch}`);
+    } else {
+      git.git(ctx, ['switch', '-c', branch]);
+      ok(`created and switched to ${branch}`);
+    }
+  }
+
+  writeHandoff(ctx, task.id, {
+    stage: 'claimed',
+    by: who.id,
+    branch,
+    summary: `Tarea reclamada por ${who.kind}:${who.id}. Rama ${branch}. Nada implementado todavía.`,
+    next: 'planner',
+  });
   return EXIT.OK;
 };
 

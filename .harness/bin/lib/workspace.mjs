@@ -121,10 +121,18 @@ export function readPlan(ctx, id) {
  */
 export function planNeedsHumanReview(ctx, id) {
   const plan = readPlan(ctx, id);
+
+  // "No plan yet" and "a human must decide" are different situations and must not share an
+  // exit code. Running the choreography by hand showed why: an agent that treats a missing
+  // plan as a checkpoint stops to ask permission when what it should do is go and write the
+  // plan. The caller needs to tell those apart without parsing prose.
+  if (!plan.exists) {
+    return { missing: true, stop: false, reasons: ['there is no plan yet — write one before deciding anything'], risk: null, areas: [] };
+  }
+
   const reasons = [];
-  if (!plan.exists) reasons.push('there is no plan');
-  else if (plan.problems.length) reasons.push(...plan.problems, 'unassessed risk is treated as high');
+  if (plan.problems.length) reasons.push(...plan.problems, 'unassessed risk is treated as high');
   else if (plan.risk === 'high') reasons.push('the plan declares risk: high');
   if (plan.areas.length > 1) reasons.push(`the plan touches ${plan.areas.length} areas: ${plan.areas.join(', ')}`);
-  return { stop: reasons.length > 0, reasons, risk: plan.risk, areas: plan.areas };
+  return { missing: false, stop: reasons.length > 0, reasons, risk: plan.risk, areas: plan.areas };
 }
