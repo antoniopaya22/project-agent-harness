@@ -58,9 +58,10 @@ taskSchema }`. No hay estado global.
 
 ## Trampas conocidas
 
-- **`parseArgs` no soporta flags repetidas con el mismo nombre** salvo donde el subcomando las envuelve
-  con `[].concat(...)` (como `--doc` y `--file` en `task context`). Si añades un subcomando que acepte
-  una flag repetible, envuélvela igual.
+- **Una flag repetida acumula en un array**, así que `--file a --file b` conserva las dos. Con una sola
+  aparición sigue siendo un escalar, y por eso los subcomandos que aceptan repetición la envuelven con
+  `[].concat(flags.x || [])` y los que no comprueban `typeof flags.x === 'string'`. Si mezclas las dos
+  convenciones en un subcomando nuevo, una entrada válida se descartará en silencio.
 - **`spawnSync` con `shell: true`** usa `cmd.exe` en Windows y `sh` en POSIX. Los comandos de gate
   tienen que funcionar en los dos: nada de `&&`, `$(...)` ni comillas simples anidadas.
 - El validador de `schema.mjs` **avisa de palabras clave que no soporta** en lugar de ignorarlas
