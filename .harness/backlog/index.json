@@ -2,16 +2,16 @@
   "harness_version": "1.0.0",
   "counts": {
     "backlog": 11,
-    "ready": 49,
+    "ready": 48,
     "in_progress": 0,
-    "in_review": 29,
+    "in_review": 30,
     "blocked": 0,
     "done": 0,
     "cancelled": 0,
     "total": 89,
     "open": 89
   },
-  "next": "FEAT-0030",
+  "next": "FEAT-0036",
   "tasks": [
     {
       "id": "CHORE-0001",
@@ -824,16 +824,16 @@
       "id": "FEAT-0030",
       "title": "Medir el camino de lectura en tokens y no en líneas",
       "type": "feature",
-      "status": "ready",
+      "status": "in_review",
       "priority": "critical",
       "size": "M",
       "area": "cli",
       "parent": "EPIC-0008",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "assignee": "agent:implementer",
+      "branch": "feat/0030-medir-el-camino-de-lectura-en",
+      "updated_at": "2026-08-20T15:51:25Z"
     },
     {
       "id": "FEAT-0031",

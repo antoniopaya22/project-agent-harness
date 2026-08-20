@@ -21,9 +21,7 @@
   ],
   "context": {
     "area": "definitions",
-    "docs": [
-      "docs/HARNESS-PLAN.md"
-    ],
+    "docs": [],
     "files": [],
     "out_of_scope": []
   },

@@ -42,9 +42,7 @@
   ],
   "context": {
     "area": "cli",
-    "docs": [
-      "docs/HARNESS-PLAN.md"
-    ],
+    "docs": [],
     "files": [],
     "out_of_scope": []
   },

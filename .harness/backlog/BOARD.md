@@ -7,8 +7,8 @@
 | Columna | Tareas |
 |---------|--------|
 | Backlog | 11 |
-| Listas para empezar | 49 |
-| En revisión | 29 |
+| Listas para empezar | 48 |
+| En revisión | 30 |
 
 ## Backlog (11)
 
@@ -26,7 +26,7 @@
 | `SPIKE-0001` | Verificar los formatos reales de Cursor y de Copilot | low | S | adapters | de EPIC-0005 |
 | `SPIKE-0002` | Verificar la interfaz de programación de ClickUp | low | S | integrations | espera FEAT-0046 · de EPIC-0006 |
 
-## Listas para empezar (49)
+## Listas para empezar (48)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -47,7 +47,6 @@
 | `FEAT-0021` | Perfiles de estructura destino por lenguaje | high | S | definitions | de EPIC-0004 |
 | `FEAT-0022` | Reescritura de referencias tras mover ficheros | critical | L | cli | espera FEAT-0021 · de EPIC-0004 |
 | `FEAT-0023` | Motor de reorganización por lotes verificados | critical | L | cli | espera FEAT-0017, FEAT-0021, FEAT-0022 · de EPIC-0004 |
-| `FEAT-0030` | Medir el camino de lectura en tokens y no en líneas | critical | M | cli | de EPIC-0008 |
 | `FEAT-0031` | Un solo payload en lugar de cuatro lecturas | critical | M | cli | espera FEAT-0030, RFCT-0001 · de EPIC-0008 |
 | `FEAT-0032` | Cerrar una tarea en una sola llamada | high | M | cli | espera FEAT-0037 · de EPIC-0008 |
 | `FEAT-0033` | Cachear el resultado de los gates por huella del arbol | high | M | cli | de EPIC-0008 |
@@ -80,7 +79,7 @@
 | `SPIKE-0004` | Decidir si una tarea puede pertenecer a varias areas | medium | S | definitions | de EPIC-0013 |
 | `SPIKE-0005` | Como evaluar si un cambio de prompt mejora o empeora | medium | M | definitions | de EPIC-0013 |
 
-## En revisión (29)
+## En revisión (30)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -110,6 +109,7 @@
 | `FEAT-0015` | Comando de commit con apertura de solicitud de cambios | critical | L | cli | agent:implementer · de EPIC-0003 |
 | `FEAT-0016` | Comandos de revisión y de traspaso | high | S | definitions | agent:implementer · de EPIC-0003 |
 | `FEAT-0024` | Adaptador universal y degradación a guías ejecutables | medium | M | adapters | agent:implementer · de EPIC-0005 |
+| `FEAT-0030` | Medir el camino de lectura en tokens y no en líneas | critical | M | cli | agent:implementer · de EPIC-0008 |
 | `FIX-0001` | El CLI llegaba incompleto al repositorio remoto | critical | — | cli | agent:implementer |
 | `FIX-0002` | Las opciones repetidas se descartaban en silencio | high | — | cli | agent:implementer |
 | `FIX-0003` | El emparejado de rutas fallaba fuera de Windows | high | — | cli | agent:implementer |

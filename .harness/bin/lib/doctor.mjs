@@ -3,10 +3,11 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { countLines, listFiles, matchesAny, parseFrontMatter, toPosixPath } from './util.mjs';
+import { countLines, countTokens, listFiles, matchesAny, parseFrontMatter, toPosixPath } from './util.mjs';
 import { loadAll, validateTask } from './tasks.mjs';
 import { lintBacklog } from './lint.mjs';
 import { git } from './git.mjs';
+import { budgetProblems } from './readpath.mjs';
 import * as generate from './generate.mjs';
 import { buildIndex, indexPath, boardPath, renderBoard } from './board.mjs';
 import { validate } from './schema.mjs';
@@ -73,18 +74,41 @@ export function runDoctor(ctx, { fix = false } = {}) {
     }
   }
 
-  // 6. the read-path budget. This is the mechanical guard on "read the minimum" (§4).
+  // 6. the read-path budget, in tokens. This is the mechanical guard on "read the
+  // minimum" (§4), and the only number the central claim of the design rests on.
   for (const entry of ctx.project.read_path || []) {
     for (const file of expandReadPath(ctx, entry.path)) {
-      const lines = countLines(file);
-      if (lines === null) {
+      const tokens = countTokens(file);
+      if (tokens === null) {
         issues.push({ level: 'error', check: 'read-path', message: `${rel(ctx, file)} does not exist` });
-      } else if (lines > entry.max_lines) {
+      } else if (tokens > entry.max_tokens) {
         issues.push({
           level: 'error',
           check: 'read-path',
-          message: `${rel(ctx, file)} is ${lines} lines, budget is ${entry.max_lines}`,
+          message:
+            `${rel(ctx, file)} costs ~${tokens} tokens, budget is ${entry.max_tokens}. ` +
+            'Move content out — raising the budget is how the read path stops being short.',
         });
+      }
+    }
+  }
+  const totalCap = ctx.project.read_path_total_max_tokens;
+  if (totalCap) {
+    const worstCase = (ctx.project.read_path || []).reduce((sum, e) => sum + e.max_tokens, 0);
+    if (worstCase > totalCap) {
+      issues.push({
+        level: 'error',
+        check: 'read-path',
+        message: `the declared budgets add up to ${worstCase} tokens, over the cap of ${totalCap}`,
+      });
+    }
+    // Per-file budgets are not enough: a task can stay inside every one of them and still
+    // be unworkable because `context.docs` points at something enormous. This checks the
+    // cold start an agent would *actually* pay for each task.
+    for (const t of tasks) {
+      if (t.type === 'epic') continue; // never implemented directly, so it has no read path
+      for (const p of budgetProblems(ctx, t)) {
+        issues.push({ level: 'error', check: 'read-path', message: `${t.id}: ${p}` });
       }
     }
   }

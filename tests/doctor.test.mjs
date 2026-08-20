@@ -77,13 +77,45 @@ test('outside a git repository the check stays silent rather than inventing a pr
 
 test('a read-path file over budget is an error that says not to raise the budget', () => {
   const { ctx, cleanup } = tempHarness({
-    project: { read_path: [{ path: 'docs/areas/core.md', max_lines: 3 }] },
+    project: { read_path: [{ path: 'docs/areas/core.md', max_tokens: 10 }] },
   });
   try {
-    fs.writeFileSync(path.join(ctx.root, 'docs', 'areas', 'core.md'), 'x\n'.repeat(20));
+    fs.writeFileSync(path.join(ctx.root, 'docs', 'areas', 'core.md'), 'x'.repeat(400));
     const found = issuesFor(ctx).filter((i) => i.check === 'read-path');
-    assert.equal(found.length, 1);
-    assert.match(found[0].message, /is 20 lines, budget is 3/);
+    assert.ok(found.some((i) => /costs ~100 tokens, budget is 10/.test(i.message)));
+    assert.ok(found.some((i) => /Move content out/.test(i.message)), 'and it must say not to raise the budget');
+  } finally {
+    cleanup();
+  }
+});
+
+test('a task whose context points at something enormous is caught, naming the culprit', () => {
+  // Per-file budgets are not enough: this is the failure that got past them — a task
+  // referencing a 13k-token design document from context.docs.
+  const { ctx, cleanup } = tempHarness({
+    project: { read_path: [], read_path_total_max_tokens: 500 },
+    tasks: [makeTask({ context: { area: 'core', docs: ['docs/enorme.md'], files: [], out_of_scope: [] } })],
+  });
+  try {
+    fs.writeFileSync(path.join(ctx.root, 'docs', 'enorme.md'), 'x'.repeat(8000));
+    const found = issuesFor(ctx).filter((i) => i.check === 'read-path');
+    assert.ok(found.some((i) => /orientation costs/.test(i.message)));
+    assert.ok(found.some((i) => i.message.includes('docs/enorme.md')), 'it must name the largest item');
+  } finally {
+    cleanup();
+  }
+});
+
+test('a large file in context.files is not capped, because the work is the work', () => {
+  const { ctx, cleanup } = tempHarness({
+    project: { read_path: [], read_path_total_max_tokens: 500 },
+    tasks: [makeTask({ context: { area: 'core', docs: [], files: ['src/grande.mjs'], out_of_scope: [] } })],
+  });
+  try {
+    fs.mkdirSync(path.join(ctx.root, 'src'), { recursive: true });
+    fs.writeFileSync(path.join(ctx.root, 'src', 'grande.mjs'), 'x'.repeat(8000));
+    const found = issuesFor(ctx).filter((i) => i.check === 'read-path' && /orientation costs/.test(i.message));
+    assert.deepEqual(found, [], 'a task about a big file is not a badly groomed task');
   } finally {
     cleanup();
   }

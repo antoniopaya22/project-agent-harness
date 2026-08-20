@@ -30,9 +30,7 @@
   ],
   "context": {
     "area": "integrations",
-    "docs": [
-      "docs/HARNESS-PLAN.md"
-    ],
+    "docs": [],
     "files": [],
     "out_of_scope": []
   },

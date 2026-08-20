@@ -144,17 +144,29 @@
     },
     "read_path": {
       "type": "array",
-      "description": "The cold-start read path, with a line budget per file. Enforced by `harness doctor`.",
+      "description": "The cold-start read path, with an estimated-token budget per file. Enforced by `harness doctor`. Budgets are in tokens, not lines: lines rank files wrongly (dense JSON costs far less per line than prose).",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["path", "max_lines"],
+        "required": ["path", "max_tokens"],
         "properties": {
-          "path": { "type": "string" },
-          "max_lines": { "type": "integer", "minimum": 1 },
+          "path": {
+            "type": "string",
+            "description": "`{task}` expands to every task file, `{area}` to every area doc."
+          },
+          "max_tokens": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Estimated tokens (chars/4). When exceeded, move content out — do not raise the budget."
+          },
           "note": { "type": "string" }
         }
       }
+    },
+    "read_path_total_max_tokens": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Cap on the worst-case cold start (the sum of every entry's budget). This is the number the whole design rests on."
     }
   },
   "$defs": {

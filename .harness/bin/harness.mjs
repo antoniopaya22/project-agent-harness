@@ -117,16 +117,29 @@ commands['read-path'] = (ctx, { positional, flags }) => {
   say(c.bold(`${task.id}  ${task.title}`));
   say('');
   let total = 0;
+  const budgets = new Map((ctx.project.read_path || []).map((e) => [e.path, e.max_tokens]));
   const rows = entries.map((e) => {
     const full = path.join(ctx.root, e.path);
-    const exists = fs.existsSync(full);
-    const lines = exists ? fs.readFileSync(full, 'utf8').split('\n').length : null;
-    if (lines) total += lines;
-    return [e.path, lines === null ? c.red('missing') : `${lines} lines`, c.gray(e.why)];
+    if (!fs.existsSync(full)) return [e.path, c.red('missing'), '', c.gray(e.why)];
+    const text = fs.readFileSync(full, 'utf8');
+    const tokens = Math.ceil(text.length / 4);
+    total += tokens;
+    // Tokens are what the model pays; lines are shown only for human orientation.
+    const budget = budgets.get(e.path) ?? budgets.get(e.path.replace(/[^/]+\.json$/, '{task}.json'));
+    const over = budget && tokens > budget;
+    return [
+      e.path,
+      over ? c.red(`~${tokens} tok`) : `~${tokens} tok`,
+      c.gray(`${text.split('\n').length} ln`),
+      c.gray(e.why),
+    ];
   });
-  say(table(rows, ['FILE', 'SIZE', 'WHY']));
+  say(table(rows, ['FILE', 'COST', 'LINES', 'WHY']));
   say('');
-  say(c.gray(`${entries.length} files, ~${total} lines. Read nothing else unless the work forces you to.`));
+  const cap = ctx.project.read_path_total_max_tokens;
+  const verdict = cap && total > cap ? c.red(`over the ${cap} cap`) : c.gray(`cap ${cap ?? 'n/a'}`);
+  say(`${c.gray(`${entries.length} files, ~${total} tokens`)}  ${verdict}`);
+  say(c.gray('Read nothing else unless the work forces you to.'));
   return EXIT.OK;
 };
 

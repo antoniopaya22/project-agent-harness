@@ -124,6 +124,28 @@ export function countLines(file) {
   return text.replace(/\n$/, '').split('\n').length;
 }
 
+/**
+ * Approximate token count: characters / 4.
+ *
+ * Deliberately an estimate, and deliberately not lines. Lines are a bad proxy and they
+ * rank wrongly: in this repository a 153-line project.json costs ~914 tokens while a
+ * 132-line area doc costs ~1638 — fewer lines, 79% more context. Budgeting in lines
+ * therefore protects the wrong files.
+ *
+ * chars/4 is the usual rule of thumb. It runs perhaps 20% low on dense JSON and code,
+ * where punctuation tokenises poorly, so budgets are set with headroom rather than
+ * pretending this is exact. A real tokeniser would mean a dependency, which the harness
+ * does not take (D2), and would not change any decision this number drives.
+ */
+export function estimateTokens(text) {
+  return Math.ceil(String(text).length / 4);
+}
+
+export function countTokens(file) {
+  if (!fs.existsSync(file)) return null;
+  return estimateTokens(fs.readFileSync(file, 'utf8'));
+}
+
 /** Minimal glob: supports **, * and ?. Enough for area globs and never_move lists. */
 export function globToRegExp(glob) {
   let re = '';
