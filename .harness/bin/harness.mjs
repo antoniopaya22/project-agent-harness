@@ -77,7 +77,7 @@ commands.help = () => {
         ['lint-backlog', 'cross-task hygiene: cycles, orphans, unready "ready"'],
         ['index', 'regenerate backlog/index.json and backlog/BOARD.md'],
         ['generate [--check]', 'write provider adapters from .harness/ (--check for CI)'],
-        ['doctor [--fix]', 'validate the harness itself, including read-path budgets'],
+        ['doctor [--fix] [--only c]', 'validate the harness itself, including read-path budgets'],
         ['handoff <sub> <ID>', 'read | write | validate | resume the in-flight state of a task'],
         ['plan-risk <ID>', 'exit 3 when the plan needs a human checkpoint before coding'],
         ['commit [--task ID]', 'conventional commit + push (+ PR when the task is in_review)'],
@@ -312,7 +312,8 @@ commands['lint-backlog'] = (ctx) => {
 };
 
 commands.index = (ctx) => {
-  const { index, changed } = board.regenerate(ctx);
+  const { index, changed, epics } = board.regenerate(ctx);
+  for (const e of epics || []) ok(`epic derivada  ${e}`);
   if (changed.length === 0) info('index and board already up to date');
   else for (const f of changed) ok(`wrote ${f}`);
   info(`${index.counts.total} task(s): ${Object.entries(index.counts).filter(([k, v]) => v && k !== 'total').map(([k, v]) => `${k} ${v}`).join(', ')}`);
@@ -338,7 +339,15 @@ commands.generate = (ctx, { flags }) => {
 };
 
 commands.doctor = (ctx, { flags }) => {
-  const { issues, fixed, counts } = doctorLib.runDoctor(ctx, { fix: Boolean(flags.fix) });
+  const only = typeof flags.only === 'string' ? flags.only : null;
+  let { issues, fixed, counts } = doctorLib.runDoctor(ctx, { fix: Boolean(flags.fix) });
+  if (only) {
+    const known = [...new Set(doctorLib.CHECKS)];
+    if (!known.includes(only)) fail(`unknown check "${only}" (known: ${known.join(', ')})`, EXIT.USAGE);
+    issues = issues.filter((i) => i.check === only);
+    fixed = [];
+    counts = { error: issues.filter((i) => i.level === 'error').length, warn: issues.filter((i) => i.level === 'warn').length };
+  }
   for (const f of fixed) ok(f);
   const byCheck = new Map();
   for (const i of issues) {

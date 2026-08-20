@@ -133,6 +133,10 @@ taskSubs.new = (ctx, { flags }) => {
 taskSubs.claim = (ctx, { positional, flags }) => {
   const who = actor(ctx, flags);
   const task = tasksLib.load(ctx, requireId(positional[0]));
+  if (task.type === 'epic') {
+    bad(`${task.id} is an epic: it is a container, not work. Claim one of its children instead.`);
+    return EXIT.PRECONDITION;
+  }
   const branch = task.branch || tasksLib.branchFor(task);
   task.assignee = { kind: who.kind, id: who.id };
   task.claimed_at = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');

@@ -1,2 +1,5 @@
 {"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
 {"at":"2026-08-20T16:21:08Z","by":"human","event":"verified","note":"baseline: AC1=fail AC2=fail"}
+{"at":"2026-08-20T17:53:14Z","by":"implementer","event":"claimed","note":"branch feat/0044-derivar-el-estado-de-una-epica"}
+{"at":"2026-08-20T17:53:16Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-20T17:53:16Z","by":"human","event":"verified","note":"AC2 -> pass"}

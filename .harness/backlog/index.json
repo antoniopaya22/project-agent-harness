@@ -2,8 +2,8 @@
   "harness_version": "1.0.0",
   "counts": {
     "backlog": 11,
-    "ready": 31,
-    "in_progress": 0,
+    "ready": 26,
+    "in_progress": 5,
     "in_review": 0,
     "blocked": 1,
     "done": 46,
@@ -98,16 +98,16 @@
       "id": "CHORE-0006",
       "title": "Afinar el autodiagnostico y el limite de tamano de fichero",
       "type": "chore",
-      "status": "ready",
+      "status": "in_progress",
       "priority": "low",
       "size": "XS",
       "area": "cli",
       "parent": "EPIC-0012",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T16:32:47Z"
+      "assignee": "agent:implementer",
+      "branch": "chore/0006-afinar-el-autodiagnostico-y-el-limite",
+      "updated_at": "2026-08-20T17:53:16Z"
     },
     {
       "id": "DOCS-0001",
@@ -308,7 +308,7 @@
       "id": "EPIC-0010",
       "title": "Anti-podredumbre: que la estructura se defienda sola",
       "type": "epic",
-      "status": "ready",
+      "status": "in_progress",
       "priority": "high",
       "size": null,
       "area": null,
@@ -317,7 +317,7 @@
       "blocked": false,
       "assignee": null,
       "branch": null,
-      "updated_at": "2026-08-20T16:34:04Z"
+      "updated_at": "2026-08-20T17:53:14Z"
     },
     {
       "id": "EPIC-0011",
@@ -338,7 +338,7 @@
       "id": "EPIC-0012",
       "title": "Ergonomia y huecos del dia a dia",
       "type": "epic",
-      "status": "ready",
+      "status": "in_progress",
       "priority": "high",
       "size": null,
       "area": null,
@@ -347,7 +347,7 @@
       "blocked": false,
       "assignee": null,
       "branch": null,
-      "updated_at": "2026-08-20T16:34:41Z"
+      "updated_at": "2026-08-20T17:53:16Z"
     },
     {
       "id": "EPIC-0013",
@@ -1043,31 +1043,31 @@
       "id": "FEAT-0044",
       "title": "Derivar el estado de una epica de sus tareas hijas",
       "type": "feature",
-      "status": "ready",
+      "status": "in_progress",
       "priority": "medium",
       "size": "S",
       "area": "cli",
       "parent": "EPIC-0010",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T16:21:08Z"
+      "assignee": "agent:implementer",
+      "branch": "feat/0044-derivar-el-estado-de-una-epica",
+      "updated_at": "2026-08-20T17:53:16Z"
     },
     {
       "id": "FEAT-0045",
       "title": "Detectar ficheros generados que ya no tienen fuente",
       "type": "feature",
-      "status": "ready",
+      "status": "in_progress",
       "priority": "medium",
       "size": "S",
       "area": "adapters",
       "parent": "EPIC-0010",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "assignee": "agent:implementer",
+      "branch": "feat/0045-detectar-ficheros-generados-que-ya-no",
+      "updated_at": "2026-08-20T17:53:16Z"
     },
     {
       "id": "FEAT-0046",

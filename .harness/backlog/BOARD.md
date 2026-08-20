@@ -7,7 +7,8 @@
 | Columna | Tareas |
 |---------|--------|
 | Backlog | 11 |
-| Listas para empezar | 31 |
+| Listas para empezar | 26 |
+| En curso | 5 |
 | Bloqueadas | 1 |
 | Hechas | 46 |
 
@@ -27,18 +28,15 @@
 | `SPIKE-0001` | Verificar los formatos reales de Cursor y de Copilot | low | S | adapters | de EPIC-0005 |
 | `SPIKE-0002` | Verificar la interfaz de programación de ClickUp | low | S | integrations | de EPIC-0006 |
 
-## Listas para empezar (31)
+## Listas para empezar (26)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
 | `CHORE-0002` | Proyectos de prueba y verificación de la adopción en integración continua | medium | M | cli | espera FEAT-0020, FEAT-0023 · de EPIC-0004 |
-| `CHORE-0006` | Afinar el autodiagnostico y el limite de tamano de fichero | low | XS | cli | de EPIC-0012 |
 | `EPIC-0004` | Adopción de un proyecto ya existente | high | — | — | — |
 | `EPIC-0008` | Eficiencia del camino de lectura en frío | critical | — | — | — |
 | `EPIC-0009` | Mecanismos en lugar de instrucciones | critical | — | — | — |
-| `EPIC-0010` | Anti-podredumbre: que la estructura se defienda sola | high | — | — | — |
 | `EPIC-0011` | Proyeccion del backlog a GitHub | high | — | — | — |
-| `EPIC-0012` | Ergonomia y huecos del dia a dia | high | — | — | — |
 | `EPIC-0013` | Preguntas abiertas y medicion honesta | medium | — | — | — |
 | `FEAT-0017` | Reconocimiento del proyecto y línea base de calidad | high | M | cli | de EPIC-0004 |
 | `FEAT-0018` | Entrevista iterativa al humano | high | M | cli | espera FEAT-0017 · de EPIC-0004 |
@@ -52,8 +50,6 @@
 | `FEAT-0039` | Bloquear la edicion de ficheros generados con automatismos del proveedor | high | M | adapters | de EPIC-0009 |
 | `FEAT-0042` | Frescura de documentos medida en commits, no en rutas existentes | high | M | cli | de EPIC-0010 |
 | `FEAT-0043` | Realimentacion sobre la calidad del refinamiento de tareas | high | L | cli | de EPIC-0010 |
-| `FEAT-0044` | Derivar el estado de una epica de sus tareas hijas | medium | S | cli | de EPIC-0010 |
-| `FEAT-0045` | Detectar ficheros generados que ya no tienen fuente | medium | S | adapters | de EPIC-0010 |
 | `FEAT-0049` | Sincronizar desde integracion continua | medium | S | integrations | espera FEAT-0047, FEAT-0048 · de EPIC-0011 |
 | `FEAT-0051` | La siguiente tarea se elige por camino critico | high | S | cli | de EPIC-0012 |
 | `FEAT-0052` | Cola de tareas y deteccion de trabajo paralelizable | medium | S | cli | de EPIC-0012 |
@@ -62,6 +58,16 @@
 | `FEAT-0056` | Registrar coste y duracion por tarea | medium | S | cli | de EPIC-0013 |
 | `SPIKE-0004` | Decidir si una tarea puede pertenecer a varias areas | medium | S | definitions | de EPIC-0013 |
 | `SPIKE-0005` | Como evaluar si un cambio de prompt mejora o empeora | medium | M | definitions | de EPIC-0013 |
+
+## En curso (5)
+
+| Id | Tarea | Prioridad | Tamaño | Área | Notas |
+|----|-------|-----------|--------|------|-------|
+| `CHORE-0006` | Afinar el autodiagnostico y el limite de tamano de fichero | low | XS | cli | agent:implementer · de EPIC-0012 |
+| `EPIC-0010` | Anti-podredumbre: que la estructura se defienda sola | high | — | — | — |
+| `EPIC-0012` | Ergonomia y huecos del dia a dia | high | — | — | — |
+| `FEAT-0044` | Derivar el estado de una epica de sus tareas hijas | medium | S | cli | agent:implementer · de EPIC-0010 |
+| `FEAT-0045` | Detectar ficheros generados que ya no tienen fuente | medium | S | adapters | agent:implementer · de EPIC-0010 |
 
 ## Bloqueadas (1)
 

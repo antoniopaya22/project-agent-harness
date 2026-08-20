@@ -1,1 +1,4 @@
 {"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
+{"at":"2026-08-20T17:53:16Z","by":"implementer","event":"claimed","note":"branch chore/0006-afinar-el-autodiagnostico-y-el-limite"}
+{"at":"2026-08-20T17:53:16Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-20T17:53:16Z","by":"human","event":"verified","note":"AC2 -> pass"}

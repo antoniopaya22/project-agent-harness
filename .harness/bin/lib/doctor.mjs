@@ -14,6 +14,12 @@ import { validate } from './schema.mjs';
 
 /** @typedef {{level:'error'|'warn', check:string, message:string}} Issue */
 
+/** Every check name, so `--only` can validate its argument instead of silently matching nothing. */
+export const CHECKS = [
+  'project-schema', 'task-schema', 'backlog', 'index', 'adapters', 'read-path',
+  'areas', 'codemap', 'definitions', 'secrets', 'git-visibility', 'orphans', 'templates',
+];
+
 export function runDoctor(ctx, { fix = false } = {}) {
   /** @type {Issue[]} */
   const issues = [];
@@ -180,7 +186,34 @@ export function runDoctor(ctx, { fix = false } = {}) {
   // to the machine where the files still exist.
   issues.push(...checkGitVisibility(ctx));
 
-  // 12. no template left unresolved in a generated prompt. A `{{include:x}}` that never
+  // 12. generated files whose canonical source is gone. Renaming an agent leaves its old
+  // projection behind for ever, and a ghost agent stays available to the provider — a role
+  // with nobody maintaining it, which is worse than no role. `generate` does not delete, so
+  // somebody has to look.
+  {
+    const wanted = new Set(generate.plan(ctx).map((item) => toPosixPath(item.path)));
+    const sweep = ['.claude/agents', '.claude/commands', 'docs/runbooks'];
+    for (const dir of sweep) {
+      const full = path.join(ctx.root, ...dir.split('/'));
+      if (!fs.existsSync(full)) continue;
+      for (const file of listFiles(full, '.md')) {
+        const relPath = toPosixPath(path.relative(ctx.root, file));
+        if (wanted.has(relPath)) continue;
+        if (fix) {
+          fs.rmSync(file);
+          fixed.push(`removed orphan generated file ${relPath}`);
+        } else {
+          issues.push({
+            level: 'error',
+            check: 'orphans',
+            message: `${relPath} is generated but nothing in .harness/ produces it any more — its source was renamed or deleted`,
+          });
+        }
+      }
+    }
+  }
+
+  // 13. no template left unresolved in a generated prompt. A `{{include:x}}` that never
   // resolved is a missing instruction, and it is invisible unless something looks for it.
   for (const item of generate.plan(ctx)) {
     for (const m of item.content.matchAll(/\{\{(config|include):([A-Za-z0-9_.-]+)\}\}/g)) {

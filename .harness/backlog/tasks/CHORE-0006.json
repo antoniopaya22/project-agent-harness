@@ -3,7 +3,7 @@
   "id": "CHORE-0006",
   "title": "Afinar el autodiagnostico y el limite de tamano de fichero",
   "type": "chore",
-  "status": "ready",
+  "status": "in_progress",
   "priority": "low",
   "size": "XS",
   "parent": "EPIC-0012",
@@ -16,7 +16,8 @@
         "type": "command",
         "run": "node .harness/bin/harness.mjs doctor --only read-path"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "doctor --only read-path funciona y --only inventada sale con 2 listando las comprobaciones conocidas"
     },
     {
       "id": "AC2",
@@ -25,7 +26,8 @@
         "type": "command",
         "run": "node .harness/bin/harness.mjs gate lint"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "scripts/lint.mjs exime tests/ del limite de 600 lineas"
     }
   ],
   "context": {
@@ -38,9 +40,12 @@
   "labels": [
     "mejora"
   ],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T17:53:15Z",
+  "branch": "chore/0006-afinar-el-autodiagnostico-y-el-limite",
   "links": {
     "pr": null,
     "issue": null,
@@ -57,5 +62,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T16:32:47Z"
+  "updated_at": "2026-08-20T17:53:16Z"
 }

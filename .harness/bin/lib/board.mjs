@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { HARNESS_VERSION, writeFileIfChanged, writeJson } from './util.mjs';
-import { OPEN_STATUSES, STATUSES, isBlockedByDeps, loadAll, pickNext } from './tasks.mjs';
+import { OPEN_STATUSES, STATUSES, isBlockedByDeps, loadAll, logEvent, pickNext, save as saveTask } from './tasks.mjs';
 
 const STATUS_LABEL = {
   backlog: 'Backlog',
@@ -108,9 +108,54 @@ function escapeCell(s) {
   return String(s).replace(/\|/g, '\\|');
 }
 
-/** @returns {{index: object, changed: string[]}} */
+/**
+ * An epic's status follows its children.
+ *
+ * Keeping it by hand is bookkeeping that goes stale the moment nobody is looking, and it is
+ * fully derivable. Note this does set `done` without a human saying so, which everywhere
+ * else is forbidden — legitimately, because the human decisions already happened one level
+ * down: an epic is only done when every child was closed by a person.
+ */
+export function deriveEpicStatus(epic, children) {
+  if (children.length === 0) return epic.status;
+  const has = (s) => children.some((c) => c.status === s);
+  const every = (fn) => children.every(fn);
+
+  if (every((c) => c.status === 'cancelled')) return 'cancelled';
+  const live = children.filter((c) => c.status !== 'cancelled');
+  if (live.length === 0) return 'cancelled';
+  if (live.every((c) => c.status === 'done')) return 'done';
+  if (has('in_progress') || has('in_review')) return 'in_progress';
+  if (has('blocked') && !has('ready') && !has('in_progress')) return 'blocked';
+  if (has('ready')) return 'ready';
+  return 'backlog';
+}
+
+function applyEpicStatuses(ctx, tasks) {
+  const byParent = new Map();
+  for (const t of tasks) {
+    if (!t.parent) continue;
+    if (!byParent.has(t.parent)) byParent.set(t.parent, []);
+    byParent.get(t.parent).push(t);
+  }
+  const changed = [];
+  for (const epic of tasks.filter((t) => t.type === 'epic')) {
+    const derived = deriveEpicStatus(epic, byParent.get(epic.id) || []);
+    if (derived !== epic.status) {
+      const from = epic.status;
+      epic.status = derived;
+      saveTask(ctx, epic);
+      logEvent(ctx, epic.id, 'harness', 'status_changed', `${from} -> ${derived} (derivado de sus hijas)`);
+      changed.push(`${epic.id}: ${from} -> ${derived}`);
+    }
+  }
+  return changed;
+}
+
+/** @returns {{index: object, changed: string[], epics: string[]}} */
 export function regenerate(ctx, { tasks = null } = {}) {
   const all = tasks || loadAll(ctx);
+  const epics = applyEpicStatuses(ctx, all);
   const index = buildIndex(all);
   const changed = [];
   const before = safeRead(indexPath(ctx));
@@ -119,7 +164,7 @@ export function regenerate(ctx, { tasks = null } = {}) {
   if (writeFileIfChanged(boardPath(ctx), renderBoard(ctx, index))) {
     changed.push(path.relative(ctx.root, boardPath(ctx)));
   }
-  return { index, changed };
+  return { index, changed, epics };
 }
 
 function safeRead(file) {

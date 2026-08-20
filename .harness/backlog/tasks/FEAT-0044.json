@@ -3,7 +3,7 @@
   "id": "FEAT-0044",
   "title": "Derivar el estado de una epica de sus tareas hijas",
   "type": "feature",
-  "status": "ready",
+  "status": "in_progress",
   "priority": "medium",
   "size": "S",
   "parent": "EPIC-0010",
@@ -16,8 +16,9 @@
         "type": "command",
         "run": "node --test tests/epics.test.mjs"
       },
-      "status": "pending",
-      "baseline": "fail"
+      "status": "pass",
+      "baseline": "fail",
+      "evidence": "deriveEpicStatus + regenerate escriben el estado derivado y lo registran; idempotente; tests/epics.test.mjs"
     },
     {
       "id": "AC2",
@@ -26,8 +27,9 @@
         "type": "command",
         "run": "node --test tests/epics.test.mjs"
       },
-      "status": "pending",
-      "baseline": "fail"
+      "status": "pass",
+      "baseline": "fail",
+      "evidence": "reclamar una epica sale con 3 y dice que reclame una hija"
     }
   ],
   "context": {
@@ -40,14 +42,17 @@
   "labels": [
     "mejora"
   ],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T17:53:13Z",
+  "branch": "feat/0044-derivar-el-estado-de-una-epica",
   "links": {
     "pr": null,
     "issue": null,
     "commits": []
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T16:21:08Z"
+  "updated_at": "2026-08-20T17:53:16Z"
 }

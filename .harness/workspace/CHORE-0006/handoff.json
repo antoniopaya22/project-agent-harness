@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "CHORE-0006",
+  "stage": "claimed",
+  "by": "implementer",
+  "branch": "chore/0006-afinar-el-autodiagnostico-y-el-limite",
+  "summary": "Tarea reclamada por agent:implementer. Rama chore/0006-afinar-el-autodiagnostico-y-el-limite. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-20T17:53:16Z"
+}
