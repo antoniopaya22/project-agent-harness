@@ -1,0 +1,6 @@
+{"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
+{"at":"2026-08-20T15:51:24Z","by":"implementer","event":"claimed","note":"branch feat/0030-medir-el-camino-de-lectura-en"}
+{"at":"2026-08-20T15:51:25Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-20T15:51:25Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-20T15:51:25Z","by":"human","event":"verified","note":"AC3 -> pass"}
+{"at":"2026-08-20T15:51:25Z","by":"tester","event":"status_changed","note":"in_progress -> in_review"}

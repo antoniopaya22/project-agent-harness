@@ -20,7 +20,6 @@ test('a fully populated task validates', () => {
     acceptance_criteria: [
       { id: 'AC1', must: 'Devuelve 409 con email duplicado.', check: { type: 'command', run: 'pytest -q' }, status: 'pass', evidence: '1 passed' },
     ],
-    worklog: [{ at: '2026-08-18T00:00:00Z', by: 'planner', event: 'groomed', note: null }],
     external: { clickup: { id: null, url: null, list_id: null, last_synced_at: null, content_hash: null } },
   });
   assert.deepEqual(validate(task, schema), []);
@@ -51,6 +50,12 @@ test('an acceptance criterion with an unknown check type is rejected', () => {
   });
   const errors = validate(task, schema);
   assert.ok(errors.some((e) => e.path === 'acceptance_criteria[0].check.type'));
+});
+
+test('the history is no longer part of the task, because the read path pays for it', () => {
+  // It used to be a 20-entry array inside the file an agent reads to implement.
+  const errors = validate(makeTask({ worklog: [] }), schema);
+  assert.ok(errors.some((e) => /unknown property "worklog"/.test(e.message)));
 });
 
 test('unknown properties are rejected rather than silently ignored', () => {

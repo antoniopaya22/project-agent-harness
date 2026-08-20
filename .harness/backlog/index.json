@@ -2,9 +2,9 @@
   "harness_version": "1.0.0",
   "counts": {
     "backlog": 11,
-    "ready": 48,
+    "ready": 47,
     "in_progress": 0,
-    "in_review": 30,
+    "in_review": 31,
     "blocked": 0,
     "done": 0,
     "cancelled": 0,
@@ -1293,16 +1293,16 @@
       "id": "RFCT-0001",
       "title": "Sacar el historial de trabajo del fichero de tarea",
       "type": "refactor",
-      "status": "ready",
+      "status": "in_review",
       "priority": "high",
       "size": "S",
       "area": "cli",
       "parent": "EPIC-0008",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "assignee": "agent:implementer",
+      "branch": "refactor/0001-sacar-el-historial-de-trabajo-del",
+      "updated_at": "2026-08-20T15:52:43Z"
     },
     {
       "id": "RFCT-0002",

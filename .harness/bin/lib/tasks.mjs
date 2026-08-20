@@ -104,7 +104,7 @@ const KEY_ORDER = [
   '$schema', 'id', 'title', 'type', 'status', 'priority', 'size', 'parent',
   'description', 'acceptance_criteria', 'context', 'depends_on', 'blocked_reason',
   'resolution', 'labels', 'assignee', 'claimed_at', 'branch', 'estimate_hours',
-  'links', 'worklog', 'external', 'created_at', 'updated_at',
+  'links', 'external', 'created_at', 'updated_at',
 ];
 
 export function orderTask(task) {
@@ -191,17 +191,44 @@ export function newTask({ id, title, type, priority = 'medium', description, are
     claimed_at: null,
     branch: null,
     links: { pr: null, issue: null, commits: [] },
-    worklog: [{ at, by: 'harness', event: 'created', note: null }],
     created_at: at,
     updated_at: at,
   });
 }
 
-export function addWorklog(task, by, event, note = null) {
-  if (!Array.isArray(task.worklog)) task.worklog = [];
-  task.worklog.push({ at: nowIso(), by, event, note });
-  // Bounded on purpose: the full history belongs in workspace/<ID>/worklog.md
-  if (task.worklog.length > 20) task.worklog = task.worklog.slice(-20);
+export function worklogFile(ctx, id) {
+  return path.join(ctx.harnessDir, 'backlog', 'worklog', `${id}.jsonl`);
+}
+
+/**
+ * The history lives beside the task, not inside it.
+ *
+ * It used to be an array in the task file — which sits at step 2 of the cold-start read
+ * path, so every implementation paid for twenty history entries that are useless for
+ * implementing. Append-only JSONL also means concurrent writers never rewrite each
+ * other's lines, unlike a JSON array.
+ */
+export function logEvent(ctx, id, by, event, note = null) {
+  const file = worklogFile(ctx, id);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.appendFileSync(file, `${JSON.stringify({ at: nowIso(), by, event, note })}\n`, 'utf8');
+}
+
+/** @returns the last `limit` entries, oldest first */
+export function readWorklog(ctx, id, limit = 10) {
+  const file = worklogFile(ctx, id);
+  if (!fs.existsSync(file)) return [];
+  const lines = fs.readFileSync(file, 'utf8').split('\n').filter(Boolean);
+  return lines
+    .slice(-limit)
+    .map((l) => {
+      try {
+        return JSON.parse(l);
+      } catch {
+        return null;
+      }
+    })
+    .filter(Boolean);
 }
 
 /**

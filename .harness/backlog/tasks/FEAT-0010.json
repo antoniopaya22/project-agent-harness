@@ -59,20 +59,6 @@
     "issue": null,
     "commits": []
   },
-  "worklog": [
-    {
-      "at": "2026-08-18T19:00:00Z",
-      "by": "harness",
-      "event": "created",
-      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
-    },
-    {
-      "at": "2026-08-18T19:00:00Z",
-      "by": "implementer",
-      "event": "implemented",
-      "note": "entregada en la construcción inicial"
-    }
-  ],
   "created_at": "2026-08-18T19:00:00Z",
   "updated_at": "2026-08-18T19:00:00Z"
 }

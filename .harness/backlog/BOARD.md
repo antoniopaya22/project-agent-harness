@@ -7,8 +7,8 @@
 | Columna | Tareas |
 |---------|--------|
 | Backlog | 11 |
-| Listas para empezar | 48 |
-| En revisión | 30 |
+| Listas para empezar | 47 |
+| En revisión | 31 |
 
 ## Backlog (11)
 
@@ -26,7 +26,7 @@
 | `SPIKE-0001` | Verificar los formatos reales de Cursor y de Copilot | low | S | adapters | de EPIC-0005 |
 | `SPIKE-0002` | Verificar la interfaz de programación de ClickUp | low | S | integrations | espera FEAT-0046 · de EPIC-0006 |
 
-## Listas para empezar (48)
+## Listas para empezar (47)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -73,13 +73,12 @@
 | `FEAT-0054` | Importar incidencias existentes como tareas | medium | S | cli | de EPIC-0012 |
 | `FEAT-0055` | Tiempo de ciclo en el informe de situacion | low | S | cli | de EPIC-0012 |
 | `FEAT-0056` | Registrar coste y duracion por tarea | medium | S | cli | de EPIC-0013 |
-| `RFCT-0001` | Sacar el historial de trabajo del fichero de tarea | high | S | cli | de EPIC-0008 |
 | `RFCT-0002` | Los comandos referencian a los agentes en vez de reescribirlos | high | M | definitions | de EPIC-0008 |
 | `SPIKE-0003` | Verificar la interfaz de programacion de proyectos y sub-issues | high | S | integrations | de EPIC-0011 |
 | `SPIKE-0004` | Decidir si una tarea puede pertenecer a varias areas | medium | S | definitions | de EPIC-0013 |
 | `SPIKE-0005` | Como evaluar si un cambio de prompt mejora o empeora | medium | M | definitions | de EPIC-0013 |
 
-## En revisión (30)
+## En revisión (31)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -113,6 +112,7 @@
 | `FIX-0001` | El CLI llegaba incompleto al repositorio remoto | critical | — | cli | agent:implementer |
 | `FIX-0002` | Las opciones repetidas se descartaban en silencio | high | — | cli | agent:implementer |
 | `FIX-0003` | El emparejado de rutas fallaba fuera de Windows | high | — | cli | agent:implementer |
+| `RFCT-0001` | Sacar el historial de trabajo del fichero de tarea | high | S | cli | agent:implementer · de EPIC-0008 |
 
 ---
 

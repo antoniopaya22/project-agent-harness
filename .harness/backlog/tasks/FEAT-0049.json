@@ -49,26 +49,6 @@
     "issue": null,
     "commits": []
   },
-  "worklog": [
-    {
-      "at": "2026-08-20T15:30:00Z",
-      "by": "planner",
-      "event": "created",
-      "note": "revision del harness construido"
-    },
-    {
-      "at": "2026-08-20T15:40:17Z",
-      "by": "human",
-      "event": "status_changed",
-      "note": "depends_on=FEAT-0047"
-    },
-    {
-      "at": "2026-08-20T15:40:18Z",
-      "by": "human",
-      "event": "status_changed",
-      "note": "depends_on=FEAT-0048"
-    }
-  ],
   "created_at": "2026-08-20T15:30:00Z",
   "updated_at": "2026-08-20T15:40:18Z"
 }

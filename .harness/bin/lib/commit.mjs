@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { EXIT, c, fail, info, ok, say, toPosixPath, warn } from './util.mjs';
 import * as git from './git.mjs';
-import { TYPE_GIT, addWorklog, branchFor, idFromBranch, load, save } from './tasks.mjs';
+import { TYPE_GIT, branchFor, idFromBranch, load, logEvent, save } from './tasks.mjs';
 import { printGateResults, runAllGates, summarize } from './gates.mjs';
 
 export function resolveTask(ctx, explicitId) {
@@ -181,7 +181,7 @@ export function doCommit(ctx, opts = {}) {
   task.branch = current;
   task.links = task.links || { pr: null, issue: null, commits: [] };
   task.links.commits = [...(task.links.commits || []), head.slice(0, 12)].slice(-20);
-  addWorklog(task, 'harness', 'committed', msg.split('\n')[0]);
+  logEvent(ctx, task.id, 'harness', 'committed', msg.split('\n')[0]);
 
   if (push) {
     if (!git.hasRemote(ctx)) {

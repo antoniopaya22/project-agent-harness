@@ -84,7 +84,6 @@ export function makeTask(overrides = {}) {
     claimed_at: null,
     branch: null,
     links: { pr: null, issue: null, commits: [] },
-    worklog: [],
     created_at: '2026-08-18T00:00:00Z',
     updated_at: '2026-08-18T00:00:00Z',
     ...overrides,

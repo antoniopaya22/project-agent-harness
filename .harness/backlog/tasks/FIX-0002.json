@@ -51,62 +51,6 @@
     "issue": null,
     "commits": []
   },
-  "worklog": [
-    {
-      "at": "2026-08-20T15:12:51Z",
-      "by": "harness",
-      "event": "created",
-      "note": null
-    },
-    {
-      "at": "2026-08-20T15:12:51Z",
-      "by": "human",
-      "event": "groomed",
-      "note": "AC1 set"
-    },
-    {
-      "at": "2026-08-20T15:12:51Z",
-      "by": "human",
-      "event": "groomed",
-      "note": "AC2 set"
-    },
-    {
-      "at": "2026-08-20T15:12:51Z",
-      "by": "human",
-      "event": "groomed",
-      "note": "file+.harness/bin/lib/util.mjs file+docs/areas/cli.md"
-    },
-    {
-      "at": "2026-08-20T15:12:51Z",
-      "by": "planner",
-      "event": "status_changed",
-      "note": "backlog -> ready"
-    },
-    {
-      "at": "2026-08-20T15:12:51Z",
-      "by": "implementer",
-      "event": "claimed",
-      "note": "branch fix/0002-las-opciones-repetidas-se-descartaban-en"
-    },
-    {
-      "at": "2026-08-20T15:12:51Z",
-      "by": "human",
-      "event": "verified",
-      "note": "AC1 -> pass"
-    },
-    {
-      "at": "2026-08-20T15:12:51Z",
-      "by": "human",
-      "event": "verified",
-      "note": "AC2 -> pass"
-    },
-    {
-      "at": "2026-08-20T15:12:51Z",
-      "by": "tester",
-      "event": "status_changed",
-      "note": "in_progress -> in_review"
-    }
-  ],
   "created_at": "2026-08-20T15:12:51Z",
   "updated_at": "2026-08-20T15:12:51Z"
 }

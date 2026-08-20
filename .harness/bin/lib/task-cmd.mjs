@@ -58,6 +58,14 @@ taskSubs.show = (ctx, { positional, flags }) => {
     say('');
     say(`${c.yellow('Bloqueada')}: ${task.blocked_reason}`);
   }
+  const history = tasksLib.readWorklog(ctx, task.id, flags.history ? 50 : 5);
+  if (history.length) {
+    say('');
+    say(c.bold('Historial') + c.gray(flags.history ? '' : '  (últimas entradas; --history para más)'));
+    for (const e of history) {
+      say(c.gray(`  ${e.at}  ${String(e.by).padEnd(12)} ${e.event}${e.note ? `  ${e.note}` : ''}`));
+    }
+  }
   return EXIT.OK;
 };
 
@@ -89,6 +97,7 @@ taskSubs.new = (ctx, { flags }) => {
   if (flags.parent) task.parent = tasksLib.normalizeId(flags.parent);
   if (flags.size) task.size = String(flags.size);
   tasksLib.save(ctx, task);
+  tasksLib.logEvent(ctx, id, actor(ctx, flags).id, 'created', null);
   board.regenerate(ctx);
   ok(`created ${id} (${task.status})`);
   info(`refine it with /plan ${id} — it cannot become ready until it has real acceptance criteria`);
@@ -108,7 +117,7 @@ taskSubs.claim = (ctx, { positional, flags }) => {
     return EXIT.PRECONDITION;
   }
   task.status = 'in_progress';
-  tasksLib.addWorklog(task, who.id, 'claimed', `branch ${branch}`);
+  tasksLib.logEvent(ctx, task.id, who.id, 'claimed', `branch ${branch}`);
   tasksLib.save(ctx, task);
   board.regenerate(ctx);
   ok(`${task.id} claimed by ${who.kind}:${who.id}`);
@@ -122,7 +131,7 @@ taskSubs.unclaim = (ctx, { positional, flags }) => {
   task.assignee = null;
   task.claimed_at = null;
   task.status = 'ready';
-  tasksLib.addWorklog(task, who.id, 'status_changed', 'unclaimed');
+  tasksLib.logEvent(ctx, task.id, who.id, 'status_changed', 'unclaimed');
   tasksLib.save(ctx, task);
   board.regenerate(ctx);
   ok(`${task.id} back to ready`);
@@ -145,7 +154,7 @@ taskSubs['set-status'] = (ctx, { positional, flags }) => {
   const from = task.status;
   task.status = to;
   if (to !== 'blocked') task.blocked_reason = null;
-  tasksLib.addWorklog(task, who.id, to === 'done' ? 'completed' : 'status_changed', `${from} -> ${to}`);
+  tasksLib.logEvent(ctx, task.id, who.id, to === 'done' ? 'completed' : 'status_changed', `${from} -> ${to}`);
   tasksLib.save(ctx, task);
   board.regenerate(ctx);
   ok(`${task.id}: ${from} -> ${to}`);
@@ -165,7 +174,7 @@ taskSubs.ac = (ctx, { positional, flags }) => {
   if (!ac) fail(`${task.id} has no criterion ${acId}`, EXIT.NOT_FOUND);
   ac.status = status;
   if (typeof flags.evidence === 'string') ac.evidence = flags.evidence;
-  tasksLib.addWorklog(task, who.id, 'verified', `${acId} -> ${status}`);
+  tasksLib.logEvent(ctx, task.id, who.id, 'verified', `${acId} -> ${status}`);
   tasksLib.save(ctx, task);
   ok(`${task.id} ${acId}: ${status}`);
   return EXIT.OK;
@@ -202,7 +211,7 @@ taskSubs['ac-set'] = (ctx, { positional, flags }) => {
     for (const p of problems) bad(`${p.path || '(root)'}: ${p.message}`);
     return EXIT.CHECK_FAILED;
   }
-  tasksLib.addWorklog(task, who.id, 'groomed', `${acId} set`);
+  tasksLib.logEvent(ctx, task.id, who.id, 'groomed', `${acId} set`);
   tasksLib.save(ctx, task);
   ok(`${task.id} ${acId}: ${ac.must} [${ac.check.type}]`);
   return EXIT.OK;
@@ -216,7 +225,7 @@ taskSubs['ac-rm'] = (ctx, { positional, flags }) => {
   task.acceptance_criteria = (task.acceptance_criteria || []).filter((x) => x.id !== acId);
   if (task.acceptance_criteria.length === before) fail(`${task.id} has no criterion ${acId}`, EXIT.NOT_FOUND);
   if (task.acceptance_criteria.length === 0) fail('a task must keep at least one acceptance criterion', EXIT.PRECONDITION);
-  tasksLib.addWorklog(task, who.id, 'groomed', `${acId} removed`);
+  tasksLib.logEvent(ctx, task.id, who.id, 'groomed', `${acId} removed`);
   tasksLib.save(ctx, task);
   ok(`${task.id}: removed ${acId}`);
   return EXIT.OK;
@@ -228,7 +237,7 @@ taskSubs.describe = (ctx, { positional, flags }) => {
   const text = typeof flags.text === 'string' ? flags.text : positional.slice(1).join(' ');
   if (!text) fail('usage: harness task describe <ID> --text "..."', EXIT.USAGE);
   task.description = text;
-  tasksLib.addWorklog(task, who.id, 'groomed', 'description rewritten');
+  tasksLib.logEvent(ctx, task.id, who.id, 'groomed', 'description rewritten');
   tasksLib.save(ctx, task);
   ok(`${task.id}: description updated (${text.length} chars)`);
   return EXIT.OK;
@@ -260,7 +269,7 @@ taskSubs.context = (ctx, { positional, flags }) => {
     changes.push('out_of_scope+');
   }
   if (changes.length === 0) fail('usage: harness task context <ID> [--area a] [--doc path] [--file path] [--out-of-scope "..."]', EXIT.USAGE);
-  tasksLib.addWorklog(task, who.id, 'groomed', changes.join(' '));
+  tasksLib.logEvent(ctx, task.id, who.id, 'groomed', changes.join(' '));
   tasksLib.save(ctx, task);
   board.regenerate(ctx);
   ok(`${task.id} context: ${changes.join(', ')}`);
@@ -283,7 +292,7 @@ taskSubs.retype = (ctx, { positional, flags }) => {
   const newId = tasksLib.allocateId(ctx, type);
   task.id = newId;
   task.type = type;
-  tasksLib.addWorklog(task, who.id, 'retyped', `${oldId} -> ${newId}`);
+  tasksLib.logEvent(ctx, task.id, who.id, 'retyped', `${oldId} -> ${newId}`);
   tasksLib.save(ctx, task);
   fs.rmSync(tasksLib.taskFile(ctx, oldId), { force: true });
   board.regenerate(ctx);
@@ -317,11 +326,11 @@ taskSubs.split = (ctx, { positional, flags }) => {
     epic.acceptance_criteria = [
       { id: 'AC1', must: 'Todas las tareas hijas están en done.', check: { type: 'review', run: null }, status: 'pending' },
     ];
-    tasksLib.addWorklog(epic, who.id, 'split', `from ${parentTask.id}`);
+    tasksLib.logEvent(ctx, epic.id, who.id, 'split', `from ${parentTask.id}`);
     tasksLib.save(ctx, epic);
     parentTask.resolution = `Dividida en el epic ${epicId}`;
     parentTask.status = 'cancelled';
-    tasksLib.addWorklog(parentTask, who.id, 'split', `-> ${epicId}`);
+    tasksLib.logEvent(ctx, parentTask.id, who.id, 'split', `-> ${epicId}`);
     tasksLib.save(ctx, parentTask);
   }
   const created = [];
@@ -335,7 +344,7 @@ taskSubs.split = (ctx, { positional, flags }) => {
       area: parentTask.context?.area ?? null,
     });
     child.parent = epicId;
-    tasksLib.addWorklog(child, who.id, 'split', `child of ${epicId}`);
+    tasksLib.logEvent(ctx, child.id, who.id, 'split', `child of ${epicId}`);
     tasksLib.save(ctx, child);
     created.push(id);
   }
@@ -364,7 +373,7 @@ taskSubs.edit = (ctx, { positional, flags }) => {
     set('depends_on', flags['depends-on']);
   }
   if (changes.length === 0) fail('nothing to change: pass --priority/--size/--area/--title/--estimate/--parent/--label/--depends-on', EXIT.USAGE);
-  tasksLib.addWorklog(task, who.id, 'status_changed', changes.join(' '));
+  tasksLib.logEvent(ctx, task.id, who.id, 'status_changed', changes.join(' '));
   tasksLib.save(ctx, task);
   board.regenerate(ctx);
   ok(`${task.id} updated: ${changes.join(', ')}`);

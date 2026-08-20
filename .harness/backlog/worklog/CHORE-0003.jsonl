@@ -1,0 +1,4 @@
+{"at":"2026-08-18T19:00:00Z","by":"harness","event":"created","note":"sembrada desde docs/HARNESS-PLAN.md §12"}
+{"at":"2026-08-18T18:05:21Z","by":"human","event":"status_changed","note":"depends_on=SPIKE-0002"}
+{"at":"2026-08-20T15:40:18Z","by":"human","event":"status_changed","note":"priority=low"}
+{"at":"2026-08-20T15:40:18Z","by":"human","event":"status_changed","note":"depends_on=FEAT-0046"}
