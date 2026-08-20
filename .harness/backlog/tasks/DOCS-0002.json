@@ -1,0 +1,70 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "DOCS-0002",
+  "title": "Set documental: arquitectura, mapa, convenciones, entorno y glosario",
+  "type": "docs",
+  "status": "in_review",
+  "priority": "high",
+  "size": "L",
+  "parent": "EPIC-0001",
+  "description": "Cinco documentos con dueño único de tema, cada uno declarando qué contiene y qué no, más las plantillas de área y de decisión de arquitectura.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Cada documento declara explícitamente qué contiene y qué no",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pass",
+      "evidence": "Cita de apertura en los cinco documentos"
+    },
+    {
+      "id": "AC2",
+      "must": "Todas las rutas citadas en el mapa del código existen",
+      "check": {
+        "type": "command",
+        "run": "node .harness/bin/harness.mjs doctor"
+      },
+      "status": "pass",
+      "evidence": "doctor: codemap en verde"
+    }
+  ],
+  "context": {
+    "area": "docs",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-18T19:00:00Z",
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "harness",
+      "event": "created",
+      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
+    },
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "implementer",
+      "event": "implemented",
+      "note": "entregada en la construcción inicial"
+    }
+  ],
+  "created_at": "2026-08-18T19:00:00Z",
+  "updated_at": "2026-08-18T19:00:00Z"
+}

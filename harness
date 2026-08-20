@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Shim so that `harness <cmd>` is the same command name on PowerShell and POSIX (D2).
+# Usage:  ./harness status
+set -euo pipefail
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec node "$DIR/.harness/bin/harness.mjs" "$@"

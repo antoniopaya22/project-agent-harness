@@ -1,0 +1,59 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0025",
+  "title": "Anulaciones locales, regiones preservadas y matriz de capacidades",
+  "type": "feature",
+  "status": "backlog",
+  "priority": "low",
+  "size": "M",
+  "parent": "EPIC-0005",
+  "description": "La escotilla de escape para ajustes que la generación no contempla, y el documento que dice qué puede hacer cada proveedor y cómo degrada lo que no puede.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "La regeneración preserva las regiones marcadas como conservables",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/generate.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "La matriz de capacidades está publicada y es honesta sobre lo no verificado",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "adapters",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "harness",
+      "event": "created",
+      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
+    }
+  ],
+  "created_at": "2026-08-18T19:00:00Z",
+  "updated_at": "2026-08-18T19:00:00Z"
+}

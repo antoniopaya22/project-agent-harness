@@ -1,0 +1,70 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0001",
+  "title": "Esquema JSON de tarea",
+  "type": "feature",
+  "status": "in_review",
+  "priority": "critical",
+  "size": "M",
+  "parent": "EPIC-0001",
+  "description": "Define exhaustivamente la forma de una tarea: identificador con prefijo de tipo, estado, criterios de aceptación con comprobación asociada, bloque de contexto, dependencias y bloque de sincronización externa.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "El esquema valida una tarea completa de ejemplo",
+      "check": {
+        "type": "command",
+        "run": "node .harness/bin/harness.mjs validate"
+      },
+      "status": "pass",
+      "evidence": "validate: todas las tareas válidas"
+    },
+    {
+      "id": "AC2",
+      "must": "Rechaza un estado inválido, un criterio sin comprobación y un identificador mal formado",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/schema.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "tests/schema.test.mjs en verde"
+    }
+  ],
+  "context": {
+    "area": "definitions",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "labels": [],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-18T19:00:00Z",
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "harness",
+      "event": "created",
+      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
+    },
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "implementer",
+      "event": "implemented",
+      "note": "entregada en la construcción inicial"
+    }
+  ],
+  "created_at": "2026-08-18T19:00:00Z",
+  "updated_at": "2026-08-18T19:00:00Z"
+}

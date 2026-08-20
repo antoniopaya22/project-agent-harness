@@ -1,0 +1,55 @@
+---
+id: plan
+name: Plan
+purpose: Groom a task or produce its implementation plan, without writing any code.
+args: "<TASK-ID>"
+kind: agent
+agents: [planner, researcher]
+capabilities: [read, search, shell, edit, ask]
+model: deep
+---
+
+Plan task **$1**.
+
+Read the task first: `node .harness/bin/harness.mjs task show $1`.
+
+Then invoke the **planner** for whichever of the two jobs applies:
+
+## If the task is in `backlog` — groom it
+
+The planner rewrites the title for a non-technical reader, rewrites the description, writes
+acceptance criteria that each carry a real check, sets `context` so the next agent reads little, and
+sizes it. If the honest size is `L`, it splits the task instead of pretending.
+
+End by trying the transition:
+
+```bash
+node .harness/bin/harness.mjs task set-status $1 ready --as planner
+```
+
+If that refuses, it is telling you exactly what is still missing. Fix that; do not work around it.
+
+Then show the human the criteria and ask for confirmation. Criteria are a contract — getting them
+wrong is the most expensive mistake available at this stage, and it is cheap to check now.
+
+## If the task is already `ready` — plan the implementation
+
+The planner writes `.harness/workspace/$1/plan.md`: approach and the rejected alternative, ordered
+steps naming the files each touches, an explicit risk level, the tests to add mapped to criteria, and
+the docs the change will invalidate.
+
+If the question the plan depends on is genuinely unknown — an unfamiliar library, an external API, an
+undocumented corner of this codebase — invoke the **researcher** first and let it answer with sources.
+Do not let the planner guess and call it a plan.
+
+## Never
+
+- Do not write or modify production code or tests. This command produces text only.
+- Do not edit the criteria of a task that is already `in_progress` or later.
+- Do not present an unverified external API shape as fact in a plan.
+
+## Report
+
+For grooming: the criteria as a list, the area, the size, and an explicit question asking the human to
+confirm. For planning: the plan's path, its risk level, and — if the risk is `high` — a clear
+statement that implementation should not start until the human confirms.

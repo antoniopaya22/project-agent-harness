@@ -1,0 +1,67 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0027",
+  "title": "Interfaz de adaptador y tabla de correspondencias",
+  "type": "feature",
+  "status": "backlog",
+  "priority": "medium",
+  "size": "M",
+  "parent": "EPIC-0006",
+  "description": "Las operaciones que debe implementar cualquier tracker, y la correspondencia de estados editable sin tocar código, para que añadir otro tracker no toque el núcleo.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "La correspondencia de estados se cambia editando configuración, sin tocar código",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/sync.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "El adaptador es sustituible por otro proveedor sin cambiar el núcleo",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "integrations",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [
+    "CHORE-0003"
+  ],
+  "labels": [],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "harness",
+      "event": "created",
+      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
+    },
+    {
+      "at": "2026-08-18T18:05:21Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "depends_on=CHORE-0003"
+    }
+  ],
+  "created_at": "2026-08-18T19:00:00Z",
+  "updated_at": "2026-08-18T18:05:21Z"
+}

@@ -8,17 +8,17 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+/build/
 develop-eggs/
-dist/
+/dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
-parts/
+/lib/
+/lib64/
+/parts/
 sdist/
-var/
+/var/
 wheels/
 share/python-wheels/
 *.egg-info/
@@ -216,3 +216,18 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ── harness ──────────────────────────────────────────────────────────────────
+# Credenciales de integraciones opcionales (ClickUp, etc.). Nunca en el repo.
+.env
+.env.local
+
+# Registro de auditoría de sincronización: ruido, y puede contener nombres.
+.harness/integrations/*/sync.log.jsonl
+
+# Salida de gates y ficheros de trabajo transitorios de los comandos.
+.harness/workspace/*/COMMIT_MSG.txt
+.harness/workspace/*/PR_BODY.md
+.harness/workspace/*/gate-output/
+
+# El plan y los informes de una adopción sí se commitean: son evidencia revisable.

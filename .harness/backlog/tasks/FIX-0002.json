@@ -1,0 +1,112 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FIX-0002",
+  "title": "Las opciones repetidas se descartaban en silencio",
+  "type": "fix",
+  "status": "in_review",
+  "priority": "high",
+  "description": "El parseador de argumentos sobrescribia una opcion repetida en lugar de acumularla, asi que en task context solo se guardaba el ultimo --file o --doc. El resto se perdia sin aviso, y la documentacion del area afirmaba lo contrario. Se descubrio al usar el propio harness para registrar la correccion anterior.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Una opcion repetida conserva todos sus valores, y una sola aparicion sigue siendo un escalar",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/util.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "tests/util.test.mjs: 113 autotests en verde"
+    },
+    {
+      "id": "AC2",
+      "must": "La trampa documentada en el area del CLI describe el comportamiento real",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pass",
+      "evidence": "docs/areas/cli.md: trampa reescrita"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [],
+    "files": [
+      ".harness/bin/lib/util.mjs",
+      "docs/areas/cli.md"
+    ],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "blocked_reason": null,
+  "labels": [],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T15:12:51Z",
+  "branch": "fix/0002-las-opciones-repetidas-se-descartaban-en",
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-20T15:12:51Z",
+      "by": "harness",
+      "event": "created",
+      "note": null
+    },
+    {
+      "at": "2026-08-20T15:12:51Z",
+      "by": "human",
+      "event": "groomed",
+      "note": "AC1 set"
+    },
+    {
+      "at": "2026-08-20T15:12:51Z",
+      "by": "human",
+      "event": "groomed",
+      "note": "AC2 set"
+    },
+    {
+      "at": "2026-08-20T15:12:51Z",
+      "by": "human",
+      "event": "groomed",
+      "note": "file+.harness/bin/lib/util.mjs file+docs/areas/cli.md"
+    },
+    {
+      "at": "2026-08-20T15:12:51Z",
+      "by": "planner",
+      "event": "status_changed",
+      "note": "backlog -> ready"
+    },
+    {
+      "at": "2026-08-20T15:12:51Z",
+      "by": "implementer",
+      "event": "claimed",
+      "note": "branch fix/0002-las-opciones-repetidas-se-descartaban-en"
+    },
+    {
+      "at": "2026-08-20T15:12:51Z",
+      "by": "human",
+      "event": "verified",
+      "note": "AC1 -> pass"
+    },
+    {
+      "at": "2026-08-20T15:12:51Z",
+      "by": "human",
+      "event": "verified",
+      "note": "AC2 -> pass"
+    },
+    {
+      "at": "2026-08-20T15:12:51Z",
+      "by": "tester",
+      "event": "status_changed",
+      "note": "in_progress -> in_review"
+    }
+  ],
+  "created_at": "2026-08-20T15:12:51Z",
+  "updated_at": "2026-08-20T15:12:51Z"
+}

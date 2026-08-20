@@ -1,0 +1,67 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FEAT-0022",
+  "title": "Reescritura de referencias tras mover ficheros",
+  "type": "feature",
+  "status": "ready",
+  "priority": "critical",
+  "size": "L",
+  "parent": "EPIC-0004",
+  "description": "La parte difícil de reorganizar no es mover, es que todo lo que apuntaba al sitio antiguo siga apuntando bien: importaciones, empaquetado, configuración de pruebas y cobertura, contenedores e integración continua.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "Reescribe importaciones y las familias de configuración declaradas en el perfil",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/restructure.test.mjs"
+      },
+      "status": "pending"
+    },
+    {
+      "id": "AC2",
+      "must": "El informe enumera uno por uno los ficheros de configuración tocados",
+      "check": {
+        "type": "review",
+        "run": null
+      },
+      "status": "pending"
+    }
+  ],
+  "context": {
+    "area": "cli",
+    "docs": [
+      "docs/HARNESS-PLAN.md"
+    ],
+    "files": [],
+    "out_of_scope": []
+  },
+  "depends_on": [
+    "FEAT-0021"
+  ],
+  "labels": [],
+  "assignee": null,
+  "claimed_at": null,
+  "branch": null,
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "worklog": [
+    {
+      "at": "2026-08-18T19:00:00Z",
+      "by": "harness",
+      "event": "created",
+      "note": "sembrada desde docs/HARNESS-PLAN.md §12"
+    },
+    {
+      "at": "2026-08-18T18:05:21Z",
+      "by": "human",
+      "event": "status_changed",
+      "note": "depends_on=FEAT-0021"
+    }
+  ],
+  "created_at": "2026-08-18T19:00:00Z",
+  "updated_at": "2026-08-18T18:05:21Z"
+}

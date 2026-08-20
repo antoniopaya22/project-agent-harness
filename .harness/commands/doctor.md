@@ -1,0 +1,48 @@
+---
+id: doctor
+name: Doctor
+purpose: Validate the harness itself — schemas, backlog hygiene, generated adapters, read-path budgets and codemap truthfulness.
+args: "[--fix]"
+kind: script
+capabilities: [read, shell]
+model: fast
+---
+
+Check the harness's own health.
+
+```bash
+node .harness/bin/harness.mjs doctor $ARGUMENTS
+```
+
+`--fix` repairs only what is mechanically derivable — it regenerates `index.json`, `BOARD.md` and the
+provider adapters. It never edits a task, a doc or any source file, because those need judgement.
+
+## What it checks, and why each one matters
+
+| Check | Why it exists |
+|-------|---------------|
+| `project-schema`, `task-schema` | Malformed config or tasks break every command downstream. |
+| `backlog` | Cross-task problems a schema cannot see: dependency cycles, orphan parents, a task marked `ready` that does not meet the entry conditions. |
+| `index` | `index.json` and `BOARD.md` are generated; stale ones mislead both agents and the humans reading the board. |
+| `adapters` | `CLAUDE.md`, `.claude/**` and `AGENTS.md` are projections of `.harness/`. Drift means an agent is following an outdated instruction set. |
+| `read-path` | **The load-bearing one.** Every file in the cold-start read path must exist and stay inside its line budget. This is what keeps "read the minimum" from decaying into a slogan. |
+| `areas` | Every declared area has its doc, and no orphan area docs exist. |
+| `codemap` | Every path named in `docs/CODEMAP.md` still exists. This is the anti-rot mechanism that actually works, because it is mechanical. |
+| `definitions` | Every agent declares a non-empty `forbidden` — an agent without limits has no reason to be a separate role. |
+| `secrets` | Nothing that looks like a credential has landed in a task file or in `project.json`. |
+
+## How to respond to failures
+
+Fix the cause, not the symptom.
+
+- **read-path over budget** → the file has absorbed something that belongs elsewhere. Move it out, do
+  not raise the budget. Raising the budget is how the read path stops being short.
+- **codemap references a missing path** → the code moved and the map lied. Update the map.
+- **adapters drifted** → run `harness generate`. If someone hand-edited a generated file, their change
+  is about to be lost: recover it into `.harness/` or into `.harness/overrides/` first.
+- **a task marked `ready` that is not** → it will mislead `/implement`. Regroom it with `/plan`.
+
+## Report
+
+Group findings by check, errors before warnings. Then one line: healthy, or the number of errors and
+the single most important one to fix first. If `--fix` repaired something, say exactly what.
