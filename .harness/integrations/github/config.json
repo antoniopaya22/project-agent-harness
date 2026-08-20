@@ -1,0 +1,5 @@
+{
+  "enabled": true,
+  "project": null,
+  "_comment": "Para proyectar al tablero, pon project: { \"owner\": \"<usuario>\", \"number\": <n> }. Los identificadores de proyecto, campo y opciones se descubren en la primera sincronización y se guardan aquí. Sin secretos: el transporte es gh."
+}

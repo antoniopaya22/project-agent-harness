@@ -234,3 +234,6 @@ __marimo__/
 
 # Resultados de gates cacheados por huella del arbol. Derivado, nunca fuente.
 .harness/.cache/
+
+# Log de auditoria de sincronizacion: ruido, y puede contener nombres.
+.harness/integrations/*/sync.log.jsonl

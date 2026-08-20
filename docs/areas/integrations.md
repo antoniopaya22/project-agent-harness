@@ -61,10 +61,34 @@ los proyectos clásicos está retirada. Requiere el scope `project` en el token
 | `parent` (épica) | sub-issue — **[VERIFY]** superficie exacta de la API |
 | `branch`, `links.pr` | referencias cruzadas nativas |
 
-**[VERIFY]** antes de implementar: descubrimiento de los identificadores de campo y de opción del
-tablero (hay que hacerlo una vez y guardarlos), y si el token de Actions puede escribir en un tablero —
-es un recurso de usuario u organización, no del repositorio, así que probablemente haga falta un PAT o
-una App.
+### Verificado contra la API (20/08/2026)
+
+Comprobado por introspección del esquema GraphQL, no de memoria:
+
+| Necesidad | Resolución |
+|-----------|-----------|
+| Añadir una incidencia al tablero | `addProjectV2ItemById(projectId, contentId)` |
+| Fijar el estado | `updateProjectV2ItemFieldValue(projectId, itemId, fieldId, value: { singleSelectOptionId })` |
+| Descubrir los identificadores | **Una sola consulta**: `ProjectV2SingleSelectField` expone `id`, `name` y `options { id name }` |
+| Crear el campo de estado con sus opciones | **Una sola mutación**: `createProjectV2Field(dataType: SINGLE_SELECT, singleSelectOptions: [...])` |
+| Épicas como sub-issues | `addSubIssue(issueId, subIssueId)` existe en el esquema |
+
+Fijar un estado necesita **cuatro** identificadores (proyecto, item, campo, opción). Los tres estables
+—proyecto, campo, opciones— se descubren una vez y se guardan en la configuración; el del item es por
+tarea y vive en `external.github`.
+
+### El token de integración continua, y por qué importa al diseño
+
+Una incidencia es un recurso **del repositorio**, así que el `GITHUB_TOKEN` de Actions puede escribirla
+con permiso `issues: write`. Un tablero es un recurso **de usuario u organización**, así que ese token
+no llega: hace falta un PAT o una App con scope `project`.
+
+Eso no es un inconveniente, es el argumento del diseño de varios sumideros: en integración continua el
+sumidero de incidencias funciona sin configurar nada y el del tablero se salta **avisando**, en lugar de
+romper la construcción. Cada sumidero declara qué credencial necesita y se desactiva solo si le falta.
+
+En local no hace falta ningún secreto: el transporte es `gh`, ya autenticado, con `gh auth refresh -s
+project` para el tablero.
 
 ## Mapeo de campos a ClickUp
 

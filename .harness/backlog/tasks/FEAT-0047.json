@@ -3,7 +3,7 @@
   "id": "FEAT-0047",
   "title": "Sumidero de incidencias de GitHub",
   "type": "feature",
-  "status": "ready",
+  "status": "done",
   "priority": "high",
   "size": "M",
   "parent": "EPIC-0011",
@@ -16,7 +16,8 @@
         "type": "command",
         "run": "node --test tests/sync-github.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "24 incidencias reales creadas con titulo con id delante y criterios como lista de comprobacion"
     },
     {
       "id": "AC2",
@@ -25,7 +26,8 @@
         "type": "command",
         "run": "node --test tests/sync-github.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "verificado contra el remoto real: segunda pasada da 24 sin cambios y 65 por crear"
     },
     {
       "id": "AC3",
@@ -34,7 +36,8 @@
         "type": "review",
         "run": null
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "el transporte es gh, ya autenticado: ningun secreto en el proyecto"
     },
     {
       "id": "AC4",
@@ -43,7 +46,8 @@
         "type": "command",
         "run": "node --test tests/sync-github.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "si el cuerpo remoto difiere se marca drifted, se avisa y se sobrescribe: el repo manda"
     }
   ],
   "context": {
@@ -55,17 +59,21 @@
   "depends_on": [
     "FEAT-0046"
   ],
+  "blocked_reason": null,
   "labels": [
     "mejora"
   ],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T16:37:28Z",
+  "branch": "feat/0047-sumidero-de-incidencias-de-github",
   "links": {
     "pr": null,
     "issue": null,
     "commits": []
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T15:40:17Z"
+  "updated_at": "2026-08-20T16:37:36Z"
 }

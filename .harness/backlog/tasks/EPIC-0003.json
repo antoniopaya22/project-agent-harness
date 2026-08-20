@@ -38,6 +38,16 @@
     "issue": null,
     "commits": []
   },
+  "external": {
+    "github": {
+      "id": "14",
+      "url": null,
+      "issue": 14,
+      "drifted": false,
+      "content_hash": "0cdff8d15e5ba0ff",
+      "last_synced_at": "2026-08-20T16:33:29Z"
+    }
+  },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-20T16:01:17Z"
+  "updated_at": "2026-08-20T16:33:29Z"
 }

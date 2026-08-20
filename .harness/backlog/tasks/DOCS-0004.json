@@ -50,6 +50,16 @@
     "issue": null,
     "commits": []
   },
+  "external": {
+    "github": {
+      "id": "11",
+      "url": null,
+      "issue": 11,
+      "drifted": false,
+      "content_hash": "927fdae2d416b988",
+      "last_synced_at": "2026-08-20T16:33:11Z"
+    }
+  },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-20T16:01:17Z"
+  "updated_at": "2026-08-20T16:33:11Z"
 }

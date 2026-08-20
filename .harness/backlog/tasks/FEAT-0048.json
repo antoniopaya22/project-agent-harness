@@ -3,7 +3,7 @@
   "id": "FEAT-0048",
   "title": "Sumidero del tablero de GitHub",
   "type": "feature",
-  "status": "ready",
+  "status": "blocked",
   "priority": "high",
   "size": "M",
   "parent": "EPIC-0011",
@@ -47,6 +47,7 @@
     "FEAT-0046",
     "SPIKE-0003"
   ],
+  "blocked_reason": "Implementado y con tests de la parte pura, pero sus criterios exigen un tablero real: hace falta crear el Project y poner owner y numero en integrations/github/config.json.",
   "labels": [
     "mejora"
   ],
@@ -59,5 +60,5 @@
     "commits": []
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T15:40:17Z"
+  "updated_at": "2026-08-20T16:37:36Z"
 }

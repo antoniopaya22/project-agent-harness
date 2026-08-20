@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "FEAT-0047",
+  "stage": "claimed",
+  "by": "implementer",
+  "branch": "feat/0047-sumidero-de-incidencias-de-github",
+  "summary": "Tarea reclamada por agent:implementer. Rama feat/0047-sumidero-de-incidencias-de-github. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-20T16:37:29Z"
+}

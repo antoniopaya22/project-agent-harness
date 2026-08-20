@@ -1,0 +1,70 @@
+# Proyecta el backlog a GitHub al integrar en la rama principal.
+#
+# Si la proyección depende de que alguien ejecute un comando, tarde o temprano el tablero
+# miente. Aquí se ejecuta sola.
+#
+# Sobre credenciales, y esto lo decidió el spike de la API: una incidencia es un recurso del
+# **repositorio**, así que el GITHUB_TOKEN de Actions basta con `issues: write`. Un tablero es
+# un recurso de **usuario u organización**, así que ese token no llega — necesita un PAT con
+# scope `project` en el secreto `HARNESS_PROJECT_TOKEN`. Sin él, el sumidero del tablero se
+# salta avisando y las incidencias siguen proyectándose.
+name: sync
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Solo mostrar lo que cambiaría'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  # Dos proyecciones a la vez se pisarían escribiendo el estado en las tareas.
+  group: harness-sync
+  cancel-in-progress: false
+
+jobs:
+  project:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Qué sumideros pueden ejecutarse
+        env:
+          GH_TOKEN: ${{ secrets.HARNESS_PROJECT_TOKEN || github.token }}
+        run: node .harness/bin/harness.mjs sinks
+
+      # La proyección es un espejo: que falle no debe romper la construcción del proyecto.
+      # `continue-on-error` es lo que lo garantiza; sin él, un tablero externo caído
+      # bloquearía el desarrollo, que es exactamente al revés de lo que queremos.
+      - name: Proyectar
+        id: project
+        continue-on-error: true
+        env:
+          # El PAT si existe; si no, el token del repositorio, que basta para incidencias.
+          GH_TOKEN: ${{ secrets.HARNESS_PROJECT_TOKEN || github.token }}
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            node .harness/bin/harness.mjs sync --dry-run
+          else
+            node .harness/bin/harness.mjs sync
+          fi
+
+      # Pero tampoco puede pasar desapercibido: un espejo silenciosamente desactualizado es
+      # peor que no tenerlo, porque alguien se lo cree.
+      - name: Avisar si la proyección falló
+        if: steps.project.outcome == 'failure'
+        run: |
+          echo "::warning title=Proyección incompleta::El tablero externo puede estar desactualizado. Revisa el paso 'Proyectar'."
+          echo "### La proyección del backlog falló" >> "$GITHUB_STEP_SUMMARY"
+          echo "El tablero externo puede estar desactualizado. La construcción no se ha roto a propósito." >> "$GITHUB_STEP_SUMMARY"

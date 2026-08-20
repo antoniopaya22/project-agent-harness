@@ -32,6 +32,7 @@ import { SUBCOMMANDS, taskCommand, next as taskNext } from './lib/task-cmd.mjs';
 import * as readpath from './lib/readpath.mjs';
 import * as workspace from './lib/workspace.mjs';
 import * as init from './lib/init.mjs';
+import * as syncLib from './lib/sync.mjs';
 import { lintBacklog } from './lib/lint.mjs';
 
 function actorId(ctx, flags) {
@@ -80,7 +81,8 @@ commands.help = () => {
         ['handoff <sub> <ID>', 'read | write | validate | resume the in-flight state of a task'],
         ['plan-risk <ID>', 'exit 3 when the plan needs a human checkpoint before coding'],
         ['commit [--task ID]', 'conventional commit + push (+ PR when the task is in_review)'],
-        ['sync [--dry-run]', 'project the backlog to the external tracker (optional)'],
+        ['sinks', 'which projections are installed, and whether each can run'],
+        ['sync [--dry-run]', 'project the backlog to every enabled sink'],
         ['version', 'print the harness version'],
       ],
       ['COMMAND', 'WHAT IT DOES'],
@@ -394,22 +396,26 @@ commands.commit = (ctx, { flags }) => {
   return EXIT.OK;
 };
 
-commands.sync = (ctx, { flags }) => {
-  const cfg = ctx.project.integrations?.clickup;
-  if (!cfg?.enabled) {
-    info('sync disabled: integrations.clickup.enabled is false in project.json');
+commands.sync = async (ctx, { flags }) => {
+  const results = await syncLib.runSync(ctx, {
+    dryRun: Boolean(flags['dry-run']),
+    only: typeof flags.sink === 'string' ? flags.sink : null,
+  });
+  return results.some((r) => r.failed > 0) ? EXIT.CHECK_FAILED : EXIT.OK;
+};
+
+commands.sinks = async (ctx, { flags }) => {
+  const status = await syncLib.sinkStatus(ctx);
+  if (flags.json) {
+    say(JSON.stringify(status, null, 2));
     return EXIT.OK;
   }
-  if (!process.env.CLICKUP_API_TOKEN) {
-    info('sync disabled: CLICKUP_API_TOKEN is not set');
+  if (status.length === 0) {
+    info('no sinks installed');
     return EXIT.OK;
   }
-  const adapter = path.join(ctx.harnessDir, 'integrations', 'clickup', 'adapter.mjs');
-  if (!fs.existsSync(adapter)) {
-    warn('ClickUp adapter not installed yet (phase 5 of docs/HARNESS-PLAN.md)');
-    return EXIT.OK;
-  }
-  return import(`file://${adapter}`).then((m) => m.run(ctx, { dryRun: Boolean(flags['dry-run']) }));
+  say(table(status.map((s) => [s.id, s.enabled ? c.green('enabled') : c.gray('disabled'), s.reason]), ['SINK', 'STATE', 'WHY']));
+  return EXIT.OK;
 };
 
 commands.task = (ctx, parsed) => taskCommand(ctx, parsed);
