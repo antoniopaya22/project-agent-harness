@@ -2,7 +2,7 @@
 // should I do next, and where has reality drifted from the backlog?
 
 import { c, pluralize, say, table } from './util.mjs';
-import { OPEN_STATUSES, STATUSES, idFromBranch, loadAll, pickNext } from './tasks.mjs';
+import { OPEN_STATUSES, STATUSES, idFromBranch, loadAll, pickNext, timeInStatus, unblockCounts } from './tasks.mjs';
 import * as git from './git.mjs';
 
 const STALE_DAYS = 7;
@@ -62,8 +62,13 @@ export function print(ctx, r) {
     say(c.bold('En curso'));
     say(
       table(
-        wip.map((t) => [t.id, t.status, t.assignee ? `${t.assignee.kind}:${t.assignee.id}` : '—', t.title]),
-        ['ID', 'ESTADO', 'ASIGNADA', 'TÍTULO'],
+        wip.map((t) => {
+          const age = timeInStatus(ctx, t);
+          // For a reader from outside, how long it has been stuck is the useful number.
+          const label = age.days === null ? '—' : age.days === 0 ? 'hoy' : `${age.days} d`;
+          return [t.id, t.status, label, t.assignee ? `${t.assignee.kind}:${t.assignee.id}` : '—', t.title];
+        }),
+        ['ID', 'ESTADO', 'LLEVA', 'ASIGNADA', 'TÍTULO'],
       ),
     );
   }
@@ -77,7 +82,8 @@ export function print(ctx, r) {
 
   say('');
   if (r.next) {
-    say(`${c.bold('Siguiente')}  ${c.green(r.next.id)}  ${r.next.title}`);
+    const unblocks = unblockCounts(r.tasks).get(r.next.id) ?? 0;
+    say(`${c.bold('Siguiente')}  ${c.green(r.next.id)}  ${r.next.title}${unblocks ? c.gray(`  (desbloquea ${unblocks})`) : ''}`);
     say(c.gray(`          harness read-path ${r.next.id}   ·   /implement ${r.next.id}`));
   } else {
     const readyish = r.tasks.filter((t) => OPEN_STATUSES.includes(t.status));

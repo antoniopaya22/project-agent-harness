@@ -1,3 +1,6 @@
 {"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
 {"at":"2026-08-20T16:20:49Z","by":"human","event":"verified","note":"baseline: AC1=pass AC2=pass"}
 {"at":"2026-08-20T16:21:08Z","by":"human","event":"verified","note":"baseline: AC1=fail AC2=fail"}
+{"at":"2026-08-20T17:57:53Z","by":"implementer","event":"claimed","note":"branch feat/0051-la-siguiente-tarea-se-elige-por"}
+{"at":"2026-08-20T17:57:55Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-20T17:57:55Z","by":"human","event":"verified","note":"AC2 -> pass"}

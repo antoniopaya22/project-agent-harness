@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "FEAT-0052",
+  "stage": "claimed",
+  "by": "implementer",
+  "branch": "feat/0052-cola-de-tareas-y-deteccion-de",
+  "summary": "Tarea reclamada por agent:implementer. Rama feat/0052-cola-de-tareas-y-deteccion-de. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-20T17:57:54Z"
+}

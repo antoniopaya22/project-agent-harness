@@ -3,7 +3,7 @@
   "id": "FEAT-0055",
   "title": "Tiempo de ciclo en el informe de situacion",
   "type": "feature",
-  "status": "ready",
+  "status": "done",
   "priority": "low",
   "size": "S",
   "parent": "EPIC-0012",
@@ -16,7 +16,8 @@
         "type": "command",
         "run": "node --test tests/status.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "timeInStatus lee el historial, no updated_at; status muestra la columna LLEVA"
     }
   ],
   "context": {
@@ -26,17 +27,21 @@
     "out_of_scope": []
   },
   "depends_on": [],
+  "blocked_reason": null,
   "labels": [
     "mejora"
   ],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T17:57:54Z",
+  "branch": "feat/0055-tiempo-de-ciclo-en-el-informe",
   "links": {
     "pr": null,
     "issue": null,
     "commits": []
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T15:30:00Z"
+  "updated_at": "2026-08-20T17:58:15Z"
 }

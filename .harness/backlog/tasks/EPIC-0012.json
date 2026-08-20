@@ -3,7 +3,7 @@
   "id": "EPIC-0012",
   "title": "Ergonomia y huecos del dia a dia",
   "type": "epic",
-  "status": "ready",
+  "status": "in_progress",
   "priority": "high",
   "description": "Lo que hace que el harness se use en lugar de rodearse.",
   "acceptance_criteria": [
@@ -49,5 +49,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T17:54:49Z"
+  "updated_at": "2026-08-20T17:57:53Z"
 }

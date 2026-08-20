@@ -96,14 +96,42 @@ taskSubs.show = (ctx, { positional, flags }) => {
 };
 
 taskSubs.next = (ctx, { flags }) => {
-  const next = tasksLib.pickNext(tasksLib.loadAll(ctx));
+  const all = tasksLib.loadAll(ctx);
+  const count = flags.count ? Number(flags.count) : 1;
+  if (!Number.isInteger(count) || count < 1) fail('--count must be a positive integer', EXIT.USAGE);
+
+  // Asking for more than one is asking "what can I run at the same time", which is not the
+  // same as "the top N": two ready tasks over the same files are not parallel work.
+  if (count > 1 || flags.parallel) {
+    const { chosen, deferred } = tasksLib.pickParallel(all, flags.parallel ? Number(flags.parallel) || count : count);
+    if (flags.json) {
+      say(JSON.stringify({
+        chosen: chosen.map((t2) => ({ id: t2.id, title: t2.title })),
+        deferred: deferred.map((d) => ({ id: d.task.id, against: d.against, reasons: d.reasons })),
+      }, null, 2));
+      return EXIT.OK;
+    }
+    if (chosen.length === 0) {
+      info('no ready, unblocked, unclaimed task');
+      return EXIT.OK;
+    }
+    const unblocks = tasksLib.unblockCounts(all);
+    say(table(chosen.map((t2) => [t2.id, t2.priority ?? '—', `desbloquea ${unblocks.get(t2.id) ?? 0}`, t2.title]), ['ID', 'PRIO', 'IMPACTO', 'TÍTULO']));
+    for (const d of deferred) {
+      say(c.gray(`   aparte: ${d.task.id} choca con ${d.against} (${d.reasons.join('; ')})`));
+    }
+    return EXIT.OK;
+  }
+
+  const next = tasksLib.pickNext(all);
   if (!next) {
     if (flags.json) say('null');
     else info('no ready, unblocked, unclaimed task');
     return EXIT.OK;
   }
-  if (flags.json) say(JSON.stringify({ id: next.id, title: next.title }, null, 2));
-  else say(`${next.id}  ${next.title}`);
+  const unblocks = tasksLib.unblockCounts(all).get(next.id) ?? 0;
+  if (flags.json) say(JSON.stringify({ id: next.id, title: next.title, unblocks }, null, 2));
+  else say(`${next.id}  ${next.title}${unblocks ? c.gray(`  (desbloquea ${unblocks})`) : ''}`);
   return EXIT.OK;
 };
 

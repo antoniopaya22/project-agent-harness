@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "FEAT-0055",
+  "stage": "claimed",
+  "by": "implementer",
+  "branch": "feat/0055-tiempo-de-ciclo-en-el-informe",
+  "summary": "Tarea reclamada por agent:implementer. Rama feat/0055-tiempo-de-ciclo-en-el-informe. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-20T17:57:55Z"
+}
