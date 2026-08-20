@@ -2,16 +2,16 @@
   "harness_version": "1.0.0",
   "counts": {
     "backlog": 11,
-    "ready": 21,
+    "ready": 18,
     "in_progress": 2,
     "in_review": 0,
-    "blocked": 1,
-    "done": 54,
+    "blocked": 0,
+    "done": 58,
     "cancelled": 0,
     "total": 89,
-    "open": 35
+    "open": 31
   },
-  "next": "FEAT-0023",
+  "next": "FEAT-0018",
   "tasks": [
     {
       "id": "CHORE-0001",
@@ -303,7 +303,7 @@
       "id": "EPIC-0011",
       "title": "Proyeccion del backlog a GitHub",
       "type": "epic",
-      "status": "ready",
+      "status": "done",
       "priority": "high",
       "size": null,
       "area": null,
@@ -662,7 +662,7 @@
       "id": "FEAT-0023",
       "title": "Motor de reorganización por lotes verificados",
       "type": "feature",
-      "status": "ready",
+      "status": "done",
       "priority": "critical",
       "size": "L",
       "area": "cli",
@@ -673,8 +673,8 @@
         "FEAT-0022"
       ],
       "blocked": false,
-      "assignee": null,
-      "branch": null
+      "assignee": "agent:implementer",
+      "branch": "feat/0023-motor-de-reorganizacion-por-lotes-verificados"
     },
     {
       "id": "FEAT-0024",
@@ -1037,7 +1037,7 @@
       "id": "FEAT-0048",
       "title": "Sumidero del tablero de GitHub",
       "type": "feature",
-      "status": "blocked",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "integrations",
@@ -1047,14 +1047,14 @@
         "SPIKE-0003"
       ],
       "blocked": false,
-      "assignee": null,
-      "branch": null
+      "assignee": "agent:implementer",
+      "branch": "feat/0048-sumidero-del-tablero-de-github"
     },
     {
       "id": "FEAT-0049",
       "title": "Sincronizar desde integracion continua",
       "type": "feature",
-      "status": "ready",
+      "status": "done",
       "priority": "medium",
       "size": "S",
       "area": "integrations",
@@ -1063,9 +1063,9 @@
         "FEAT-0047",
         "FEAT-0048"
       ],
-      "blocked": true,
-      "assignee": null,
-      "branch": null
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0049-sincronizar-desde-integracion-continua"
     },
     {
       "id": "FEAT-0050",

@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "FEAT-0049",
+  "stage": "claimed",
+  "by": "implementer",
+  "branch": "feat/0049-sincronizar-desde-integracion-continua",
+  "summary": "Tarea reclamada por agent:implementer. Rama feat/0049-sincronizar-desde-integracion-continua. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-20T20:06:53Z"
+}

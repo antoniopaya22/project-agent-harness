@@ -45,9 +45,11 @@
       "issue": 24,
       "drifted": false,
       "content_hash": "a1134ef0ce5ae25e",
-      "last_synced_at": "2026-08-20T16:34:47Z"
+      "last_synced_at": "2026-08-20T20:05:07Z",
+      "remote_hash": "e760908d13138abf",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XxkQ"
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T16:34:47Z"
+  "updated_at": "2026-08-20T20:05:07Z"
 }

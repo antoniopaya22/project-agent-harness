@@ -57,11 +57,12 @@
       "id": "7",
       "url": null,
       "issue": 7,
-      "drifted": false,
-      "content_hash": "18e6091b6ea6522b",
-      "last_synced_at": "2026-08-20T16:32:47Z"
+      "drifted": true,
+      "content_hash": "a24ee7dee619f351",
+      "last_synced_at": "2026-08-20T18:32:49Z",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XFWM"
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T17:54:49Z"
+  "updated_at": "2026-08-20T18:32:49Z"
 }

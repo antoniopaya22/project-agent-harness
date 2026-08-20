@@ -2,3 +2,11 @@
 {"at":"2026-08-18T18:05:21Z","by":"human","event":"status_changed","note":"depends_on=FEAT-0017"}
 {"at":"2026-08-18T18:05:21Z","by":"human","event":"status_changed","note":"depends_on=FEAT-0021"}
 {"at":"2026-08-18T18:05:21Z","by":"human","event":"status_changed","note":"depends_on=FEAT-0022"}
+{"at":"2026-08-20T20:06:23Z","by":"implementer","event":"claimed","note":"branch feat/0023-motor-de-reorganizacion-por-lotes-verificados"}
+{"at":"2026-08-20T20:06:23Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-20T20:06:23Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-20T20:06:23Z","by":"human","event":"verified","note":"AC3 -> pass"}
+{"at":"2026-08-20T20:06:23Z","by":"human","event":"verified","note":"AC4 -> pass"}
+{"at":"2026-08-20T20:06:23Z","by":"human","event":"verified","note":"AC5 -> pass"}
+{"at":"2026-08-20T20:06:32Z","by":"tester","event":"status_changed","note":"in_progress -> in_review"}
+{"at":"2026-08-20T20:06:32Z","by":"human","event":"completed","note":"in_review -> done"}

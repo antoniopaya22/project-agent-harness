@@ -1,3 +1,8 @@
 {"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
 {"at":"2026-08-20T15:40:17Z","by":"human","event":"status_changed","note":"depends_on=FEAT-0047"}
 {"at":"2026-08-20T15:40:18Z","by":"human","event":"status_changed","note":"depends_on=FEAT-0048"}
+{"at":"2026-08-20T20:06:53Z","by":"implementer","event":"claimed","note":"branch feat/0049-sincronizar-desde-integracion-continua"}
+{"at":"2026-08-20T20:06:53Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-20T20:06:53Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-20T20:07:02Z","by":"tester","event":"status_changed","note":"in_progress -> in_review"}
+{"at":"2026-08-20T20:07:02Z","by":"human","event":"completed","note":"in_review -> done"}

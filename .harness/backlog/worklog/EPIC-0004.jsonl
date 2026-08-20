@@ -3,3 +3,5 @@
 {"at":"2026-08-20T18:28:08Z","by":"harness","event":"status_changed","note":"in_progress -> ready (derivado de sus hijas)"}
 {"at":"2026-08-20T18:28:52Z","by":"harness","event":"status_changed","note":"ready -> in_progress (derivado de sus hijas)"}
 {"at":"2026-08-20T18:29:59Z","by":"harness","event":"status_changed","note":"in_progress -> ready (derivado de sus hijas)"}
+{"at":"2026-08-20T20:06:23Z","by":"harness","event":"status_changed","note":"ready -> in_progress (derivado de sus hijas)"}
+{"at":"2026-08-20T20:06:32Z","by":"harness","event":"status_changed","note":"in_progress -> ready (derivado de sus hijas)"}

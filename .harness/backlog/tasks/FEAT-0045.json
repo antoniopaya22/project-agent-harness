@@ -53,6 +53,18 @@
     "issue": null,
     "commits": []
   },
+  "external": {
+    "github": {
+      "id": "69",
+      "url": null,
+      "issue": 69,
+      "drifted": false,
+      "remote_hash": "7d4d7ff712d43c98",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XIUU",
+      "content_hash": "982cf92dc848e0a8",
+      "last_synced_at": "2026-08-20T18:40:01Z"
+    }
+  },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T17:54:43Z"
+  "updated_at": "2026-08-20T18:40:01Z"
 }

@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "FEAT-0023",
+  "stage": "claimed",
+  "by": "implementer",
+  "branch": "feat/0023-motor-de-reorganizacion-por-lotes-verificados",
+  "summary": "Tarea reclamada por agent:implementer. Rama feat/0023-motor-de-reorganizacion-por-lotes-verificados. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-20T20:06:23Z"
+}
