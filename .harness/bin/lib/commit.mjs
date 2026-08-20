@@ -4,7 +4,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { EXIT, c, fail, info, ok, say, warn } from './util.mjs';
+import { EXIT, c, fail, info, ok, say, toPosixPath, warn } from './util.mjs';
 import * as git from './git.mjs';
 import { TYPE_GIT, addWorklog, branchFor, idFromBranch, load, save } from './tasks.mjs';
 import { printGateResults, runAllGates, summarize } from './gates.mjs';
@@ -53,7 +53,7 @@ export function inferScope(ctx, files) {
   const allowed = ctx.project.git?.commit_scopes || [];
   const hits = new Set();
   for (const file of files) {
-    const rel = file.split(path.sep).join('/');
+    const rel = toPosixPath(file);
     for (const area of areas) {
       if (area.globs.some((g) => matchGlob(rel, g))) hits.add(area.id);
     }

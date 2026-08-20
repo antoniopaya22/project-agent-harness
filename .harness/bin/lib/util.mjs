@@ -153,8 +153,19 @@ export function globToRegExp(glob) {
   return new RegExp(`^${re}$`);
 }
 
+/**
+ * Globs are always written with `/`, so a path is normalised to `/` before matching.
+ * Note this converts backslashes unconditionally rather than using `path.sep`: on POSIX
+ * `path.sep` is already `/`, so a Windows-style path handed to a POSIX process would go
+ * unnormalised and silently fail to match. Every path reaching here is repo-relative,
+ * from `path.relative` or from git, so no legitimate filename contains a backslash.
+ */
+export function toPosixPath(p) {
+  return String(p).split('\\').join('/');
+}
+
 export function matchesAny(relPath, globs = []) {
-  const p = relPath.split(path.sep).join('/');
+  const p = toPosixPath(relPath);
   return globs.some((g) => globToRegExp(g).test(p));
 }
 

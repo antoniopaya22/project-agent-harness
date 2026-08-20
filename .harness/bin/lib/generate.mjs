@@ -9,6 +9,7 @@ import {
   generatedHeader,
   listFiles,
   parseFrontMatter,
+  toPosixPath,
   writeFileIfChanged,
 } from './util.mjs';
 
@@ -35,7 +36,7 @@ export function loadDefinitions(ctx, kind) {
     const { data, body } = parseFrontMatter(fs.readFileSync(file, 'utf8'));
     return {
       file,
-      rel: path.relative(ctx.root, file).split(path.sep).join('/'),
+      rel: toPosixPath(path.relative(ctx.root, file)),
       id: data.id || path.basename(file, '.md'),
       data,
       body: body.trim(),
@@ -280,10 +281,8 @@ export function plan(ctx) {
       const base = path.join(overridesRoot, provider);
       if (!fs.statSync(base).isDirectory()) continue;
       for (const file of walk(base)) {
-        out.push({
-          path: path.relative(base, file).split(path.sep).join(path.sep),
-          content: fs.readFileSync(file, 'utf8'),
-        });
+        // Kept platform-native: this path is re-joined onto ctx.root when written.
+        out.push({ path: path.relative(base, file), content: fs.readFileSync(file, 'utf8') });
       }
     }
   }

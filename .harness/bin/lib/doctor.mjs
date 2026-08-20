@@ -3,7 +3,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { countLines, listFiles, matchesAny, parseFrontMatter } from './util.mjs';
+import { countLines, listFiles, matchesAny, parseFrontMatter, toPosixPath } from './util.mjs';
 import { loadAll, validateTask } from './tasks.mjs';
 import { lintBacklog } from './lint.mjs';
 import { git } from './git.mjs';
@@ -202,7 +202,7 @@ function norm(s) {
 }
 
 function rel(ctx, file) {
-  return path.relative(ctx.root, file).split(path.sep).join('/');
+  return toPosixPath(path.relative(ctx.root, file));
 }
 
 /** `{task}` and `{area}` in a read-path entry expand to every real instance. */
@@ -252,7 +252,7 @@ function walkRel(dir, root, acc = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (entry.name === 'node_modules' || entry.name === '.git') continue;
     const full = path.join(dir, entry.name);
-    acc.push(path.relative(root, full).split(path.sep).join('/'));
+    acc.push(toPosixPath(path.relative(root, full)));
     if (entry.isDirectory()) walkRel(full, root, acc);
   }
   return acc;
