@@ -1,2 +1,5 @@
 {"at":"2026-08-18T19:00:00Z","by":"harness","event":"created","note":"sembrada desde docs/HARNESS-PLAN.md §12"}
 {"at":"2026-08-18T18:05:21Z","by":"human","event":"status_changed","note":"depends_on=FEAT-0021"}
+{"at":"2026-08-20T18:28:52Z","by":"implementer","event":"claimed","note":"branch feat/0022-reescritura-de-referencias-tras-mover-ficheros"}
+{"at":"2026-08-20T18:28:52Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-20T18:28:53Z","by":"human","event":"verified","note":"AC2 -> pass"}

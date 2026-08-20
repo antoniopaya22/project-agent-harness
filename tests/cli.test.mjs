@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
 import { EXIT } from '../.harness/bin/lib/util.mjs';
-import { REPO } from './helpers.mjs';
+import { REPO, makeTask, tempHarness } from './helpers.mjs';
 
 const ENTRY = path.join(REPO, '.harness', 'bin', 'harness.mjs');
 
@@ -102,9 +102,17 @@ test('index is idempotent when invoked through the CLI', () => {
 });
 
 test('an illegal transition exits with the precondition code, so hooks can branch on it', () => {
-  const res = run(['task', 'set-status', 'FEAT-0017', 'done']);
-  assert.equal(res.status, EXIT.PRECONDITION);
-  assert.match(res.stdout, /not allowed/);
+  // Against a fixture, not a real task: asserting on the live backlog made this test fail
+  // the moment that task legitimately advanced.
+  const { ctx, cleanup } = tempHarness({ tasks: [makeTask({ id: 'FEAT-0001', status: 'backlog' })] });
+  try {
+    const res = run(['task', 'set-status', 'FEAT-0001', 'done'], ctx.root);
+    assert.equal(res.status, EXIT.PRECONDITION);
+    assert.match(res.stdout, /not allowed/);
+    assert.match(res.stdout, /ready, blocked, cancelled/, 'and it says where you may go');
+  } finally {
+    cleanup();
+  }
 });
 
 test('sync is optional, and a test must never perform a real projection', () => {

@@ -2,16 +2,16 @@
   "harness_version": "1.0.0",
   "counts": {
     "backlog": 11,
-    "ready": 21,
+    "ready": 20,
     "in_progress": 4,
     "in_review": 0,
     "blocked": 1,
-    "done": 52,
+    "done": 53,
     "cancelled": 0,
     "total": 89,
-    "open": 37
+    "open": 36
   },
-  "next": "FEAT-0022",
+  "next": "FEAT-0018",
   "tasks": [
     {
       "id": "CHORE-0001",
@@ -227,7 +227,7 @@
       "blocked": false,
       "assignee": null,
       "branch": null,
-      "updated_at": "2026-08-20T18:24:58Z"
+      "updated_at": "2026-08-20T18:28:52Z"
     },
     {
       "id": "EPIC-0005",
@@ -608,7 +608,7 @@
       "id": "FEAT-0017",
       "title": "Reconocimiento del proyecto y línea base de calidad",
       "type": "feature",
-      "status": "in_progress",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "cli",
@@ -617,7 +617,7 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": "feat/0017-reconocimiento-del-proyecto-y-linea-base",
-      "updated_at": "2026-08-20T18:25:00Z"
+      "updated_at": "2026-08-20T18:28:08Z"
     },
     {
       "id": "FEAT-0018",
@@ -631,7 +631,7 @@
       "depends_on": [
         "FEAT-0017"
       ],
-      "blocked": true,
+      "blocked": false,
       "assignee": null,
       "branch": null,
       "updated_at": "2026-08-18T18:05:20Z"
@@ -690,7 +690,7 @@
       "id": "FEAT-0022",
       "title": "Reescritura de referencias tras mover ficheros",
       "type": "feature",
-      "status": "ready",
+      "status": "in_progress",
       "priority": "critical",
       "size": "L",
       "area": "cli",
@@ -699,9 +699,9 @@
         "FEAT-0021"
       ],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-18T18:05:21Z"
+      "assignee": "agent:implementer",
+      "branch": "feat/0022-reescritura-de-referencias-tras-mover-ficheros",
+      "updated_at": "2026-08-20T18:28:53Z"
     },
     {
       "id": "FEAT-0023",
