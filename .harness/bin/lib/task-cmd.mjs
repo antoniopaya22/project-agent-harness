@@ -2,6 +2,7 @@
 // backlog through these commands and never by hand-editing JSON, which is how a schema
 // survives contact with a language model.
 
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import { EXIT, bad, c, fail, info, ok, say, table } from './util.mjs';
 import * as tasksLib from './tasks.mjs';
@@ -172,6 +173,14 @@ taskSubs.ac = (ctx, { positional, flags }) => {
   }
   const ac = (task.acceptance_criteria || []).find((x) => x.id === acId);
   if (!ac) fail(`${task.id} has no criterion ${acId}`, EXIT.NOT_FOUND);
+  if (status === 'pass' && ac.baseline === 'pass' && !flags.force) {
+    bad(
+      `${acId} already passed before the change (baseline: pass), so a pass now proves nothing.
+` +
+        '   Fix the check or regroom the criterion. Use --force only if you can say why this is legitimate.',
+    );
+    return EXIT.CHECK_FAILED;
+  }
   ac.status = status;
   if (typeof flags.evidence === 'string') ac.evidence = flags.evidence;
   tasksLib.logEvent(ctx, task.id, who.id, 'verified', `${acId} -> ${status}`);
@@ -401,3 +410,51 @@ function requireId(id) {
   return id;
 }
 
+
+/**
+ * Records what each `command` check does BEFORE the change.
+ *
+ * The implementer prompt says "write the failing test first" and nothing verified it. A
+ * check that already passes proves nothing about the criterion, and it is the most common
+ * way a green result lies. Running the checks up front turns that from a warning into a
+ * recorded fact the tester can compare against.
+ */
+taskSubs['ac-baseline'] = (ctx, { positional, flags }) => {
+  const who = actor(ctx, flags);
+  const task = tasksLib.load(ctx, requireId(positional[0]));
+  const runnable = (task.acceptance_criteria || []).filter((a) => a.check?.type === 'command' && a.check.run);
+  if (runnable.length === 0) {
+    info(`${task.id} has no command checks to baseline`);
+    return EXIT.OK;
+  }
+
+  const alreadyPassing = [];
+  for (const ac of runnable) {
+    const res = spawnSync(ac.check.run, {
+      cwd: ctx.root,
+      shell: true,
+      stdio: 'pipe',
+      encoding: 'utf8',
+    });
+    // A command that cannot even start (missing test file, for instance) is the normal
+    // state before the work exists, and is distinguished from a clean failing assertion.
+    const started = res.error === undefined && res.status !== null;
+    ac.baseline = !started ? 'error' : res.status === 0 ? 'pass' : 'fail';
+    if (ac.baseline === 'pass') alreadyPassing.push(ac.id);
+    const mark = ac.baseline === 'pass' ? c.red('PASS') : c.green(ac.baseline.toUpperCase());
+    say(`${mark} ${c.bold(ac.id)} ${c.gray(ac.check.run)}`);
+  }
+
+  tasksLib.save(ctx, task);
+  tasksLib.logEvent(ctx, task.id, who.id, 'verified', `baseline: ${runnable.map((a) => `${a.id}=${a.baseline}`).join(' ')}`);
+
+  if (alreadyPassing.length) {
+    bad(
+      `${alreadyPassing.join(', ')} already pass before any change, so they cannot prove their criterion.\n` +
+        '   Either the work is already done, or the check is testing the wrong thing. Regroom before implementing.',
+    );
+    return EXIT.CHECK_FAILED;
+  }
+  ok(`${runnable.length} check(s) baselined — all of them fail today, which is what makes them evidence`);
+  return EXIT.OK;
+};

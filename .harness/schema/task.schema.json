@@ -152,6 +152,17 @@
               "null"
             ],
             "description": "Filled by the tester: command output excerpt, or the reviewer's reasoning."
+          },
+          "baseline": {
+            "type": "string",
+            "enum": [
+              "not-run",
+              "fail",
+              "error",
+              "pass"
+            ],
+            "default": "not-run",
+            "description": "Result of running this criterion's check BEFORE the change. `fail` or `error` is what you want: it proves the check exercises something that does not work yet. `pass` means the check cannot prove the criterion — either the work is already done or the check is wrong."
           }
         }
       }

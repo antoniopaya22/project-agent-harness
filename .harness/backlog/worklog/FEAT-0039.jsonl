@@ -1,1 +1,3 @@
 {"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
+{"at":"2026-08-20T16:07:55Z","by":"human","event":"verified","note":"baseline: AC3=pass"}
+{"at":"2026-08-20T16:08:37Z","by":"planner","event":"groomed","note":"AC3 set"}

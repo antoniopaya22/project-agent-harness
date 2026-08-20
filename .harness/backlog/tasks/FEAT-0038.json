@@ -3,7 +3,7 @@
   "id": "FEAT-0038",
   "title": "Probar que la comprobacion de un criterio fallaba antes del cambio",
   "type": "feature",
-  "status": "ready",
+  "status": "done",
   "priority": "critical",
   "size": "L",
   "parent": "EPIC-0009",
@@ -16,7 +16,8 @@
         "type": "command",
         "run": "node --test tests/baseline.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "harness task ac-baseline registra fail/error/pass por criterio antes del cambio"
     },
     {
       "id": "AC2",
@@ -25,7 +26,8 @@
         "type": "command",
         "run": "node --test tests/baseline.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "una comprobacion que ya pasaba sale con 1 y marcarla pass se rehusa salvo --force"
     },
     {
       "id": "AC3",
@@ -34,7 +36,8 @@
         "type": "review",
         "run": null
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "commands/implement.md etapa 6 exige la linea base antes de implementar"
     }
   ],
   "context": {
@@ -44,17 +47,21 @@
     "out_of_scope": []
   },
   "depends_on": [],
+  "blocked_reason": null,
   "labels": [
     "mejora"
   ],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-20T16:08:38Z",
+  "branch": "feat/0038-probar-que-la-comprobacion-de-un",
   "links": {
     "pr": null,
     "issue": null,
     "commits": []
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T15:30:00Z"
+  "updated_at": "2026-08-20T16:08:38Z"
 }

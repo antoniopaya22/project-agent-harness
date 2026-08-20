@@ -29,12 +29,13 @@
     },
     {
       "id": "AC3",
-      "must": "Los automatismos se generan desde la configuracion, no se escriben a mano",
+      "must": "Los automatismos se generan desde la configuracion y editar un fichero generado queda bloqueado en la practica",
       "check": {
-        "type": "command",
-        "run": "node .harness/bin/harness.mjs generate --check"
+        "type": "manual",
+        "run": null
       },
-      "status": "pending"
+      "status": "pending",
+      "baseline": "pass"
     }
   ],
   "context": {
@@ -56,5 +57,5 @@
     "commits": []
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T15:30:00Z"
+  "updated_at": "2026-08-20T16:08:37Z"
 }

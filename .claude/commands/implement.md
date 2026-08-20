@@ -76,7 +76,18 @@ confirm the approach before implementing.** Otherwise continue. Update the hando
 
 ## 6 — Implement
 
-Invoke the **implementer**. It reads only the read path plus the plan. Update the handoff to
+First record what each command check does *before* any change:
+
+```bash
+node .harness/bin/harness.mjs task ac-baseline $1
+```
+
+Exit 0 means every check fails today, which is what makes it evidence. **A non-zero exit
+means some check already passes**, so it cannot prove its criterion — either the work is
+already done or the check tests the wrong thing. Stop and regroom; do not implement against
+a criterion that cannot be proven.
+
+Then invoke the **implementer**. It reads only the read path plus the plan. Update the handoff to
 `implemented`.
 
 ## 7 — Verify

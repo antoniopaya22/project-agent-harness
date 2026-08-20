@@ -2,16 +2,16 @@
   "harness_version": "1.0.0",
   "counts": {
     "backlog": 11,
-    "ready": 42,
+    "ready": 41,
     "in_progress": 0,
     "in_review": 0,
     "blocked": 0,
-    "done": 36,
+    "done": 37,
     "cancelled": 0,
     "total": 89,
-    "open": 53
+    "open": 52
   },
-  "next": "FEAT-0038",
+  "next": "FEAT-0050",
   "tasks": [
     {
       "id": "CHORE-0001",
@@ -951,16 +951,16 @@
       "id": "FEAT-0038",
       "title": "Probar que la comprobacion de un criterio fallaba antes del cambio",
       "type": "feature",
-      "status": "ready",
+      "status": "done",
       "priority": "critical",
       "size": "L",
       "area": "cli",
       "parent": "EPIC-0009",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "assignee": "agent:implementer",
+      "branch": "feat/0038-probar-que-la-comprobacion-de-un",
+      "updated_at": "2026-08-20T16:08:38Z"
     },
     {
       "id": "FEAT-0039",
@@ -975,7 +975,7 @@
       "blocked": false,
       "assignee": null,
       "branch": null,
-      "updated_at": "2026-08-20T15:30:00Z"
+      "updated_at": "2026-08-20T16:08:37Z"
     },
     {
       "id": "FEAT-0040",
@@ -1037,7 +1037,7 @@
       "blocked": false,
       "assignee": null,
       "branch": null,
-      "updated_at": "2026-08-20T15:40:18Z"
+      "updated_at": "2026-08-20T16:07:56Z"
     },
     {
       "id": "FEAT-0044",

@@ -16,7 +16,8 @@
         "type": "command",
         "run": "node --test tests/feedback.test.mjs"
       },
-      "status": "pending"
+      "status": "pending",
+      "baseline": "fail"
     },
     {
       "id": "AC2",
@@ -25,7 +26,8 @@
         "type": "command",
         "run": "node --test tests/feedback.test.mjs"
       },
-      "status": "pending"
+      "status": "pending",
+      "baseline": "fail"
     },
     {
       "id": "AC3",
@@ -58,5 +60,5 @@
     "commits": []
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T15:40:18Z"
+  "updated_at": "2026-08-20T16:07:56Z"
 }
