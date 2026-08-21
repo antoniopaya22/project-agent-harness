@@ -1,3 +1,10 @@
 {"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
 {"at":"2026-08-20T16:07:55Z","by":"human","event":"verified","note":"baseline: AC3=pass"}
 {"at":"2026-08-20T16:08:37Z","by":"planner","event":"groomed","note":"AC3 set"}
+{"at":"2026-08-21T08:44:33Z","by":"implementer","event":"claimed","note":"branch feat/0039-bloquear-la-edicion-de-ficheros-generados"}
+{"at":"2026-08-21T08:44:34Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-21T08:44:34Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-21T08:46:36Z","by":"human","event":"verified","note":"AC3 -> pass"}
+{"at":"2026-08-21T08:46:36Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-21T08:46:37Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-21T08:48:47Z","by":"harness","event":"status_changed","note":"in_review (finish)"}

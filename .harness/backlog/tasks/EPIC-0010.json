@@ -3,7 +3,7 @@
   "id": "EPIC-0010",
   "title": "Anti-podredumbre: que la estructura se defienda sola",
   "type": "epic",
-  "status": "in_progress",
+  "status": "done",
   "priority": "high",
   "description": "Las comprobaciones mecanicas que faltan para que la documentacion y el backlog no se separen de la realidad sin que nadie se entere.",
   "acceptance_criteria": [
@@ -51,5 +51,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-21T08:37:12Z"
+  "updated_at": "2026-08-21T08:39:03Z"
 }

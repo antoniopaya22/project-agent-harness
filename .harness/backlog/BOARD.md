@@ -2,57 +2,54 @@
 
 # Tablero — project-agent-harness
 
-90 tareas · 20 abiertas · 70 hechas
+90 tareas · 17 abiertas · 73 hechas
 
 | Columna | Tareas |
 |---------|--------|
-| Backlog | 11 |
-| Listas para empezar | 6 |
-| En curso | 2 |
+| Backlog | 9 |
+| Listas para empezar | 4 |
+| En curso | 3 |
 | En revisión | 1 |
-| Hechas | 70 |
+| Hechas | 73 |
 
-## Backlog (11)
+## Backlog (9)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
 | `CHORE-0003` | Crear la lista destino y sus campos personalizados | low | S | integrations | espera SPIKE-0002, FEAT-0046 · de EPIC-0006 |
 | `EPIC-0005` | Soporte de otros proveedores de agentes | medium | — | — | — |
 | `EPIC-0006` | Proyección del backlog a ClickUp | low | — | — | — |
-| `EPIC-0007` | Endurecimiento, automatismos y publicación | medium | — | — | — |
 | `FEAT-0025` | Anulaciones locales, regiones preservadas y matriz de capacidades | low | M | adapters | de EPIC-0005 |
 | `FEAT-0026` | Versionado del harness y migraciones entre versiones | low | M | cli | espera SPIKE-0001 · de EPIC-0005 |
 | `FEAT-0027` | Interfaz de adaptador y tabla de correspondencias | low | M | integrations | espera CHORE-0003, FEAT-0046 · de EPIC-0006 |
 | `FEAT-0028` | Cliente de sincronización en una sola dirección | low | M | integrations | espera FEAT-0027, FEAT-0046 · de EPIC-0006 |
-| `FEAT-0029` | Política de permisos y automatismos del proveedor | medium | M | adapters | de EPIC-0007 |
 | `SPIKE-0001` | Verificar los formatos reales de Cursor y de Copilot | low | S | adapters | de EPIC-0005 |
 | `SPIKE-0002` | Verificar la interfaz de programación de ClickUp | low | S | integrations | de EPIC-0006 |
 
-## Listas para empezar (6)
+## Listas para empezar (4)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
-| `EPIC-0009` | Mecanismos en lugar de instrucciones | critical | — | — | — |
 | `EPIC-0013` | Preguntas abiertas y medicion honesta | medium | — | — | — |
-| `FEAT-0039` | Bloquear la edicion de ficheros generados con automatismos del proveedor | high | M | adapters | de EPIC-0009 |
 | `FEAT-0056` | Registrar coste y duracion por tarea | medium | S | cli | de EPIC-0013 |
 | `SPIKE-0004` | Decidir si una tarea puede pertenecer a varias areas | medium | S | definitions | de EPIC-0013 |
 | `SPIKE-0005` | Como evaluar si un cambio de prompt mejora o empeora | medium | M | definitions | de EPIC-0013 |
 
-## En curso (2)
+## En curso (3)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
-| `EPIC-0010` | Anti-podredumbre: que la estructura se defienda sola | high | — | — | — |
-| `FEAT-0042` | Frescura de documentos medida en commits, no en rutas existentes | high | M | cli | agent:implementer · de EPIC-0010 |
+| `EPIC-0007` | Endurecimiento, automatismos y publicación | medium | — | — | — |
+| `EPIC-0009` | Mecanismos en lugar de instrucciones | critical | — | — | — |
+| `FEAT-0039` | Bloquear la edicion de ficheros generados con automatismos del proveedor | high | M | adapters | agent:implementer · de EPIC-0009 |
 
 ## En revisión (1)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
-| `FEAT-0043` | Realimentacion sobre la calidad del refinamiento de tareas | high | L | cli | agent:implementer · de EPIC-0010 |
+| `FEAT-0029` | Política de permisos y automatismos del proveedor | medium | M | adapters | agent:implementer · de EPIC-0007 |
 
-## Hechas (70)
+## Hechas (73)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -70,6 +67,7 @@
 | `EPIC-0003` | Agentes, comandos y proyección a Claude Code | high | — | — | — |
 | `EPIC-0004` | Adopción de un proyecto ya existente | high | — | — | — |
 | `EPIC-0008` | Eficiencia del camino de lectura en frío | critical | — | — | — |
+| `EPIC-0010` | Anti-podredumbre: que la estructura se defienda sola | high | — | — | — |
 | `EPIC-0011` | Proyeccion del backlog a GitHub | high | — | — | — |
 | `EPIC-0012` | Ergonomia y huecos del dia a dia | high | — | — | — |
 | `FEAT-0001` | Esquema JSON de tarea | critical | M | definitions | agent:implementer · de EPIC-0001 |
@@ -107,6 +105,8 @@
 | `FEAT-0038` | Probar que la comprobacion de un criterio fallaba antes del cambio | critical | L | cli | agent:implementer · de EPIC-0009 |
 | `FEAT-0040` | Gate de secretos sobre el cambio completo | high | S | cli | agent:implementer · de EPIC-0009 |
 | `FEAT-0041` | El reclamo de una tarea rehusa si ya hay rama en el remoto | medium | S | cli | agent:implementer · de EPIC-0009 |
+| `FEAT-0042` | Frescura de documentos medida en commits, no en rutas existentes | high | M | cli | agent:implementer · de EPIC-0010 |
+| `FEAT-0043` | Realimentacion sobre la calidad del refinamiento de tareas | high | L | cli | agent:implementer · de EPIC-0010 |
 | `FEAT-0044` | Derivar el estado de una epica de sus tareas hijas | medium | S | cli | agent:implementer · de EPIC-0010 |
 | `FEAT-0045` | Detectar ficheros generados que ya no tienen fuente | medium | S | adapters | agent:implementer · de EPIC-0010 |
 | `FEAT-0046` | Motor de proyeccion con varios sumideros | critical | M | integrations | agent:implementer · de EPIC-0011 |

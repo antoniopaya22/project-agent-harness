@@ -3,7 +3,7 @@
   "id": "FEAT-0043",
   "title": "Realimentacion sobre la calidad del refinamiento de tareas",
   "type": "feature",
-  "status": "in_review",
+  "status": "done",
   "priority": "high",
   "size": "L",
   "parent": "EPIC-0010",
@@ -36,7 +36,8 @@
         "type": "review",
         "run": null
       },
-      "status": "pass"
+      "status": "pass",
+      "evidence": "diagnose() emite dos veredictos distintos: documentacion-insuficiente (un fichero leido desde varias tareas del area) y tarea-mal-refinada (muchos ficheros dispersos en una sola tarea). tests/feedback.test.mjs casos 4 y 5."
     }
   ],
   "context": {
@@ -76,5 +77,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-21T08:38:18Z"
+  "updated_at": "2026-08-21T08:46:37Z"
 }

@@ -273,6 +273,61 @@ function runbook(ctx, def) {
 // ---------------------------------------------------------------------------
 
 /** @returns {{path:string, content:string}[]} the full desired state of all adapters */
+
+/**
+ * The hard rules as provider automation.
+ *
+ * A rule written in ENTRYPOINT.md, in CLAUDE.md and in every agent prompt, and enforced
+ * nowhere, is not a rule. This projects the declared policy into the format Claude Code reads,
+ * pointing every hook at one provider-agnostic guard so the policy itself lives in exactly one
+ * place.
+ *
+ * Settings are **merged**, not overwritten: a project's own settings.json holds things that are
+ * none of the harness's business, and replacing the file wholesale would delete them. Only the
+ * hooks the harness owns are replaced, matched by the command they run.
+ */
+export function claudeSettings(ctx) {
+  const policy = ctx.project.hooks || {};
+  if (policy.enabled === false) return null;
+
+  const guard = 'node .harness/bin/guard.mjs';
+  const owned = (mode) => ({
+    type: 'command',
+    command: `${guard} ${mode}`,
+  });
+
+  const existing = readJsonIfAny(path.join(ctx.root, '.claude', 'settings.json')) || {};
+  const hooks = { ...(existing.hooks || {}) };
+
+  // Anything already pointing at our guard is ours to replace; anything else is somebody's
+  // and stays. Matching on the command rather than on position is what makes a regeneration
+  // idempotent instead of duplicating a hook every time.
+  const keepForeign = (list) =>
+    (list || []).filter((entry) => !(entry.hooks || []).some((h) => String(h.command || '').includes('guard.mjs')));
+
+  hooks.PreToolUse = [
+    ...keepForeign(hooks.PreToolUse),
+    { matcher: 'Edit|Write|MultiEdit|NotebookEdit', hooks: [owned('pre')] },
+  ];
+  hooks.PostToolUse = [
+    ...keepForeign(hooks.PostToolUse),
+    { matcher: 'Edit|Write|MultiEdit', hooks: [owned('post')] },
+  ];
+
+  return `${JSON.stringify({ ...existing, hooks }, null, 2)}\n`;
+}
+
+function readJsonIfAny(file) {
+  if (!fs.existsSync(file)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch {
+    // A settings file we cannot parse is left completely alone: overwriting somebody's broken
+    // JSON would destroy whatever they were in the middle of writing.
+    return null;
+  }
+}
+
 export function plan(ctx) {
   const providers = ctx.project.providers || {};
   const agents = loadDefinitions(ctx, 'agents');
@@ -295,6 +350,8 @@ export function plan(ctx) {
         keep: extractKeep(path.join(ctx.root, 'CLAUDE.md')),
       }),
     });
+    const settings = claudeSettings(ctx);
+    if (settings) out.push({ path: path.join('.claude', 'settings.json'), content: settings });
   }
 
   if (providers.agents_md !== false) {

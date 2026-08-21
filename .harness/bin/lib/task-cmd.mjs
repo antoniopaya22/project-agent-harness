@@ -4,7 +4,7 @@
 
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
-import { EXIT, bad, c, fail, info, matchesAny, ok, say, table, toPosixPath } from './util.mjs';
+import { EXIT, bad, c, fail, info, matchesAny, ok, rejectUnknownFlags, say, table, toPosixPath } from './util.mjs';
 import * as tasksLib from './tasks.mjs';
 import * as board from './board.mjs';
 import { actor } from './actor.mjs';
@@ -261,9 +261,9 @@ taskSubs.ac = (ctx, { positional, flags }) => {
   const acId = (positional[1] || '').toUpperCase();
   const status = positional[2];
   const allowed = ['pending', 'pass', 'fail', 'unverifiable'];
-  if (!acId || !allowed.includes(status)) {
-    fail(`usage: harness task ac <ID> <AC1> <${allowed.join('|')}> [--evidence "..."]`, EXIT.USAGE);
-  }
+  const usage = `usage: harness task ac <ID> <AC1> <${allowed.join('|')}> [--evidence "..."]`;
+  if (!acId || !allowed.includes(status)) fail(usage, EXIT.USAGE);
+  rejectUnknownFlags(flags, ['evidence'], usage);
   const ac = (task.acceptance_criteria || []).find((x) => x.id === acId);
   if (!ac) fail(`${task.id} has no criterion ${acId}`, EXIT.NOT_FOUND);
   if (status === 'pass' && ac.baseline === 'pass' && !flags.force) {

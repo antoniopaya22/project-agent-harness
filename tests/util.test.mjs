@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import test from 'node:test';
-import { globToRegExp, matchesAny, parseArgs, parseFrontMatter, table } from '../.harness/bin/lib/util.mjs';
+import { globToRegExp, matchesAny, parseArgs, parseFrontMatter, rejectUnknownFlags, table } from '../.harness/bin/lib/util.mjs';
+import { REPO } from './helpers.mjs';
 
 test('parseArgs handles the three flag spellings and positionals', () => {
   const { flags, positional } = parseArgs(['show', 'FEAT-0001', '--json', '--area', 'api', '--size=M']);
@@ -87,4 +89,33 @@ test('table aligns columns and never leaves trailing whitespace', () => {
   // The second column must begin at the same offset on every row.
   const offsets = [lines[0].indexOf('Y'), lines[1].indexOf('bb'), lines[2].indexOf('d')];
   assert.equal(new Set(offsets).size, 1, `columns misaligned: ${offsets.join(', ')}`);
+});
+
+test('a flag nobody reads is refused instead of dropped', () => {
+  // parseArgs collects whatever it is given, so a misspelling used to vanish without a word.
+  // That is how nine acceptance criteria here were recorded with `--note`, which nothing
+  // consumes: the command printed OK and the evidence went nowhere.
+  const r = spawnSync(process.execPath, ['.harness/bin/harness.mjs', 'task', 'ac', 'FEAT-0001', 'AC1', 'pass', '--note', 'x'], {
+    cwd: REPO,
+    encoding: 'utf8',
+  });
+  assert.equal(r.status, 2, 'exit 2 es USAGE');
+  assert.match(r.stderr + r.stdout, /--note/);
+  assert.match(r.stderr + r.stdout, /--evidence/, 'y propone la vecina obvia');
+});
+
+test('the global flags are accepted everywhere without each command declaring them', () => {
+  assert.doesNotThrow(() => rejectUnknownFlags({ json: true, as: 'human', evidence: 'x' }, ['evidence'], 'uso'));
+});
+
+test('no suggestion is offered when there is no obvious neighbour', () => {
+  // A wrong guess reads as authoritative and sends somebody down the wrong path, which is
+  // worse than no suggestion at all.
+  let message = null;
+  try {
+    rejectUnknownFlags({ zzzzz: true }, ['evidence'], 'uso');
+  } catch (e) {
+    message = e.message;
+  }
+  assert.ok(message === null || !/¿querías/.test(message));
 });
