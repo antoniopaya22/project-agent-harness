@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
 import test from 'node:test';
-import { buildMessage, buildSubject, inferScope, renderPrBody } from '../.harness/bin/lib/commit.mjs';
+import { buildMessage, buildSubject, doCommit, inferScope, renderPrBody } from '../.harness/bin/lib/commit.mjs';
 import { makeTask, tempHarness } from './helpers.mjs';
 
 test('the subject follows the conventional grammar and fits in 72 characters', () => {
@@ -110,6 +113,34 @@ test('the pull request body lists the criteria as a checklist reflecting their v
     assert.match(body, /- \[ \] \*\*AC2\*\*/, 'a pending one is not');
     assert.match(body, /FEAT-0042/);
     assert.match(body, /Sin informe de verificación/, 'missing verification is stated, not hidden');
+  } finally {
+    cleanup();
+  }
+});
+
+test('the working tree is clean when commit returns', () => {
+  // Three things are only knowable after the commit exists: its hash, the worklog entry,
+  // and the PR url. Writing them and stopping left the tree dirty every single time, and
+  // the next `git checkout` refused to switch.
+  const { ctx, cleanup } = tempHarness({
+    tasks: [makeTask({ id: 'FEAT-0001', status: 'in_progress', branch: 'feat/0001-algo', assignee: { kind: 'agent', id: 'x' } })],
+  });
+  try {
+    const run = (args, opts = {}) => spawnSync('git', args, { cwd: ctx.root, encoding: 'utf8', ...opts });
+    run(['init', '-q', '.']);
+    run(['config', 'user.email', 't@e.com']);
+    run(['config', 'user.name', 'T']);
+    run(['add', '-A']);
+    run(['commit', '-q', '-m', 'inicial']);
+    run(['switch', '-q', '-c', 'feat/0001-algo']);
+    fs.writeFileSync(path.join(ctx.root, 'src.txt'), 'algo nuevo\n');
+
+    const report = doCommit(ctx, { taskId: 'FEAT-0001', noVerify: true, push: false });
+    assert.equal(report.committed, true);
+    assert.equal(run(['status', '--porcelain']).stdout.trim(), '', 'nada se queda sin registrar');
+
+    const log = run(['log', '--oneline', '-2']).stdout;
+    assert.match(log, /registrar el commit en la tarea/, 'y el registro es un commit propio, no un amend');
   } finally {
     cleanup();
   }
