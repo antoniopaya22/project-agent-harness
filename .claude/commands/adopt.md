@@ -40,9 +40,19 @@ node .harness/bin/harness.mjs survey $1 --baseline
 
 ## 2 — Interview. Ask only what the code cannot answer
 
-The question set, the rounds and the persistence are handled for you: the harness knows what
-the survey already found and will not ask it again. Your job is to **run the rounds and
-record the answers**, at most four questions at a time.
+```bash
+node .harness/bin/harness.mjs interview $1
+```
+
+It prints one round, at most four questions, and exits 3 while anything is outstanding. Ask
+them, then record what you heard in the same command:
+
+```bash
+node .harness/bin/harness.mjs interview $1 --answer purpose="..." --unknown glossary
+```
+
+Repeat until it exits 0. The question set, the rounds and the persistence are handled for
+you: the harness knows what the survey already found and will not ask it again.
 
 Prefer confirming an inference over asking in the open — that is already how the questions
 are phrased, so keep it: *"I found `pytest -q` in your CI, is that the real command?"* gets a
@@ -53,8 +63,16 @@ When the human does not know something, record that as **not known**. It becomes
 
 ## 3 — Infer and propose. One file, nothing else touched
 
-Invoke the **researcher** for anything genuinely unknown (an unfamiliar framework, an
-undocumented corner), then the **scribe** to write `.harness/adoption/PROPOSAL.md`:
+```bash
+node .harness/bin/harness.mjs propose $1 --baseline
+```
+
+It refuses while the interview has holes, because proposing then is how an adoption invents
+the parts nobody answered. `--force` proposes anyway, with every hole visible as a hole.
+
+Invoke the **researcher** first for anything genuinely unknown (an unfamiliar framework, an
+undocumented corner) and record it as an interview answer, so it lands in
+`.harness/adoption/PROPOSAL.md` with the rest:
 
 - what will be created, and what each document will say;
 - the gates, each with the file they came from;
