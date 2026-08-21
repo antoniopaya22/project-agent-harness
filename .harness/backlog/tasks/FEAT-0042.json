@@ -54,9 +54,11 @@
   "claimed_at": "2026-08-21T08:37:11Z",
   "branch": "feat/0042-frescura-de-documentos-medida-en-commits",
   "links": {
-    "pr": null,
+    "pr": "https://github.com/antoniopaya22/project-agent-harness/pull/101",
     "issue": null,
-    "commits": []
+    "commits": [
+      "bdc90a5d83dc"
+    ]
   },
   "external": {
     "github": {
@@ -71,5 +73,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-21T08:38:38Z"
+  "updated_at": "2026-08-21T08:38:43Z"
 }
