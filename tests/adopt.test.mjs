@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
+import { GREEN_PROJECT, NO_TESTS_PROJECT, fakeProject, harnessIn } from './fixtures.mjs';
 import {
   detectExistingHarness,
   didNotRun,
@@ -22,23 +22,6 @@ import {
   renderProposal,
   writeProposal,
 } from '../.harness/bin/lib/proposal.mjs';
-
-let n = 0;
-function project(files, { git = true } = {}) {
-  n += 1;
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), `harness-survey-${n}-`));
-  for (const [rel, content] of Object.entries(files)) {
-    const full = path.join(dir, rel);
-    fs.mkdirSync(path.dirname(full), { recursive: true });
-    fs.writeFileSync(full, content);
-  }
-  if (git) {
-    for (const args of [['init', '-q', '.'], ['config', 'user.email', 't@e.com'], ['config', 'user.name', 'T']]) {
-      spawnSync('git', args, { cwd: dir });
-    }
-  }
-  return { dir, cleanup: () => fs.rmSync(dir, { recursive: true, force: true }) };
-}
 
 const NODE_PROJECT = {
   'package.json': JSON.stringify({
@@ -61,7 +44,7 @@ const PYTHON_PROJECT = {
 };
 
 test('a Node project is detected with its real gate commands and their evidence', () => {
-  const { dir, cleanup } = project(NODE_PROJECT);
+  const { dir, cleanup } = fakeProject(NODE_PROJECT);
   try {
     const s = survey(dir);
     assert.equal(s.stack.language, 'typescript');
@@ -78,7 +61,7 @@ test('a Node project is detected with its real gate commands and their evidence'
 });
 
 test('a Python project is detected from its own configuration', () => {
-  const { dir, cleanup } = project(PYTHON_PROJECT);
+  const { dir, cleanup } = fakeProject(PYTHON_PROJECT);
   try {
     const s = survey(dir);
     assert.equal(s.stack.language, 'python');
@@ -92,7 +75,7 @@ test('a Python project is detected from its own configuration', () => {
 });
 
 test('nothing is invented when there is no evidence', () => {
-  const { dir, cleanup } = project({ 'notas.txt': 'hola', 'algo.mjs': 'export const x = 1;\n' });
+  const { dir, cleanup } = fakeProject({ 'notas.txt': 'hola', 'algo.mjs': 'export const x = 1;\n' });
   try {
     const s = survey(dir);
     assert.equal(s.stack.language, null, 'loose .mjs files are not a declared stack');
@@ -104,7 +87,7 @@ test('nothing is invented when there is no evidence', () => {
 });
 
 test('the survey writes nothing at all', () => {
-  const { dir, cleanup } = project(NODE_PROJECT);
+  const { dir, cleanup } = fakeProject(NODE_PROJECT);
   try {
     const before = spawnSync('git', ['status', '--porcelain'], { cwd: dir, encoding: 'utf8' }).stdout;
     const listing = (d) => fs.readdirSync(d, { recursive: true }).sort().join('\n');
@@ -120,7 +103,7 @@ test('the survey writes nothing at all', () => {
 });
 
 test('unfinished work the code admits to is collected with file and line', () => {
-  const { dir, cleanup } = project(NODE_PROJECT);
+  const { dir, cleanup } = fakeProject(NODE_PROJECT);
   try {
     const s = survey(dir);
     const todo = s.pending.find((p) => p.kind === 'TODO');
@@ -134,7 +117,7 @@ test('unfinished work the code admits to is collected with file and line', () =>
 });
 
 test('the hotspots come from git history, and an absent history is not an error', () => {
-  const withGit = project(NODE_PROJECT);
+  const withGit = fakeProject(NODE_PROJECT);
   try {
     spawnSync('git', ['add', '-A'], { cwd: withGit.dir });
     spawnSync('git', ['commit', '-q', '-m', 'inicial'], { cwd: withGit.dir });
@@ -143,7 +126,7 @@ test('the hotspots come from git history, and an absent history is not an error'
     withGit.cleanup();
   }
 
-  const noGit = project(NODE_PROJECT, { git: false });
+  const noGit = fakeProject(NODE_PROJECT, { git: false });
   try {
     assert.deepEqual(survey(noGit.dir).hotspots, [], 'no history means no hotspots, not a crash');
     assert.equal(survey(noGit.dir).isGitRepo, false);
@@ -153,7 +136,7 @@ test('the hotspots come from git history, and an absent history is not an error'
 });
 
 test('the baseline records what each gate does today, before anything changes', () => {
-  const { dir, cleanup } = project({
+  const { dir, cleanup } = fakeProject({
     'package.json': JSON.stringify({ name: 'd', scripts: { test: 'node -e "process.exit(0)"', lint: 'node -e "process.exit(1)"' } }),
   });
   try {
@@ -177,7 +160,7 @@ test('a passing test gate is a safety net; anything else is not', () => {
 });
 
 test('a project that already has a harness is recognised instead of adopted again', () => {
-  const { dir, cleanup } = project({
+  const { dir, cleanup } = fakeProject({
     'package.json': '{"name":"d"}',
     '.harness/project.json': JSON.stringify({
       harness_version: '1.0.0',
@@ -196,7 +179,7 @@ test('a project that already has a harness is recognised instead of adopted agai
 });
 
 test('a corrupt harness config is reported as unreadable, not treated as absent', () => {
-  const { dir, cleanup } = project({ '.harness/project.json': '{ roto' });
+  const { dir, cleanup } = fakeProject({ '.harness/project.json': '{ roto' });
   try {
     assert.equal(detectExistingHarness(dir).version, 'ilegible');
   } finally {
@@ -209,7 +192,7 @@ test('a corrupt harness config is reported as unreadable, not treated as absent'
 test('every statement in the proposal carries evidence or is marked unverified', () => {
   // The whole value of an adoption is that its output can be trusted. A claim with neither
   // a file behind it nor a marker on it is the one thing this file exists to prevent.
-  const { dir, cleanup } = project(NODE_PROJECT);
+  const { dir, cleanup } = fakeProject(NODE_PROJECT);
   try {
     const s = survey(dir);
     const body = renderProposal({ root: dir, harnessDir: path.join(dir, '.harness') }, {
@@ -236,7 +219,7 @@ test('every statement in the proposal carries evidence or is marked unverified',
 });
 
 test('nothing but the proposal is written in this stage', () => {
-  const { dir, cleanup } = project(NODE_PROJECT);
+  const { dir, cleanup } = fakeProject(NODE_PROJECT);
   try {
     const before = new Set(fs.readdirSync(dir, { recursive: true }).map(String));
     const s = survey(dir);
@@ -256,7 +239,7 @@ test('nothing but the proposal is written in this stage', () => {
 });
 
 test('a gate nobody confirmed and no file declares is proposed as absent, not guessed', () => {
-  const { dir, cleanup } = project({ 'src/loose.mjs': 'export const a = 1;\n' });
+  const { dir, cleanup } = fakeProject({ 'src/loose.mjs': 'export const a = 1;\n' });
   try {
     const gates = proposeGates(survey(dir), { known: {} });
     assert.equal(gates.test.status, 'not-configured');
@@ -268,7 +251,7 @@ test('a gate nobody confirmed and no file declares is proposed as absent, not gu
 });
 
 test('a human correction beats the inference, and is recorded as confirmed', () => {
-  const { dir, cleanup } = project(PYTHON_PROJECT);
+  const { dir, cleanup } = fakeProject(PYTHON_PROJECT);
   try {
     const gates = proposeGates(survey(dir), { known: { 'gate.test': 'pytest -q --cov' } });
     assert.equal(gates.test.run, 'pytest -q --cov');
@@ -280,7 +263,7 @@ test('a human correction beats the inference, and is recorded as confirmed', () 
 });
 
 test('the areas proposed are the ones the human confirmed, not everything on disk', () => {
-  const { dir, cleanup } = project(NODE_PROJECT);
+  const { dir, cleanup } = fakeProject(NODE_PROJECT);
   try {
     const s = survey(dir);
     assert.ok(s.areas.length >= 2, 'el proyecto de prueba tiene varias');
@@ -293,7 +276,7 @@ test('the areas proposed are the ones the human confirmed, not everything on dis
 });
 
 test('the seed backlog comes from what the code admits, and never lands as ready', () => {
-  const { dir, cleanup } = project(PYTHON_PROJECT);
+  const { dir, cleanup } = fakeProject(PYTHON_PROJECT);
   try {
     const seeds = proposeSeedTasks(survey(dir));
     assert.ok(seeds.length >= 1);
@@ -308,7 +291,7 @@ test('the seed backlog comes from what the code admits, and never lands as ready
 });
 
 test('without a safety net the proposal moves nothing and says so', () => {
-  const { dir, cleanup } = project({ 'a.py': 'x = 1\n' });
+  const { dir, cleanup } = fakeProject({ 'a.py': 'x = 1\n' });
   try {
     const body = renderProposal({ root: dir, harnessDir: path.join(dir, '.harness') }, {
       survey: survey(dir),
@@ -326,7 +309,7 @@ test('without a safety net the proposal moves nothing and says so', () => {
 });
 
 test('what the human did not know surfaces in the proposal instead of being filled in', () => {
-  const { dir, cleanup } = project(NODE_PROJECT);
+  const { dir, cleanup } = fakeProject(NODE_PROJECT);
   try {
     const body = renderProposal({ root: dir, harnessDir: path.join(dir, '.harness') }, {
       survey: survey(dir),
@@ -344,7 +327,7 @@ test('what the human did not know surfaces in the proposal instead of being fill
 test('proposing twice over the same answers gives the same file, byte for byte', () => {
   // The loop is propose, correct, propose again. If the file churned on its own, a human
   // could not tell their correction from noise.
-  const { dir, cleanup } = project(NODE_PROJECT);
+  const { dir, cleanup } = fakeProject(NODE_PROJECT);
   try {
     const ctx = { root: dir, harnessDir: path.join(dir, '.harness') };
     const input = { survey: survey(dir), baseline: null, answers: { known: {}, unverified: [] } };
@@ -357,7 +340,7 @@ test('proposing twice over the same answers gives the same file, byte for byte',
 });
 
 test('an existing document is announced as an overlap, never as an overwrite', () => {
-  const { dir, cleanup } = project({ ...NODE_PROJECT, 'docs/ARCHITECTURE.md': '# lo nuestro\n' });
+  const { dir, cleanup } = fakeProject({ ...NODE_PROJECT, 'docs/ARCHITECTURE.md': '# lo nuestro\n' });
   try {
     const body = renderProposal({ root: dir, harnessDir: path.join(dir, '.harness') }, {
       survey: survey(dir),
@@ -374,7 +357,7 @@ test('an existing document is announced as an overlap, never as an overwrite', (
 test('propose refuses while the interview still has holes, and says how to continue', () => {
   // Proposing from an unfinished interview is exactly how an adoption invents the parts
   // nobody answered. Exit 3, not a warning nobody reads.
-  const { dir, cleanup } = project(NODE_PROJECT);
+  const { dir, cleanup } = fakeProject(NODE_PROJECT);
   try {
     const r = spawnSync(process.execPath, ['.harness/bin/harness.mjs', 'propose', dir], { encoding: 'utf8' });
     assert.equal(r.status, 3);
@@ -386,7 +369,7 @@ test('propose refuses while the interview still has holes, and says how to conti
 });
 
 test('propose --force writes the proposal with the holes visible as holes', () => {
-  const { dir, cleanup } = project(NODE_PROJECT);
+  const { dir, cleanup } = fakeProject(NODE_PROJECT);
   try {
     const r = spawnSync(process.execPath, ['.harness/bin/harness.mjs', 'propose', dir, '--force', '--json'], { encoding: 'utf8' });
     assert.equal(r.status, 0);
@@ -412,7 +395,7 @@ function adopt(dir, extra = []) {
 test('a gate that never runs is not recorded as configured', () => {
   // Reading a command off a config file is a hypothesis. Writing it down as configured
   // without executing it once produces a harness whose first real command fails.
-  const { dir, cleanup } = project({
+  const { dir, cleanup } = fakeProject({
     'pyproject.toml': '[tool.ruff]\nline-length = 100\n',
     'src/app/main.py': 'x = 1\n',
   });
@@ -429,7 +412,7 @@ test('a gate that never runs is not recorded as configured', () => {
 });
 
 test('a gate that runs and fails stays configured, because that is the truth', () => {
-  const { dir, cleanup } = project({
+  const { dir, cleanup } = fakeProject({
     'package.json': JSON.stringify({ name: 'demo', scripts: { test: 'node -e "process.exit(1)"' } }),
     'src/a.js': 'export const a = 1;\n',
   });
@@ -444,7 +427,7 @@ test('a gate that runs and fails stays configured, because that is the truth', (
 });
 
 test('the seeded tasks are unrefined and never marked ready', () => {
-  const { dir, cleanup } = project(PYTHON_PROJECT);
+  const { dir, cleanup } = fakeProject(PYTHON_PROJECT);
   try {
     adopt(dir);
     const tasksDir = path.join(dir, '.harness', 'backlog', 'tasks');
@@ -463,7 +446,7 @@ test('the seeded tasks are unrefined and never marked ready', () => {
 });
 
 test('adoption never overwrites a file that was already there', () => {
-  const { dir, cleanup } = project({
+  const { dir, cleanup } = fakeProject({
     ...NODE_PROJECT,
     'docs/areas/api.md': '# lo que ya habia escrito un humano\n',
     'README.md': '# el readme de verdad\n',
@@ -482,27 +465,22 @@ test('adoption never overwrites a file that was already there', () => {
 test('adopting a project with passing tests leaves a harness that self-diagnoses green', () => {
   // The end-to-end claim of the whole epic. Anything less and the first thing a newcomer
   // sees is a wall of errors about files the installer could have written itself.
-  const { dir, cleanup } = project({
-    'package.json': JSON.stringify({ name: 'verde', scripts: { test: 'node --test test/' } }),
-    'src/core/index.js': 'export const suma = (a, b) => a + b;\n',
-    'test/core.test.mjs': "import test from 'node:test';\nimport assert from 'node:assert/strict';\ntest('suma', () => assert.equal(1 + 1, 2));\n",
-  });
+  const { dir, cleanup } = fakeProject(GREEN_PROJECT);
   try {
-    const { apply, run } = adopt(dir);
+    const { apply } = adopt(dir);
     assert.equal(apply.status, 0, `apply falló: ${apply.stdout}${apply.stderr}`);
 
-    const doctor = spawnSync(process.execPath, [path.join(dir, '.harness', 'bin', 'harness.mjs'), 'doctor'], {
-      cwd: dir,
-      encoding: 'utf8',
-    });
+    const doctor = harnessIn(dir, ['doctor']);
     assert.equal(doctor.status, 0, `doctor no quedó verde:\n${doctor.stdout}\n${doctor.stderr}`);
 
-    const gate = spawnSync(process.execPath, [path.join(dir, '.harness', 'bin', 'harness.mjs'), 'gate', 'test'], {
-      cwd: dir,
-      encoding: 'utf8',
-    });
+    const gate = harnessIn(dir, ['gate', 'test']);
     assert.equal(gate.status, 0, `el gate inferido no funciona de verdad:\n${gate.stdout}\n${gate.stderr}`);
-    void run;
+
+    const status = harnessIn(dir, ['status']);
+    assert.equal(status.status, 0, 'y el proyecto adoptado sabe decir en qué estado está');
+
+    const tasks = fs.readdirSync(path.join(dir, '.harness', 'backlog', 'tasks'));
+    assert.ok(tasks.length >= 1, 'el TODO de src/web/page.js llega al backlog');
   } finally {
     cleanup();
   }
@@ -511,17 +489,15 @@ test('adopting a project with passing tests leaves a harness that self-diagnoses
 test('a project with no tests turns the reorganisation into tasks instead of moving code', () => {
   // Without an oracle, moving a file is indistinguishable from breaking it. The honest
   // output is a backlog, and the first task is getting a safety net.
-  const { dir, cleanup } = project({ 'app.py': 'x = 1\n', 'util.py': 'y = 2\n' });
+  const { dir, cleanup } = fakeProject(NO_TESTS_PROJECT);
   try {
     adopt(dir, ['--layout', 'python']);
     const before = fs.readdirSync(dir).sort();
 
-    const r = spawnSync(process.execPath, [path.join(dir, '.harness', 'bin', 'harness.mjs'), 'restructure'], {
-      cwd: dir,
-      encoding: 'utf8',
-    });
+    const r = harnessIn(dir, ['restructure']);
     assert.equal(r.status, 3, `se esperaba una precondición, salió ${r.status}:\n${r.stdout}${r.stderr}`);
     assert.match(r.stdout, /tareas que emitir en su lugar/);
+    assert.match(r.stdout, /red de seguridad|safety net/i, 'y la primera tarea es conseguir el oráculo');
     assert.deepEqual(fs.readdirSync(dir).sort(), before, 'y no se movió absolutamente nada');
   } finally {
     cleanup();

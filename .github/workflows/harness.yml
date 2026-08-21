@@ -40,6 +40,14 @@ jobs:
       - name: Autotests
         run: node .harness/bin/harness.mjs gate test
 
+      # Se ejecuta aparte de los autotests aunque ya vaya dentro, para que un fallo se lea
+      # como «la adopción se rompió» y no como «falló un test cualquiera». Adopta dos
+      # proyectos de mentira de punta a punta: uno con pruebas que pasan, donde el
+      # autodiagnóstico tiene que quedar verde, y otro sin pruebas, donde la reorganización
+      # tiene que negarse y emitir tareas.
+      - name: Adopción de punta a punta
+        run: node --test tests/adopt.test.mjs
+
       - name: Esquema de tareas
         run: node .harness/bin/harness.mjs validate
 

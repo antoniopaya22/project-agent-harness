@@ -2,14 +2,14 @@
   "harness_version": "1.0.0",
   "counts": {
     "backlog": 11,
-    "ready": 14,
+    "ready": 13,
     "in_progress": 3,
     "in_review": 1,
     "blocked": 0,
-    "done": 61,
+    "done": 62,
     "cancelled": 0,
     "total": 90,
-    "open": 29
+    "open": 28
   },
   "next": "FEAT-0032",
   "tasks": [
@@ -31,7 +31,7 @@
       "id": "CHORE-0002",
       "title": "Proyectos de prueba y verificación de la adopción en integración continua",
       "type": "chore",
-      "status": "ready",
+      "status": "in_review",
       "priority": "medium",
       "size": "M",
       "area": "cli",
@@ -40,9 +40,9 @@
         "FEAT-0020",
         "FEAT-0023"
       ],
-      "blocked": true,
-      "assignee": null,
-      "branch": null
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "chore/0002-proyectos-de-prueba-y-verificacion-de"
     },
     {
       "id": "CHORE-0003",
@@ -616,7 +616,7 @@
       "id": "FEAT-0020",
       "title": "Aplicación de la estructura y verificación final",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "cli",

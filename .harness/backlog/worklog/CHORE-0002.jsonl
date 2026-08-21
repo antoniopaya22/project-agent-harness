@@ -1,3 +1,7 @@
 {"at":"2026-08-18T19:00:00Z","by":"harness","event":"created","note":"sembrada desde docs/HARNESS-PLAN.md §12"}
 {"at":"2026-08-18T18:05:21Z","by":"human","event":"status_changed","note":"depends_on=FEAT-0020"}
 {"at":"2026-08-18T18:05:21Z","by":"human","event":"status_changed","note":"depends_on=FEAT-0023"}
+{"at":"2026-08-21T08:09:54Z","by":"implementer","event":"claimed","note":"branch chore/0002-proyectos-de-prueba-y-verificacion-de"}
+{"at":"2026-08-21T08:12:14Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-21T08:12:14Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-21T08:12:31Z","by":"implementer","event":"status_changed","note":"in_progress -> in_review"}

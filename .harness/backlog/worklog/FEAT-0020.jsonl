@@ -5,3 +5,4 @@
 {"at":"2026-08-21T08:07:19Z","by":"human","event":"verified","note":"AC2 -> pass"}
 {"at":"2026-08-21T08:07:19Z","by":"human","event":"verified","note":"AC3 -> pass"}
 {"at":"2026-08-21T08:08:36Z","by":"implementer","event":"status_changed","note":"in_progress -> in_review"}
+{"at":"2026-08-21T08:09:53Z","by":"human","event":"completed","note":"in_review -> done"}
