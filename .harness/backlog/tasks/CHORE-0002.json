@@ -47,9 +47,11 @@
   "claimed_at": "2026-08-21T08:09:53Z",
   "branch": "chore/0002-proyectos-de-prueba-y-verificacion-de",
   "links": {
-    "pr": null,
+    "pr": "https://github.com/antoniopaya22/project-agent-harness/pull/97",
     "issue": null,
-    "commits": []
+    "commits": [
+      "033dec98997d"
+    ]
   },
   "external": {
     "github": {
@@ -64,5 +66,5 @@
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-21T08:12:31Z"
+  "updated_at": "2026-08-21T08:12:53Z"
 }
