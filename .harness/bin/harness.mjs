@@ -36,6 +36,7 @@ import * as surveyLib from './lib/survey.mjs';
 import * as layoutsLib from './lib/layouts.mjs';
 import * as restructureLib from './lib/restructure.mjs';
 import { commands as adoptCommands } from './lib/adopt-cmd.mjs';
+import * as importLib from './lib/import.mjs';
 import { lintBacklog } from './lib/lint.mjs';
 
 function actorId(ctx, flags) {
@@ -92,6 +93,7 @@ commands.help = () => {
         ['commit [--task ID]', 'conventional commit + push (+ PR when the task is in_review)'],
         ['sinks', 'which projections are installed, and whether each can run'],
         ['sync [--dry-run] [--limit n]', 'project the backlog to every enabled sink'],
+        ['import [--state s]', 'seed the backlog from the issues this repository already has'],
         ['version', 'print the harness version'],
       ],
       ['COMMAND', 'WHAT IT DOES'],
@@ -409,6 +411,28 @@ commands.sinks = async (ctx, { flags }) => {
     return EXIT.OK;
   }
   say(table(status.map((s) => [s.id, s.enabled ? c.green('enabled') : c.gray('disabled'), s.reason]), ['SINK', 'STATE', 'WHY']));
+  return EXIT.OK;
+};
+
+commands.import = (ctx, { flags }) => {
+  const result = importLib.runImport(ctx, {
+    state: typeof flags.state === 'string' ? flags.state : 'open',
+    repo: typeof flags.repo === 'string' ? flags.repo : null,
+    area: typeof flags.area === 'string' ? flags.area : null,
+    limit: flags.limit ? Number(flags.limit) : 200,
+    max: flags.max ? Number(flags.max) : 100,
+    dryRun: Boolean(flags['dry-run']),
+  });
+  if (result.error) fail(result.error, EXIT.PRECONDITION);
+  if (flags.json) {
+    say(JSON.stringify(result, null, 2));
+    return EXIT.OK;
+  }
+  importLib.printImportReport(result, { dryRun: Boolean(flags['dry-run']) });
+  if (result.created.length) {
+    say('');
+    info('entran sin refinar: pasa cada una por `harness task edit` y `plan` antes de marcarla lista');
+  }
   return EXIT.OK;
 };
 

@@ -12,3 +12,4 @@
 {"at":"2026-08-21T08:06:19Z","by":"harness","event":"status_changed","note":"ready -> in_progress (derivado de sus hijas)"}
 {"at":"2026-08-21T08:09:53Z","by":"harness","event":"status_changed","note":"in_progress -> ready (derivado de sus hijas)"}
 {"at":"2026-08-21T08:09:54Z","by":"harness","event":"status_changed","note":"ready -> in_progress (derivado de sus hijas)"}
+{"at":"2026-08-21T08:15:16Z","by":"harness","event":"status_changed","note":"in_progress -> done (derivado de sus hijas)"}

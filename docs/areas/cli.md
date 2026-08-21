@@ -38,6 +38,7 @@ dependa de la buena voluntad de un modelo.
 | Entrevista | `lib/interview.mjs` | Lo que el código no puede responder, persistido entre ejecuciones |
 | Propuesta | `lib/proposal.mjs` | Un único fichero revisable, cada afirmación con respaldo |
 | Aplicación | `lib/apply.mjs` | Siembra el backlog y comprueba que los gates arrancan de verdad |
+| Importación | `lib/import.mjs` | Siembra el backlog desde las incidencias que ya existen |
 
 ## Flujo principal
 
@@ -85,6 +86,11 @@ taskSchema }`. No hay estado global.
   con `resolveExecutable`. Lo que sigue siendo indetectable es un fallo *envuelto* (`npm run lint` con
   npm instalado y la herramienta de dentro no): eso se queda en `fail` y el gate sigue configurado,
   porque perder una red de seguridad que funciona es el error más caro de los dos.
+- **`allocateId` cuenta los ficheros que hay en disco**, así que un lote de tareas construido antes de
+  escribir ninguna reparte el mismo id dos veces. `import` las escribe de una en una por eso.
+- **Importar la propia proyección crea un bucle.** `sync` escribe incidencias tituladas `FEAT-0042 · …`
+  con un marcador en el cuerpo; `import` las reconoce y las salta. El bucle no se ve en la salida hasta
+  que el backlog se ha duplicado, así que la comprobación va en el código, no en el prompt.
 - **`import.meta.dirname` cambia de profundidad al mover un fichero.** `init` localiza la plantilla
   subiendo desde su propio directorio; al pasar de `bin/` a `bin/lib/` hubo que añadir un `..`. Lo
   detectó la prueba de adopción de punta a punta, no el linter ni el autodiagnóstico.

@@ -1,1 +1,5 @@
 {"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
+{"at":"2026-08-21T08:17:51Z","by":"implementer","event":"claimed","note":"branch feat/0054-importar-incidencias-existentes-como-tareas"}
+{"at":"2026-08-21T08:17:51Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-21T08:17:51Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-21T08:18:27Z","by":"implementer","event":"status_changed","note":"in_progress -> in_review"}

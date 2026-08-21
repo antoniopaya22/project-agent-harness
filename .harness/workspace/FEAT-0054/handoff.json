@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "FEAT-0054",
+  "stage": "claimed",
+  "by": "implementer",
+  "branch": "feat/0054-importar-incidencias-existentes-como-tareas",
+  "summary": "Tarea reclamada por agent:implementer. Rama feat/0054-importar-incidencias-existentes-como-tareas. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-21T08:17:51Z"
+}
