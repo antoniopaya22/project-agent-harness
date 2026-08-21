@@ -4,6 +4,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { countTokens, estimateTokens, toPosixPath } from './util.mjs';
+import { loadAll } from './tasks.mjs';
+import { TIER_NOTE, suggestTier } from './tier.mjs';
 
 /**
  * Two kinds of cost, and the distinction is load-bearing:
@@ -114,6 +116,15 @@ export function renderBrief(ctx, task, { withFiles = false } = {}) {
   }
 
   parts.push(SEP(`task ${task.id} (projection)`) + JSON.stringify(projectTask(task), null, 2));
+
+  // The tier belongs in the brief and not only in its own command: a suggestion nobody sees
+  // where the work is decided is a suggestion nobody acts on.
+  const tier = suggestTier(task, { allTasks: loadAll(ctx) });
+  parts.push(
+    `${SEP('model tier (advisory)')}${tier.tier} — ${TIER_NOTE[tier.tier]}\n` +
+      tier.why.map((w) => `- ${w}`).join('\n') +
+      '\nSugerencia, no regla: las señales son proxies baratos. Elige otro nivel si lo ves.',
+  );
   parts.push(SEP('project config (projection)') + JSON.stringify(projectConfig(ctx, task), null, 2));
 
   if (rp.area) {

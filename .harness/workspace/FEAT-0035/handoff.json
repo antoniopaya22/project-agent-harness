@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "FEAT-0035",
+  "stage": "claimed",
+  "by": "implementer",
+  "branch": "feat/0035-sugerir-el-nivel-de-modelo-segun",
+  "summary": "Tarea reclamada por agent:implementer. Rama feat/0035-sugerir-el-nivel-de-modelo-segun. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-21T08:26:39Z"
+}

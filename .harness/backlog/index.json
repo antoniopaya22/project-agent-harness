@@ -2,16 +2,16 @@
   "harness_version": "1.0.0",
   "counts": {
     "backlog": 11,
-    "ready": 12,
-    "in_progress": 1,
-    "in_review": 2,
+    "ready": 9,
+    "in_progress": 2,
+    "in_review": 1,
     "blocked": 0,
-    "done": 64,
+    "done": 67,
     "cancelled": 0,
     "total": 90,
-    "open": 26
+    "open": 23
   },
-  "next": "FEAT-0032",
+  "next": "FEAT-0039",
   "tasks": [
     {
       "id": "CHORE-0001",
@@ -261,7 +261,7 @@
       "id": "EPIC-0008",
       "title": "Eficiencia del camino de lectura en frío",
       "type": "epic",
-      "status": "ready",
+      "status": "in_progress",
       "priority": "critical",
       "size": null,
       "area": null,
@@ -317,7 +317,7 @@
       "id": "EPIC-0012",
       "title": "Ergonomia y huecos del dia a dia",
       "type": "epic",
-      "status": "in_progress",
+      "status": "done",
       "priority": "high",
       "size": null,
       "area": null,
@@ -803,7 +803,7 @@
       "id": "FEAT-0032",
       "title": "Cerrar una tarea en una sola llamada",
       "type": "feature",
-      "status": "ready",
+      "status": "in_progress",
       "priority": "high",
       "size": "M",
       "area": "cli",
@@ -812,8 +812,8 @@
         "FEAT-0037"
       ],
       "blocked": false,
-      "assignee": null,
-      "branch": null
+      "assignee": "agent:implementer",
+      "branch": "feat/0032-cerrar-una-tarea-en-una-sola"
     },
     {
       "id": "FEAT-0033",
@@ -849,15 +849,15 @@
       "id": "FEAT-0035",
       "title": "Sugerir el nivel de modelo segun el tamano de la tarea",
       "type": "feature",
-      "status": "ready",
+      "status": "in_review",
       "priority": "medium",
       "size": "S",
       "area": "definitions",
       "parent": "EPIC-0008",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null
+      "assignee": "agent:implementer",
+      "branch": "feat/0035-sugerir-el-nivel-de-modelo-segun"
     },
     {
       "id": "FEAT-0036",
@@ -1085,7 +1085,7 @@
       "id": "FEAT-0051",
       "title": "La siguiente tarea se elige por camino critico",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "S",
       "area": "cli",
@@ -1127,7 +1127,7 @@
       "id": "FEAT-0054",
       "title": "Importar incidencias existentes como tareas",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "medium",
       "size": "S",
       "area": "cli",

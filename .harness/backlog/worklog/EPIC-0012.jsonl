@@ -2,3 +2,4 @@
 {"at":"2026-08-20T17:53:16Z","by":"harness","event":"status_changed","note":"ready -> in_progress (derivado de sus hijas)"}
 {"at":"2026-08-20T17:54:49Z","by":"harness","event":"status_changed","note":"in_progress -> ready (derivado de sus hijas)"}
 {"at":"2026-08-20T17:57:53Z","by":"harness","event":"status_changed","note":"ready -> in_progress (derivado de sus hijas)"}
+{"at":"2026-08-21T08:22:07Z","by":"harness","event":"status_changed","note":"in_progress -> done (derivado de sus hijas)"}

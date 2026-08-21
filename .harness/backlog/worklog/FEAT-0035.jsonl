@@ -1,1 +1,5 @@
 {"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
+{"at":"2026-08-21T08:26:39Z","by":"implementer","event":"claimed","note":"branch feat/0035-sugerir-el-nivel-de-modelo-segun"}
+{"at":"2026-08-21T08:26:39Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-21T08:26:39Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-21T08:26:57Z","by":"implementer","event":"status_changed","note":"in_progress -> in_review"}
