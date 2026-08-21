@@ -3,7 +3,7 @@
   "id": "CHORE-0002",
   "title": "Proyectos de prueba y verificación de la adopción en integración continua",
   "type": "chore",
-  "status": "in_review",
+  "status": "done",
   "priority": "medium",
   "size": "M",
   "parent": "EPIC-0004",
@@ -66,5 +66,5 @@
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-21T08:12:53Z"
+  "updated_at": "2026-08-21T08:15:16Z"
 }

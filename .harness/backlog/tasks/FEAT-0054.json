@@ -3,7 +3,7 @@
   "id": "FEAT-0054",
   "title": "Importar incidencias existentes como tareas",
   "type": "feature",
-  "status": "ready",
+  "status": "in_review",
   "priority": "medium",
   "size": "S",
   "parent": "EPIC-0012",
@@ -16,7 +16,7 @@
         "type": "command",
         "run": "node --test tests/import.test.mjs"
       },
-      "status": "pending"
+      "status": "pass"
     },
     {
       "id": "AC2",
@@ -25,7 +25,7 @@
         "type": "command",
         "run": "node --test tests/import.test.mjs"
       },
-      "status": "pending"
+      "status": "pass"
     }
   ],
   "context": {
@@ -35,12 +35,16 @@
     "out_of_scope": []
   },
   "depends_on": [],
+  "blocked_reason": null,
   "labels": [
     "mejora"
   ],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-21T08:17:50Z",
+  "branch": "feat/0054-importar-incidencias-existentes-como-tareas",
   "links": {
     "pr": null,
     "issue": null,
@@ -59,5 +63,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T18:40:58Z"
+  "updated_at": "2026-08-21T08:18:27Z"
 }

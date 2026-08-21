@@ -2,15 +2,15 @@
 
 # Tablero — project-agent-harness
 
-90 tareas · 28 abiertas · 62 hechas
+90 tareas · 26 abiertas · 64 hechas
 
 | Columna | Tareas |
 |---------|--------|
 | Backlog | 11 |
-| Listas para empezar | 13 |
-| En curso | 3 |
-| En revisión | 1 |
-| Hechas | 62 |
+| Listas para empezar | 12 |
+| En curso | 1 |
+| En revisión | 2 |
+| Hechas | 64 |
 
 ## Backlog (11)
 
@@ -28,7 +28,7 @@
 | `SPIKE-0001` | Verificar los formatos reales de Cursor y de Copilot | low | S | adapters | de EPIC-0005 |
 | `SPIKE-0002` | Verificar la interfaz de programación de ClickUp | low | S | integrations | de EPIC-0006 |
 
-## Listas para empezar (13)
+## Listas para empezar (12)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -41,30 +41,29 @@
 | `FEAT-0039` | Bloquear la edicion de ficheros generados con automatismos del proveedor | high | M | adapters | de EPIC-0009 |
 | `FEAT-0042` | Frescura de documentos medida en commits, no en rutas existentes | high | M | cli | de EPIC-0010 |
 | `FEAT-0043` | Realimentacion sobre la calidad del refinamiento de tareas | high | L | cli | de EPIC-0010 |
-| `FEAT-0054` | Importar incidencias existentes como tareas | medium | S | cli | de EPIC-0012 |
 | `FEAT-0056` | Registrar coste y duracion por tarea | medium | S | cli | de EPIC-0013 |
 | `SPIKE-0004` | Decidir si una tarea puede pertenecer a varias areas | medium | S | definitions | de EPIC-0013 |
 | `SPIKE-0005` | Como evaluar si un cambio de prompt mejora o empeora | medium | M | definitions | de EPIC-0013 |
 
-## En curso (3)
+## En curso (1)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
-| `EPIC-0004` | Adopción de un proyecto ya existente | high | — | — | — |
 | `EPIC-0012` | Ergonomia y huecos del dia a dia | high | — | — | — |
-| `FEAT-0051` | La siguiente tarea se elige por camino critico | high | S | cli | agent:implementer · de EPIC-0012 |
 
-## En revisión (1)
+## En revisión (2)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
-| `CHORE-0002` | Proyectos de prueba y verificación de la adopción en integración continua | medium | M | cli | agent:implementer · de EPIC-0004 |
+| `FEAT-0051` | La siguiente tarea se elige por camino critico | high | S | cli | agent:implementer · de EPIC-0012 |
+| `FEAT-0054` | Importar incidencias existentes como tareas | medium | S | cli | agent:implementer · de EPIC-0012 |
 
-## Hechas (62)
+## Hechas (64)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
 | `CHORE-0001` | Sembrar el backlog del propio harness desde el plan | high | M | definitions | agent:implementer · de EPIC-0001 |
+| `CHORE-0002` | Proyectos de prueba y verificación de la adopción en integración continua | medium | M | cli | agent:implementer · de EPIC-0004 |
 | `CHORE-0004` | Autopruebas e integración continua | high | M | cli | agent:implementer · de EPIC-0007 |
 | `CHORE-0005` | Configurar el limite de vueltas del bucle de verificacion | low | XS | definitions | agent:implementer · de EPIC-0009 |
 | `CHORE-0006` | Afinar el autodiagnostico y el limite de tamano de fichero | low | XS | cli | agent:implementer · de EPIC-0012 |
@@ -75,6 +74,7 @@
 | `EPIC-0001` | Cimientos: esquemas, entrada en frío y set documental | critical | — | — | — |
 | `EPIC-0002` | CLI núcleo: el ejecutable determinista | critical | — | — | — |
 | `EPIC-0003` | Agentes, comandos y proyección a Claude Code | high | — | — | — |
+| `EPIC-0004` | Adopción de un proyecto ya existente | high | — | — | — |
 | `EPIC-0011` | Proyeccion del backlog a GitHub | high | — | — | — |
 | `FEAT-0001` | Esquema JSON de tarea | critical | M | definitions | agent:implementer · de EPIC-0001 |
 | `FEAT-0002` | Esquema JSON de proyecto y configuración de ejemplo | critical | M | definitions | agent:implementer · de EPIC-0001 |
