@@ -467,3 +467,20 @@ function daysSince(iso) {
   if (Number.isNaN(then)) return null;
   return Math.floor((Date.now() - then) / 86400000);
 }
+
+/**
+ * The one format a status change is written in.
+ *
+ * `timeInStatus` and the metrics both parse these notes, so the format is load-bearing and it
+ * drifted the moment a second place wrote one: `finish` logged `in_review (finish)` while
+ * everything else logged `in_progress -> in_review`, and every task closed through `finish`
+ * silently fell out of both. Anything that changes a status calls this.
+ */
+export function statusNote(from, to, why = null) {
+  return `${from} -> ${to}${why ? ` (${why})` : ''}`;
+}
+
+/** Logs a status change in that format, and marks a completion as one. */
+export function logStatusChange(ctx, task, from, to, by, why = null) {
+  logEvent(ctx, task.id, by, to === 'done' ? 'completed' : 'status_changed', statusNote(from, to, why));
+}

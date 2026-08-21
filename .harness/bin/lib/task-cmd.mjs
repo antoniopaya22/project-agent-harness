@@ -248,7 +248,7 @@ taskSubs['set-status'] = (ctx, { positional, flags }) => {
   const from = task.status;
   task.status = to;
   if (to !== 'blocked') task.blocked_reason = null;
-  tasksLib.logEvent(ctx, task.id, who.id, to === 'done' ? 'completed' : 'status_changed', `${from} -> ${to}`);
+  tasksLib.logStatusChange(ctx, task, from, to, who.id);
   tasksLib.save(ctx, task);
   board.regenerate(ctx);
   ok(`${task.id}: ${from} -> ${to}`);

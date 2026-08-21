@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "SPIKE-0004",
+  "stage": "claimed",
+  "by": "planner",
+  "branch": "spike/0004-decidir-si-una-tarea-puede-pertenecer",
+  "summary": "Tarea reclamada por agent:planner. Rama spike/0004-decidir-si-una-tarea-puede-pertenecer. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-21T09:03:40Z"
+}

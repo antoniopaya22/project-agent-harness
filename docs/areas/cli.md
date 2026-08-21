@@ -2,7 +2,7 @@
 area: cli
 updated: 2026-08-18
 owner: Antonio Payá
-verified_commit: 4ca18fa308c6
+verified_commit: 031243a210a7
 ---
 
 # Área: CLI
@@ -18,34 +18,19 @@ dependa de la buena voluntad de un modelo.
 
 ## Cómo está organizada
 
-| Pieza | Dónde | Responsabilidad |
-|-------|-------|-----------------|
-| Dispatcher | `.harness/bin/harness.mjs` | Parseo de argumentos, tabla de comandos, salida con código |
-| Plumbing | `lib/util.mjs` | Rutas, JSON estable, salida con color, front-matter, globs, `EXIT` |
-| Validador | `lib/schema.mjs` | Subconjunto de JSON Schema, escrito a mano |
-| Modelo de tareas | `lib/tasks.mjs` | Ids, prefijos, transiciones, guardas, `pickNext` |
-| Subcomandos de tarea | `lib/task-cmd.mjs` | Cada mutación del backlog, validada |
-| Vistas | `lib/board.mjs` | `index.json` y `BOARD.md` |
-| Gates | `lib/gates.mjs` | Ejecución y resumen |
-| Git | `lib/git.mjs` | Envoltorios finos, sin política |
-| Política de commit | `lib/commit.mjs` | Rama, mensaje, push, PR |
-| Higiene | `lib/lint.mjs` | Problemas entre tareas |
-| Autodiagnóstico | `lib/doctor.mjs` | Todas las invariantes comprobables |
-| Situación | `lib/status.mjs` | Una pantalla, incluida la deriva |
-| Generación | `lib/generate.mjs` | Proyección a adaptadores |
-| Actor | `lib/actor.mjs` | Humano vs. agente |
-| Comandos de adopción | `lib/adopt-cmd.mjs` | `init`, `survey`, `interview`, `propose`, `apply`, `layouts`, `restructure` |
-| Reconocimiento | `lib/survey.mjs` | Qué contiene un proyecto, con evidencia, sin escribir nada |
-| Entrevista | `lib/interview.mjs` | Lo que el código no puede responder, persistido entre ejecuciones |
-| Propuesta | `lib/proposal.mjs` | Un único fichero revisable, cada afirmación con respaldo |
-| Aplicación | `lib/apply.mjs` | Siembra el backlog y comprueba que los gates arrancan de verdad |
-| Importación | `lib/import.mjs` | Siembra el backlog desde las incidencias que ya existen |
-| Cierre | `lib/finish.mjs` | Las cinco etapas del cierre, parando en la primera que falla |
-| Nivel de modelo | `lib/tier.mjs` | Sugerencia de nivel a partir de tipo, tamaño y radio de impacto |
-| Anti-podredumbre | `lib/docs-cmd.mjs` | `doc` y `read-log` |
-| Migraciones | `lib/upgrade.mjs` | De la versión que adoptó un proyecto a la actual, idempotente |
-| Frescura | `lib/freshness.mjs` | Commits en un área desde que alguien leyó su documento |
-| Realimentación | `lib/feedback.mjs` | Lecturas fuera del camino previsto, agregadas por área |
+El inventario completo de módulos está en [`docs/CODEMAP.md`](../CODEMAP.md) — «dónde vive cada cosa»
+es su tema, no el de este documento. Lo que hace falta saber aquí es la forma:
+
+| Capa | Qué es | Regla |
+|------|--------|-------|
+| Dispatcher | `harness.mjs` | Solo parsea, despacha y devuelve un `EXIT`. Nunca lógica |
+| Comandos por fase | `lib/*-cmd.mjs` | Un fichero por fase (adopción, documentación, tareas) |
+| Modelo | `lib/tasks.mjs`, `lib/board.mjs`, `lib/schema.mjs` | Las guardas viven aquí, no en los comandos |
+| Ejecución | `lib/gates.mjs`, `lib/git.mjs` | Envoltorios finos, sin política |
+| Política | `lib/commit.mjs`, `lib/doctor.mjs`, `lib/lint.mjs` | Toda decisión comprobable por una máquina |
+| Proyección | `lib/generate.mjs` | Lo canónico hacia cada proveedor |
+
+Ningún fichero pasa de 600 líneas; el gate `lint` lo comprueba y ya ha forzado tres divisiones.
 
 ## Flujo principal
 
@@ -71,6 +56,10 @@ taskSchema }`. No hay estado global.
 
 ## Trampas conocidas
 
+- **El formato de la nota de un cambio de estado es contractual.** `timeInStatus` y las medidas la
+  parsean, y se rompió en cuanto un segundo sitio escribió una: `finish` ponía `in_review (finish)` y el
+  resto `in_progress -> in_review`, así que toda tarea cerrada con `finish` desaparecía de las dos. Se
+  escribe siempre con `logStatusChange`.
 - **Una flag desconocida se rechaza, no se ignora.** `parseArgs` recoge lo que le den, así que una errata
   desaparecía en silencio: nueve criterios se registraron con `--note`, que nada consume — OK por pantalla
   y la evidencia a ningún sitio. Un subcomando declara las suyas con `rejectUnknownFlags(flags, ['x'],

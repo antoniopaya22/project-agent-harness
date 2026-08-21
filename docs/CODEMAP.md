@@ -32,20 +32,33 @@ owner: Antonio Payá
 
 | Concern | Fichero |
 |---------|---------|
-| Dispatcher y comandos de primer nivel | `.harness/bin/harness.mjs` |
-| Rutas, JSON, salida, front-matter, globs | `.harness/bin/lib/util.mjs` |
-| Validador de JSON Schema (subconjunto) | `.harness/bin/lib/schema.mjs` |
-| Modelo de tareas: ids, estados, guardas | `.harness/bin/lib/tasks.mjs` |
-| Subcomandos `task *` | `.harness/bin/lib/task-cmd.mjs` |
-| Índice y tablero generados | `.harness/bin/lib/board.mjs` |
-| Ejecución de gates | `.harness/bin/lib/gates.mjs` |
-| Envoltorio de git y `gh` | `.harness/bin/lib/git.mjs` |
-| Política de commit, push y PR | `.harness/bin/lib/commit.mjs` |
-| Higiene del backlog | `.harness/bin/lib/lint.mjs` |
-| Autodiagnóstico | `.harness/bin/lib/doctor.mjs` |
-| Informe de situación | `.harness/bin/lib/status.mjs` |
-| Generación de adaptadores | `.harness/bin/lib/generate.mjs` |
-| Quién actúa (humano vs. agente) | `.harness/bin/lib/actor.mjs` |
+| Parseo de argumentos, tabla de comandos, salida con código | `.harness/bin/harness.mjs` |
+| Rutas, JSON estable, salida con color, front-matter, globs, `EXIT` | `.harness/bin/lib/util.mjs` |
+| Subconjunto de JSON Schema, escrito a mano | `.harness/bin/lib/schema.mjs` |
+| Ids, prefijos, transiciones, guardas, `pickNext` | `.harness/bin/lib/tasks.mjs` |
+| Cada mutación del backlog, validada | `.harness/bin/lib/task-cmd.mjs` |
+| `index.json` y `BOARD.md` | `.harness/bin/lib/board.mjs` |
+| Ejecución y resumen | `.harness/bin/lib/gates.mjs` |
+| Envoltorios finos, sin política | `.harness/bin/lib/git.mjs` |
+| Rama, mensaje, push, PR | `.harness/bin/lib/commit.mjs` |
+| Problemas entre tareas | `.harness/bin/lib/lint.mjs` |
+| Todas las invariantes comprobables | `.harness/bin/lib/doctor.mjs` |
+| Una pantalla, incluida la deriva | `.harness/bin/lib/status.mjs` |
+| Proyección a adaptadores | `.harness/bin/lib/generate.mjs` |
+| Humano vs. agente | `.harness/bin/lib/actor.mjs` |
+| `init`, `survey`, `interview`, `propose`, `apply`, `layouts`, `restructure` | `.harness/bin/lib/adopt-cmd.mjs` |
+| Qué contiene un proyecto, con evidencia, sin escribir nada | `.harness/bin/lib/survey.mjs` |
+| Lo que el código no puede responder, persistido entre ejecuciones | `.harness/bin/lib/interview.mjs` |
+| Un único fichero revisable, cada afirmación con respaldo | `.harness/bin/lib/proposal.mjs` |
+| Siembra el backlog y comprueba que los gates arrancan de verdad | `.harness/bin/lib/apply.mjs` |
+| Siembra el backlog desde las incidencias que ya existen | `.harness/bin/lib/import.mjs` |
+| Las cinco etapas del cierre, parando en la primera que falla | `.harness/bin/lib/finish.mjs` |
+| Sugerencia de nivel a partir de tipo, tamaño y radio de impacto | `.harness/bin/lib/tier.mjs` |
+| `doc` y `read-log` | `.harness/bin/lib/docs-cmd.mjs` |
+| De la versión que adoptó un proyecto a la actual, idempotente | `.harness/bin/lib/upgrade.mjs` |
+| Duración derivada del worklog, consumo declarado | `.harness/bin/lib/metrics.mjs` |
+| Commits en un área desde que alguien leyó su documento | `.harness/bin/lib/freshness.mjs` |
+| Lecturas fuera del camino previsto, agregadas por área | `.harness/bin/lib/feedback.mjs` |
 
 ## Dónde poner una cosa nueva
 

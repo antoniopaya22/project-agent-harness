@@ -1,1 +1,6 @@
 {"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
+{"at":"2026-08-21T09:03:39Z","by":"implementer","event":"claimed","note":"branch feat/0056-registrar-coste-y-duracion-por-tarea"}
+{"at":"2026-08-21T09:03:39Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-21T09:03:39Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-21T09:04:47Z","by":"harness","event":"status_changed","note":"in_progress -> in_review (finish)"}
+{"at":"2026-08-21T09:04:47Z","by":"harness","event":"committed","note":"feat: Registrar coste y duracion por tarea"}

@@ -9,7 +9,7 @@
 // exactly the outcome this command exists to prevent: a closed task whose claim is false.
 
 import { EXIT, bad, c, info, ok, say } from './util.mjs';
-import { load, logEvent, save, transitionProblems } from './tasks.mjs';
+import { load, logStatusChange, save, transitionProblems } from './tasks.mjs';
 import { printGateResults, runAllGates, summarize } from './gates.mjs';
 import * as board from './board.mjs';
 import * as doctorLib from './doctor.mjs';
@@ -23,6 +23,7 @@ export const STAGES = ['criterios', 'gates', 'documentos', 'estado', 'commit'];
  */
 export function finish(ctx, taskId, { dryRun = false, push = true, message = null } = {}) {
   const task = load(ctx, taskId);
+  const previousStatus = task.status;
   const result = { task: task.id, ok: false, stopped: null, done: [], problems: [], exit: EXIT.OK };
 
   const stop = (stage, problems, exit) => {
@@ -99,7 +100,7 @@ export function finish(ctx, taskId, { dryRun = false, push = true, message = nul
 
   // 5 — the commit. Saved first so the status change is part of what gets committed.
   save(ctx, task);
-  logEvent(ctx, task.id, 'harness', 'status_changed', 'in_review (finish)');
+  logStatusChange(ctx, task, previousStatus, 'in_review', 'harness', 'finish');
 
   const report = doCommit(ctx, { taskId: task.id, push, message, noVerify: true });
   result.commit = report;

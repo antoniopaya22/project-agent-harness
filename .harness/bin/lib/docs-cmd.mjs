@@ -5,12 +5,68 @@
 // used to check, and both live here rather than in the dispatcher because they are a concern
 // of their own.
 
-import { EXIT, c, fail, info, ok, say, table } from './util.mjs';
+import { EXIT, c, fail, info, ok, rejectUnknownFlags, say, table } from './util.mjs';
 import * as tasksLib from './tasks.mjs';
 import * as freshness from './freshness.mjs';
 import * as feedback from './feedback.mjs';
+import * as metrics from './metrics.mjs';
 
 export const commands = {};
+
+commands.metrics = (ctx, { positional, flags }) => {
+  const sub = positional[0] || 'report';
+
+  if (sub === 'add') {
+    const id = positional[1];
+    if (!id) fail('usage: harness metrics add <TASK-ID> [--stage s] [--tokens n] [--seconds n] [--model m]', EXIT.USAGE);
+    rejectUnknownFlags(flags, ['stage', 'tokens', 'seconds', 'model', 'note'], 'harness metrics add <TASK-ID> [--stage s] [--tokens n] [--seconds n]');
+    const task = tasksLib.load(ctx, id);
+    const row = metrics.record(ctx, task.id, {
+      stage: typeof flags.stage === 'string' ? flags.stage : null,
+      tokens: flags.tokens ? Number(flags.tokens) : null,
+      seconds: flags.seconds ? Number(flags.seconds) : null,
+      model: typeof flags.model === 'string' ? flags.model : null,
+      note: typeof flags.note === 'string' ? flags.note : null,
+    });
+    ok(`registrado en ${metrics.metricsPath(ctx)}: ${task.id}${row.stage ? ' / ' + row.stage : ''}`);
+    say(c.gray('   la duracion no hace falta declararla: sale del worklog'));
+    return EXIT.OK;
+  }
+
+  if (sub !== 'report') fail(`unknown subcommand "${sub}" (add | report)`, EXIT.USAGE);
+
+  const r = metrics.report(ctx);
+  if (flags.json) {
+    say(JSON.stringify(r, null, 2));
+    return EXIT.OK;
+  }
+  if (r.sample === 0) {
+    info('ninguna tarea con duracion ni consumo todavia');
+    say(c.gray('   la duración sale del worklog al cerrar tareas; el consumo se declara con `harness metrics add`'));
+    return EXIT.OK;
+  }
+
+  say(c.bold(`${r.sample} tarea(s) con medida`) + c.gray(`  ${r.unmeasured} sin consumo declarado`));
+  if (!r.confident) say(c.yellow(`   con ${r.sample} no se pueden comparar areas. Hacen falta ~20.`));
+  say('');
+  for (const [label, groups] of [['AREA', r.byArea], ['TIPO', r.byType]]) {
+    say(table(
+      groups.map((g) => [
+        g.name,
+        String(g.tasks),
+        g.total ? metrics.humanDuration(g.total.median) : '—',
+        g.implementation ? metrics.humanDuration(g.implementation.median) : '—',
+        g.tokens ? String(g.tokens.median) : '—',
+      ]),
+      [label, 'TAREAS', 'TOTAL (mediana)', 'IMPLEMENTACION', 'TOKENS'],
+    ));
+    say('');
+  }
+  say(c.gray('Se da la mediana y no la media: una tarea de tres días arrastra una media de cinco a cualquier sitio.'));
+  say(c.gray('Y esto mide cuándo se cambió el estado, no cuánto se trabajó. Si el trabajo se hizo antes de'));
+  say(c.gray('mover la tarjeta, la implementación sale en segundos: es cierto y no es esfuerzo.'));
+  return EXIT.OK;
+};
 
 commands.doc = (ctx, { positional, flags }) => {
   const sub = positional[0];
