@@ -3,7 +3,7 @@
   "id": "FEAT-0032",
   "title": "Cerrar una tarea en una sola llamada",
   "type": "feature",
-  "status": "ready",
+  "status": "in_review",
   "priority": "high",
   "size": "M",
   "parent": "EPIC-0008",
@@ -16,7 +16,7 @@
         "type": "command",
         "run": "node --test tests/finish.test.mjs"
       },
-      "status": "pending"
+      "status": "pass"
     },
     {
       "id": "AC2",
@@ -25,7 +25,7 @@
         "type": "command",
         "run": "node --test tests/finish.test.mjs"
       },
-      "status": "pending"
+      "status": "pass"
     }
   ],
   "context": {
@@ -40,9 +40,12 @@
   "labels": [
     "mejora"
   ],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-21T08:26:30Z",
+  "branch": "feat/0032-cerrar-una-tarea-en-una-sola",
   "links": {
     "pr": null,
     "issue": null,
@@ -61,5 +64,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T18:38:33Z"
+  "updated_at": "2026-08-21T08:27:16Z"
 }

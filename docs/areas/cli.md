@@ -39,6 +39,8 @@ dependa de la buena voluntad de un modelo.
 | Propuesta | `lib/proposal.mjs` | Un único fichero revisable, cada afirmación con respaldo |
 | Aplicación | `lib/apply.mjs` | Siembra el backlog y comprueba que los gates arrancan de verdad |
 | Importación | `lib/import.mjs` | Siembra el backlog desde las incidencias que ya existen |
+| Cierre | `lib/finish.mjs` | Las cinco etapas del cierre, parando en la primera que falla |
+| Nivel de modelo | `lib/tier.mjs` | Sugerencia de nivel a partir de tipo, tamaño y radio de impacto |
 
 ## Flujo principal
 
@@ -86,6 +88,11 @@ taskSchema }`. No hay estado global.
   con `resolveExecutable`. Lo que sigue siendo indetectable es un fallo *envuelto* (`npm run lint` con
   npm instalado y la herramienta de dentro no): eso se queda en `fail` y el gate sigue configurado,
   porque perder una red de seguridad que funciona es el error más caro de los dos.
+- **Derivado se regenera, generado se comprueba.** `finish` regenera el índice y el tablero sin
+  preguntar, porque salen de los ficheros de tarea y no hay criterio humano dentro; en cambio la deriva
+  de los adaptadores sí rehúsa, porque ahí puede haber ediciones a mano que merezca la pena ver. Negarse
+  a cerrar una tarea terminada por una pulsación de teclado es la clase de roce que hace que un comando
+  se abandone.
 - **`allocateId` cuenta los ficheros que hay en disco**, así que un lote de tareas construido antes de
   escribir ninguna reparte el mismo id dos veces. `import` las escribe de una en una por eso.
 - **Importar la propia proyección crea un bucle.** `sync` escribe incidencias tituladas `FEAT-0042 · …`

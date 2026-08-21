@@ -37,6 +37,8 @@ import * as layoutsLib from './lib/layouts.mjs';
 import * as restructureLib from './lib/restructure.mjs';
 import { commands as adoptCommands } from './lib/adopt-cmd.mjs';
 import * as importLib from './lib/import.mjs';
+import * as finishLib from './lib/finish.mjs';
+import * as tierLib from './lib/tier.mjs';
 import { lintBacklog } from './lib/lint.mjs';
 
 function actorId(ctx, flags) {
@@ -91,6 +93,8 @@ commands.help = () => {
         ['handoff <sub> <ID>', 'read | write | validate | resume the in-flight state of a task'],
         ['plan-risk <ID>', 'exit 3 when the plan needs a human checkpoint before coding'],
         ['commit [--task ID]', 'conventional commit + push (+ PR when the task is in_review)'],
+        ['finish <ID>', 'the whole closing sequence in one call, stopping at the first failure'],
+        ['tier <ID>', 'the model tier this task looks like it deserves (advisory)'],
         ['sinks', 'which projections are installed, and whether each can run'],
         ['sync [--dry-run] [--limit n]', 'project the backlog to every enabled sink'],
         ['import [--state s]', 'seed the backlog from the issues this repository already has'],
@@ -388,6 +392,39 @@ commands.commit = (ctx, { flags }) => {
     push: flags.push !== 'false' && flags['no-push'] !== true,
     closes: Boolean(flags.closes),
   });
+  return EXIT.OK;
+};
+
+commands.finish = (ctx, { positional, flags }) => {
+  const id = positional[0];
+  if (!id) fail('usage: harness finish <TASK-ID> [--dry-run] [--no-push]', EXIT.USAGE);
+  const result = finishLib.finish(ctx, id, {
+    dryRun: Boolean(flags['dry-run']),
+    push: !flags['no-push'],
+    message: typeof flags.message === 'string' ? flags.message : null,
+  });
+  if (flags.json) {
+    say(JSON.stringify(result, null, 2));
+    return result.exit;
+  }
+  finishLib.printFinish(result);
+  return result.exit;
+};
+
+commands.tier = (ctx, { positional, flags }) => {
+  const all = tasksLib.loadAll(ctx);
+  const ids = positional.length ? positional : [statusLib.report(ctx).next?.id].filter(Boolean);
+  if (ids.length === 0) fail('usage: harness tier <TASK-ID>', EXIT.USAGE);
+
+  const out = [];
+  for (const id of ids) {
+    const task = tasksLib.load(ctx, id);
+    const suggestion = tierLib.suggestTier(task, { allTasks: all });
+    out.push({ id: task.id, ...suggestion });
+    if (!flags.json) say(tierLib.renderSuggestion(task, suggestion));
+  }
+  if (flags.json) say(JSON.stringify(out.length === 1 ? out[0] : out, null, 2));
+  // Always 0. A suggestion that could fail a build would stop being a suggestion.
   return EXIT.OK;
 };
 

@@ -3,7 +3,7 @@
   "id": "FEAT-0054",
   "title": "Importar incidencias existentes como tareas",
   "type": "feature",
-  "status": "in_review",
+  "status": "done",
   "priority": "medium",
   "size": "S",
   "parent": "EPIC-0012",
@@ -65,5 +65,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-21T08:19:01Z"
+  "updated_at": "2026-08-21T08:22:07Z"
 }

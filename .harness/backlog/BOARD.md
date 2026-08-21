@@ -2,15 +2,15 @@
 
 # Tablero — project-agent-harness
 
-90 tareas · 26 abiertas · 64 hechas
+90 tareas · 23 abiertas · 67 hechas
 
 | Columna | Tareas |
 |---------|--------|
 | Backlog | 11 |
-| Listas para empezar | 12 |
-| En curso | 1 |
-| En revisión | 2 |
-| Hechas | 64 |
+| Listas para empezar | 9 |
+| En curso | 2 |
+| En revisión | 1 |
+| Hechas | 67 |
 
 ## Backlog (11)
 
@@ -28,16 +28,13 @@
 | `SPIKE-0001` | Verificar los formatos reales de Cursor y de Copilot | low | S | adapters | de EPIC-0005 |
 | `SPIKE-0002` | Verificar la interfaz de programación de ClickUp | low | S | integrations | de EPIC-0006 |
 
-## Listas para empezar (12)
+## Listas para empezar (9)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
-| `EPIC-0008` | Eficiencia del camino de lectura en frío | critical | — | — | — |
 | `EPIC-0009` | Mecanismos en lugar de instrucciones | critical | — | — | — |
 | `EPIC-0010` | Anti-podredumbre: que la estructura se defienda sola | high | — | — | — |
 | `EPIC-0013` | Preguntas abiertas y medicion honesta | medium | — | — | — |
-| `FEAT-0032` | Cerrar una tarea en una sola llamada | high | M | cli | de EPIC-0008 |
-| `FEAT-0035` | Sugerir el nivel de modelo segun el tamano de la tarea | medium | S | definitions | de EPIC-0008 |
 | `FEAT-0039` | Bloquear la edicion de ficheros generados con automatismos del proveedor | high | M | adapters | de EPIC-0009 |
 | `FEAT-0042` | Frescura de documentos medida en commits, no en rutas existentes | high | M | cli | de EPIC-0010 |
 | `FEAT-0043` | Realimentacion sobre la calidad del refinamiento de tareas | high | L | cli | de EPIC-0010 |
@@ -45,20 +42,20 @@
 | `SPIKE-0004` | Decidir si una tarea puede pertenecer a varias areas | medium | S | definitions | de EPIC-0013 |
 | `SPIKE-0005` | Como evaluar si un cambio de prompt mejora o empeora | medium | M | definitions | de EPIC-0013 |
 
-## En curso (1)
+## En curso (2)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
-| `EPIC-0012` | Ergonomia y huecos del dia a dia | high | — | — | — |
+| `EPIC-0008` | Eficiencia del camino de lectura en frío | critical | — | — | — |
+| `FEAT-0032` | Cerrar una tarea en una sola llamada | high | M | cli | agent:implementer · de EPIC-0008 |
 
-## En revisión (2)
+## En revisión (1)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
-| `FEAT-0051` | La siguiente tarea se elige por camino critico | high | S | cli | agent:implementer · de EPIC-0012 |
-| `FEAT-0054` | Importar incidencias existentes como tareas | medium | S | cli | agent:implementer · de EPIC-0012 |
+| `FEAT-0035` | Sugerir el nivel de modelo segun el tamano de la tarea | medium | S | definitions | agent:implementer · de EPIC-0008 |
 
-## Hechas (64)
+## Hechas (67)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -76,6 +73,7 @@
 | `EPIC-0003` | Agentes, comandos y proyección a Claude Code | high | — | — | — |
 | `EPIC-0004` | Adopción de un proyecto ya existente | high | — | — | — |
 | `EPIC-0011` | Proyeccion del backlog a GitHub | high | — | — | — |
+| `EPIC-0012` | Ergonomia y huecos del dia a dia | high | — | — | — |
 | `FEAT-0001` | Esquema JSON de tarea | critical | M | definitions | agent:implementer · de EPIC-0001 |
 | `FEAT-0002` | Esquema JSON de proyecto y configuración de ejemplo | critical | M | definitions | agent:implementer · de EPIC-0001 |
 | `FEAT-0003` | Ejecutable principal y equivalentes para PowerShell y POSIX | critical | M | cli | agent:implementer · de EPIC-0002 |
@@ -116,8 +114,10 @@
 | `FEAT-0048` | Sumidero del tablero de GitHub | high | M | integrations | agent:implementer · de EPIC-0011 |
 | `FEAT-0049` | Sincronizar desde integracion continua | medium | S | integrations | agent:implementer · de EPIC-0011 |
 | `FEAT-0050` | Arranque para un proyecto nuevo | critical | M | cli | agent:implementer · de EPIC-0012 |
+| `FEAT-0051` | La siguiente tarea se elige por camino critico | high | S | cli | agent:implementer · de EPIC-0012 |
 | `FEAT-0052` | Cola de tareas y deteccion de trabajo paralelizable | medium | S | cli | agent:implementer · de EPIC-0012 |
 | `FEAT-0053` | Buscar que tareas tocan una ruta | medium | XS | cli | agent:implementer · de EPIC-0012 |
+| `FEAT-0054` | Importar incidencias existentes como tareas | medium | S | cli | agent:implementer · de EPIC-0012 |
 | `FEAT-0055` | Tiempo de ciclo en el informe de situacion | low | S | cli | agent:implementer · de EPIC-0012 |
 | `FIX-0001` | El CLI llegaba incompleto al repositorio remoto | critical | — | cli | agent:implementer |
 | `FIX-0002` | Las opciones repetidas se descartaban en silencio | high | — | cli | agent:implementer |
