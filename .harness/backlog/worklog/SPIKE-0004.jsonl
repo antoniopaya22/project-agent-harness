@@ -1,1 +1,5 @@
 {"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
+{"at":"2026-08-21T09:03:40Z","by":"planner","event":"claimed","note":"branch spike/0004-decidir-si-una-tarea-puede-pertenecer"}
+{"at":"2026-08-21T09:03:41Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-21T09:03:41Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-21T09:04:01Z","by":"planner","event":"status_changed","note":"in_progress -> in_review"}

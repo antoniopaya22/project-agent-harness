@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "FEAT-0026",
+  "stage": "claimed",
+  "by": "implementer",
+  "branch": "feat/0026-versionado-del-harness-y-migraciones-entre",
+  "summary": "Tarea reclamada por agent:implementer. Rama feat/0026-versionado-del-harness-y-migraciones-entre. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-21T08:56:49Z"
+}

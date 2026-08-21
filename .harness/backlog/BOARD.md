@@ -2,15 +2,14 @@
 
 # Tablero — project-agent-harness
 
-90 tareas · 13 abiertas · 77 hechas
+90 tareas · 9 abiertas · 81 hechas
 
 | Columna | Tareas |
 |---------|--------|
 | Backlog | 5 |
-| Listas para empezar | 5 |
 | En curso | 2 |
-| En revisión | 1 |
-| Hechas | 77 |
+| En revisión | 2 |
+| Hechas | 81 |
 
 ## Backlog (5)
 
@@ -22,30 +21,21 @@
 | `FEAT-0028` | Cliente de sincronización en una sola dirección | low | M | integrations | espera FEAT-0027, FEAT-0046 · de EPIC-0006 |
 | `SPIKE-0002` | Verificar la interfaz de programación de ClickUp | low | S | integrations | de EPIC-0006 |
 
-## Listas para empezar (5)
-
-| Id | Tarea | Prioridad | Tamaño | Área | Notas |
-|----|-------|-----------|--------|------|-------|
-| `EPIC-0013` | Preguntas abiertas y medicion honesta | medium | — | — | — |
-| `FEAT-0026` | Versionado del harness y migraciones entre versiones | low | M | cli | espera SPIKE-0001 · de EPIC-0005 |
-| `FEAT-0056` | Registrar coste y duracion por tarea | medium | S | cli | de EPIC-0013 |
-| `SPIKE-0004` | Decidir si una tarea puede pertenecer a varias areas | medium | S | definitions | de EPIC-0013 |
-| `SPIKE-0005` | Como evaluar si un cambio de prompt mejora o empeora | medium | M | definitions | de EPIC-0013 |
-
 ## En curso (2)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
-| `EPIC-0005` | Soporte de otros proveedores de agentes | medium | — | — | — |
-| `SPIKE-0001` | Verificar los formatos reales de Cursor y de Copilot | low | S | adapters | agent:researcher · de EPIC-0005 |
+| `EPIC-0013` | Preguntas abiertas y medicion honesta | medium | — | — | — |
+| `FEAT-0056` | Registrar coste y duracion por tarea | medium | S | cli | agent:implementer · de EPIC-0013 |
 
-## En revisión (1)
+## En revisión (2)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
-| `FEAT-0025` | Anulaciones locales, regiones preservadas y matriz de capacidades | low | M | adapters | agent:implementer · de EPIC-0005 |
+| `SPIKE-0004` | Decidir si una tarea puede pertenecer a varias areas | medium | S | definitions | agent:planner · de EPIC-0013 |
+| `SPIKE-0005` | Como evaluar si un cambio de prompt mejora o empeora | medium | M | definitions | agent:planner · de EPIC-0013 |
 
-## Hechas (77)
+## Hechas (81)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -62,6 +52,7 @@
 | `EPIC-0002` | CLI núcleo: el ejecutable determinista | critical | — | — | — |
 | `EPIC-0003` | Agentes, comandos y proyección a Claude Code | high | — | — | — |
 | `EPIC-0004` | Adopción de un proyecto ya existente | high | — | — | — |
+| `EPIC-0005` | Soporte de otros proveedores de agentes | medium | — | — | — |
 | `EPIC-0007` | Endurecimiento, automatismos y publicación | medium | — | — | — |
 | `EPIC-0008` | Eficiencia del camino de lectura en frío | critical | — | — | — |
 | `EPIC-0009` | Mecanismos en lugar de instrucciones | critical | — | — | — |
@@ -92,6 +83,8 @@
 | `FEAT-0022` | Reescritura de referencias tras mover ficheros | critical | L | cli | agent:implementer · de EPIC-0004 |
 | `FEAT-0023` | Motor de reorganización por lotes verificados | critical | L | cli | agent:implementer · de EPIC-0004 |
 | `FEAT-0024` | Adaptador universal y degradación a guías ejecutables | medium | M | adapters | agent:implementer · de EPIC-0005 |
+| `FEAT-0025` | Anulaciones locales, regiones preservadas y matriz de capacidades | low | M | adapters | agent:implementer · de EPIC-0005 |
+| `FEAT-0026` | Versionado del harness y migraciones entre versiones | low | M | cli | agent:implementer · de EPIC-0005 |
 | `FEAT-0029` | Política de permisos y automatismos del proveedor | medium | M | adapters | agent:implementer · de EPIC-0007 |
 | `FEAT-0030` | Medir el camino de lectura en tokens y no en líneas | critical | M | cli | agent:implementer · de EPIC-0008 |
 | `FEAT-0031` | Un solo payload en lugar de cuatro lecturas | critical | M | cli | agent:implementer · de EPIC-0008 |
@@ -125,6 +118,7 @@
 | `FIX-0004` | El tablero externo se quedaba atras sin decir por que | high | — | integrations | agent:implementer |
 | `RFCT-0001` | Sacar el historial de trabajo del fichero de tarea | high | S | cli | agent:implementer · de EPIC-0008 |
 | `RFCT-0002` | Los comandos referencian a los agentes en vez de reescribirlos | high | M | definitions | agent:implementer · de EPIC-0008 |
+| `SPIKE-0001` | Verificar los formatos reales de Cursor y de Copilot | low | S | adapters | agent:researcher · de EPIC-0005 |
 | `SPIKE-0003` | Verificar la interfaz de programacion de proyectos y sub-issues | high | S | integrations | agent:researcher · de EPIC-0011 |
 
 ---

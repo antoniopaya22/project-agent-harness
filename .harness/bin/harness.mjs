@@ -94,6 +94,7 @@ commands.help = () => {
         ['doctor [--fix] [--only c]', 'validate the harness itself, including read-path budgets'],
         ['doc <sub> [area]', 'freshness | verified — which area docs are stale, and stamping one as read'],
         ['read-log <sub>', 'record the files a task forced you to read beyond its read path, and report'],
+        ['metrics <sub>', 'duration per stage (derived) and consumption (declared), aggregated'],
         ['handoff <sub> <ID>', 'read | write | validate | resume the in-flight state of a task'],
         ['plan-risk <ID>', 'exit 3 when the plan needs a human checkpoint before coding'],
         ['commit [--task ID]', 'conventional commit + push (+ PR when the task is in_review)'],

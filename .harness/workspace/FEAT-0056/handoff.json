@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "FEAT-0056",
+  "stage": "claimed",
+  "by": "implementer",
+  "branch": "feat/0056-registrar-coste-y-duracion-por-tarea",
+  "summary": "Tarea reclamada por agent:implementer. Rama feat/0056-registrar-coste-y-duracion-por-tarea. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-21T09:03:39Z"
+}

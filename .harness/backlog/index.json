@@ -2,16 +2,16 @@
   "harness_version": "1.1.0",
   "counts": {
     "backlog": 5,
-    "ready": 5,
+    "ready": 0,
     "in_progress": 2,
-    "in_review": 1,
+    "in_review": 2,
     "blocked": 0,
-    "done": 77,
+    "done": 81,
     "cancelled": 0,
     "total": 90,
-    "open": 13
+    "open": 9
   },
-  "next": "FEAT-0056",
+  "next": null,
   "tasks": [
     {
       "id": "CHORE-0001",
@@ -219,7 +219,7 @@
       "id": "EPIC-0005",
       "title": "Soporte de otros proveedores de agentes",
       "type": "epic",
-      "status": "in_progress",
+      "status": "done",
       "priority": "medium",
       "size": null,
       "area": null,
@@ -331,7 +331,7 @@
       "id": "EPIC-0013",
       "title": "Preguntas abiertas y medicion honesta",
       "type": "epic",
-      "status": "ready",
+      "status": "in_progress",
       "priority": "medium",
       "size": null,
       "area": null,
@@ -694,7 +694,7 @@
       "id": "FEAT-0025",
       "title": "Anulaciones locales, regiones preservadas y matriz de capacidades",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "low",
       "size": "M",
       "area": "adapters",
@@ -708,7 +708,7 @@
       "id": "FEAT-0026",
       "title": "Versionado del harness y migraciones entre versiones",
       "type": "feature",
-      "status": "ready",
+      "status": "done",
       "priority": "low",
       "size": "M",
       "area": "cli",
@@ -716,9 +716,9 @@
       "depends_on": [
         "SPIKE-0001"
       ],
-      "blocked": true,
-      "assignee": null,
-      "branch": null
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0026-versionado-del-harness-y-migraciones-entre"
     },
     {
       "id": "FEAT-0027",
@@ -1155,15 +1155,15 @@
       "id": "FEAT-0056",
       "title": "Registrar coste y duracion por tarea",
       "type": "feature",
-      "status": "ready",
+      "status": "in_progress",
       "priority": "medium",
       "size": "S",
       "area": "cli",
       "parent": "EPIC-0013",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null
+      "assignee": "agent:implementer",
+      "branch": "feat/0056-registrar-coste-y-duracion-por-tarea"
     },
     {
       "id": "FIX-0001",
@@ -1253,7 +1253,7 @@
       "id": "SPIKE-0001",
       "title": "Verificar los formatos reales de Cursor y de Copilot",
       "type": "spike",
-      "status": "in_progress",
+      "status": "done",
       "priority": "low",
       "size": "S",
       "area": "adapters",
@@ -1297,29 +1297,29 @@
       "id": "SPIKE-0004",
       "title": "Decidir si una tarea puede pertenecer a varias areas",
       "type": "spike",
-      "status": "ready",
+      "status": "in_review",
       "priority": "medium",
       "size": "S",
       "area": "definitions",
       "parent": "EPIC-0013",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null
+      "assignee": "agent:planner",
+      "branch": "spike/0004-decidir-si-una-tarea-puede-pertenecer"
     },
     {
       "id": "SPIKE-0005",
       "title": "Como evaluar si un cambio de prompt mejora o empeora",
       "type": "spike",
-      "status": "ready",
+      "status": "in_review",
       "priority": "medium",
       "size": "M",
       "area": "definitions",
       "parent": "EPIC-0013",
       "depends_on": [],
       "blocked": false,
-      "assignee": null,
-      "branch": null
+      "assignee": "agent:planner",
+      "branch": "spike/0005-como-evaluar-si-un-cambio-de"
     }
   ]
 }
