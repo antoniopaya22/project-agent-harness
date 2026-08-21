@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "SPIKE-0001",
+  "stage": "claimed",
+  "by": "researcher",
+  "branch": "spike/0001-verificar-los-formatos-reales-de-cursor",
+  "summary": "Tarea reclamada por agent:researcher. Rama spike/0001-verificar-los-formatos-reales-de-cursor. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-21T08:55:18Z"
+}

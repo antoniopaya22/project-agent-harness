@@ -3,7 +3,7 @@
   "id": "FEAT-0026",
   "title": "Versionado del harness y migraciones entre versiones",
   "type": "feature",
-  "status": "backlog",
+  "status": "ready",
   "priority": "low",
   "size": "M",
   "parent": "EPIC-0005",
@@ -16,7 +16,7 @@
         "type": "command",
         "run": "node --test tests/upgrade.test.mjs"
       },
-      "status": "pending"
+      "status": "pass"
     }
   ],
   "context": {
@@ -28,6 +28,7 @@
   "depends_on": [
     "SPIKE-0001"
   ],
+  "blocked_reason": null,
   "labels": [],
   "assignee": null,
   "claimed_at": null,
@@ -50,5 +51,5 @@
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-20T18:37:59Z"
+  "updated_at": "2026-08-21T08:55:30Z"
 }

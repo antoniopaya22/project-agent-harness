@@ -3,7 +3,7 @@
   "id": "FEAT-0025",
   "title": "Anulaciones locales, regiones preservadas y matriz de capacidades",
   "type": "feature",
-  "status": "backlog",
+  "status": "in_review",
   "priority": "low",
   "size": "M",
   "parent": "EPIC-0005",
@@ -16,7 +16,7 @@
         "type": "command",
         "run": "node --test tests/overrides.test.mjs"
       },
-      "status": "pending",
+      "status": "pass",
       "baseline": "not-run"
     },
     {
@@ -26,7 +26,8 @@
         "type": "review",
         "run": null
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "docs/PROVIDERS.md publica la matriz de las seis capacidades por los cuatro proveedores, con la sintaxis de Cursor y Copilot verificada contra documentacion oficial y enlazada, y .cursorrules marcado SIN VERIFICAR. tests/overrides.test.mjs caso 8 comprueba que la matriz existe, nombra los cuatro proveedores, cita los campos concretos y conserva la marca de no verificado."
     }
   ],
   "context": {
@@ -36,10 +37,14 @@
     "out_of_scope": []
   },
   "depends_on": [],
+  "blocked_reason": null,
   "labels": [],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-21T08:55:28Z",
+  "branch": "feat/0025-anulaciones-locales-regiones-preservadas-y-matriz",
   "links": {
     "pr": null,
     "issue": null,
@@ -58,5 +63,5 @@
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-20T18:37:54Z"
+  "updated_at": "2026-08-21T08:55:49Z"
 }

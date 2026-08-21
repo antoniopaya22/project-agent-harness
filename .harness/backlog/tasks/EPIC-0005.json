@@ -3,7 +3,7 @@
   "id": "EPIC-0005",
   "title": "Soporte de otros proveedores de agentes",
   "type": "epic",
-  "status": "backlog",
+  "status": "in_progress",
   "priority": "medium",
   "description": "El harness deja de estar atado a un proveedor sin perder capacidad, solo comodidad.",
   "acceptance_criteria": [
@@ -50,5 +50,5 @@
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-20T20:04:48Z"
+  "updated_at": "2026-08-21T08:55:18Z"
 }

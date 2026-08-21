@@ -1,3 +1,4 @@
 {"at":"2026-08-18T19:00:00Z","by":"harness","event":"created","note":"sembrada desde docs/HARNESS-PLAN.md §12"}
 {"at":"2026-08-21T08:44:45Z","by":"harness","event":"status_changed","note":"backlog -> ready (derivado de sus hijas)"}
 {"at":"2026-08-21T08:44:46Z","by":"harness","event":"status_changed","note":"ready -> in_progress (derivado de sus hijas)"}
+{"at":"2026-08-21T08:49:13Z","by":"harness","event":"status_changed","note":"in_progress -> done (derivado de sus hijas)"}

@@ -1,6 +1,6 @@
 {
   "$schema": "./schema/project.schema.json",
-  "harness_version": "1.0.0",
+  "harness_version": "1.1.0",
   "project": {
     "name": "project-agent-harness",
     "purpose": "Plantilla de harness para agentes de código, independiente de proveedor: backlog en JSON con criterios de aceptación verificables, subagentes especializados, comandos automatizados y una documentación cuyo camino de lectura está acotado. Se aplica tanto a proyectos nuevos como a proyectos ya en marcha, y opcionalmente proyecta el backlog a ClickUp para que perfiles no técnicos vean el estado.",
