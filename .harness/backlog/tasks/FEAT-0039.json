@@ -58,9 +58,11 @@
   "claimed_at": "2026-08-21T08:44:33Z",
   "branch": "feat/0039-bloquear-la-edicion-de-ficheros-generados",
   "links": {
-    "pr": null,
+    "pr": "https://github.com/antoniopaya22/project-agent-harness/pull/102",
     "issue": null,
-    "commits": []
+    "commits": [
+      "ebd7cea64ddd"
+    ]
   },
   "external": {
     "github": {
@@ -75,5 +77,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-21T08:48:47Z"
+  "updated_at": "2026-08-21T08:48:53Z"
 }
