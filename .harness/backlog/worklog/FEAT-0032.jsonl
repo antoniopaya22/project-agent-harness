@@ -4,3 +4,4 @@
 {"at":"2026-08-21T08:26:38Z","by":"human","event":"verified","note":"AC1 -> pass"}
 {"at":"2026-08-21T08:26:38Z","by":"human","event":"verified","note":"AC2 -> pass"}
 {"at":"2026-08-21T08:27:16Z","by":"harness","event":"status_changed","note":"in_review (finish)"}
+{"at":"2026-08-21T08:27:17Z","by":"harness","event":"committed","note":"feat(cli): Cerrar una tarea en una sola llamada"}

@@ -47,9 +47,11 @@
   "claimed_at": "2026-08-21T08:26:30Z",
   "branch": "feat/0032-cerrar-una-tarea-en-una-sola",
   "links": {
-    "pr": null,
+    "pr": "https://github.com/antoniopaya22/project-agent-harness/pull/100",
     "issue": null,
-    "commits": []
+    "commits": [
+      "531eb0f926d0"
+    ]
   },
   "external": {
     "github": {
@@ -64,5 +66,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-21T08:27:16Z"
+  "updated_at": "2026-08-21T08:27:21Z"
 }
