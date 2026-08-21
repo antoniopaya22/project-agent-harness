@@ -884,8 +884,8 @@ Jerarquía: Workspace → Space → Folder → List → Task.
 | `labels` | `tags` |
 | `assignee` | `assignees`, vía el mapa `integrations.clickup.users` |
 | `parent` | subtarea |
-| `depends_on` | dependencias nativas — **[VERIFY]** endpoint exacto |
-| `estimate_hours` | time estimate — **[VERIFY]** unidad (¿ms?) |
+| `depends_on` | `POST /v2/task/{task_id}/dependency` con `depends_on` (o `dependency_of` para el inverso) |
+| `estimate_hours` | `time_estimate`, entero **en milisegundos** |
 | `branch`, `links.pr` | campos personalizados tipo URL |
 
 **Mapeo identidad de estados**: la List destino se crea desde cero con exactamente los siete estados del
@@ -893,16 +893,62 @@ harness (`backlog`, `ready`, `in progress`, `in review`, `blocked`, `complete`, 
 últimos marcados como cerrados). Así `mapping.json` es la identidad y desaparece una clase entera de
 bugs de traducción.
 
-## Trampas conocidas y verificaciones pendientes
+## La API de ClickUp, verificada (SPIKE-0002)
 
-Todo lo que sigue debe confirmarse contra la documentación oficial **antes** de escribir el cliente. No
-se implementa sobre esto tal como está:
+Confirmado contra la documentación oficial el 2026-08-21. Lo que no esté aquí, no está verificado.
 
-- **[VERIFY]** base `https://api.clickup.com/api/v2` y forma exacta de la cabecera de autorización con
-  un token personal.
-- **[VERIFY]** endpoints: crear tarea en una lista, actualizar tarea, listar tareas de una lista, listar
-  campos personalizados, fijar el valor de un campo personalizado.
-- **[VERIFY]** límite de peticiones por minuto y cabeceras de rate limit, para respetarlo con backoff.
-- **[VERIFY]** paginación de la lista de tareas.
-- **[VERIFY]** endpoint de dependencias y unidad del time estimate.
+**Base y autorización**
+
+- Base: `https://api.clickup.com/api/v2`.
+- Token personal: cabecera `Authorization: {token}`, **sin `Bearer`**. Los tokens personales
+  empiezan por `pk_`.
+- Un token de OAuth **sí** lleva `Authorization: Bearer {token}`. Son dos formatos distintos y
+  confundirlos da un 401 que parece un problema de permisos.
+  Fuente: [Authentication](https://developer.clickup.com/docs/authentication).
+
+**Endpoints que hacen falta**
+
+| Para | Método y ruta |
+|------|---------------|
+| Crear tarea | `POST /v2/list/{list_id}/task` |
+| Actualizar tarea | `PUT /v2/task/{task_id}` |
+| Listar tareas de una lista | `GET /v2/list/{list_id}/task` |
+| Fijar un campo personalizado | `POST /v2/task/{task_id}/field/{field_id}` |
+| Campos personalizados de una lista | `GET /v2/list/{list_id}/field` (Get Accessible Custom Fields) |
+| Dependencias | `POST /v2/task/{task_id}/dependency` |
+
+**Campos al crear una tarea**, con su tipo: `name` (string, obligatorio), `description` (string),
+`markdown_content` (string — **si se envían los dos, gana `markdown_content`**), `status` (string),
+`priority` (entero o nulo), `tags` (array de strings), `assignees` (array de enteros),
+`time_estimate` (entero, **milisegundos**), `custom_fields` (array de `{id, value}`), `parent`
+(string o nulo, y **la subtarea tiene que estar en la misma lista**).
+Fuente: [Create Task](https://developer.clickup.com/reference/createtask).
+
+**Paginación**: parámetro `page`, **empieza en 0**, máximo **100 tareas por página**, y la
+respuesta trae `last_page` (booleano) para saber si hay más. No hay cursor.
+Fuente: [Get Tasks](https://developer.clickup.com/reference/gettasks).
+
+**Límite de peticiones**, por token y por minuto: 100 en Free/Unlimited/Business, 1.000 en
+Business Plus, 10.000 en Enterprise. Al pasarse devuelve **429**. Cabeceras de respuesta:
+`X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` (marca de tiempo Unix).
+Fuente: [Rate Limits](https://developer.clickup.com/docs/rate-limits).
+
+Consecuencia para el cliente: con el plan de empresa el límite no es el problema (10.000/min
+frente a un backlog de 90), pero el backoff se implementa contra `X-RateLimit-Reset` de todos
+modos, porque un proyecto en plan Business tiene 100/min y ahí sí se nota.
+
+**Valor de un campo personalizado**: el cuerpo depende del tipo del campo. Para texto, número,
+URL, email y teléfono es `{"value": <valor>}`; para fecha, `{"value": <ms>, "value_options":
+{"time": <bool>}}`; para colecciones (personas, ficheros, tareas), `{"value": {"add": [...],
+"rem": [...]}}`.
+Fuente: [Set Custom Field Value](https://developer.clickup.com/reference/setcustomfieldvalue).
+
+**Lo que sigue sin verificar**
+
+- **[SIN VERIFICAR]** si se puede crear una lista con estados propios en una sola llamada, o si
+  hay que crearla y después definir los estados. Es lo que decide si CHORE-0003 se puede
+  automatizar o es un paso manual.
+- **[SIN VERIFICAR]** el comportamiento exacto de `date_updated` al escribir nosotros: si nuestra
+  propia escritura lo mueve, el detector de ediciones remotas se dispararía consigo mismo. Hay que
+  comprobarlo contra un espacio real antes de fiarse de la detección de deriva.
 

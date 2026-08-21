@@ -3,7 +3,7 @@
   "id": "FEAT-0028",
   "title": "Cliente de sincronización en una sola dirección",
   "type": "feature",
-  "status": "backlog",
+  "status": "ready",
   "priority": "low",
   "size": "M",
   "parent": "EPIC-0006",
@@ -16,7 +16,7 @@
         "type": "command",
         "run": "node --test tests/sync.test.mjs"
       },
-      "status": "pending"
+      "status": "pass"
     },
     {
       "id": "AC2",
@@ -25,7 +25,7 @@
         "type": "command",
         "run": "node --test tests/sync.test.mjs"
       },
-      "status": "pending"
+      "status": "pass"
     },
     {
       "id": "AC3",
@@ -34,7 +34,8 @@
         "type": "review",
         "run": null
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "detectDrift compara el estado remoto con el nuestro y devuelve drifted mas una nota que dice a que la movieron y que se sobrescribe; no mezcla nada. tests/clickup.test.mjs 'a card somebody dragged is reported and overwritten, never merged'. Si la propia comprobacion falla, la proyeccion sigue: un destino que deja de funcionar porque fallo un diagnostico es peor."
     }
   ],
   "context": {
@@ -47,6 +48,7 @@
     "FEAT-0027",
     "FEAT-0046"
   ],
+  "blocked_reason": null,
   "labels": [],
   "assignee": null,
   "claimed_at": null,
@@ -69,5 +71,5 @@
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-20T18:38:10Z"
+  "updated_at": "2026-08-21T09:13:02Z"
 }

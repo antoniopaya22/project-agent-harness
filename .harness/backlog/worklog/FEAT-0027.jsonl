@@ -2,3 +2,6 @@
 {"at":"2026-08-18T18:05:21Z","by":"human","event":"status_changed","note":"depends_on=CHORE-0003"}
 {"at":"2026-08-20T15:40:18Z","by":"human","event":"status_changed","note":"priority=low"}
 {"at":"2026-08-20T15:40:18Z","by":"human","event":"status_changed","note":"depends_on=FEAT-0046"}
+{"at":"2026-08-21T09:12:47Z","by":"human","event":"status_changed","note":"backlog -> ready"}
+{"at":"2026-08-21T09:13:00Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-21T09:13:01Z","by":"human","event":"verified","note":"AC2 -> pass"}

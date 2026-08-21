@@ -1,0 +1,14 @@
+{
+  "$comment": "Identificadores, nunca credenciales. El token vive en .env (CLICKUP_API_TOKEN), que está en .gitignore, y doctor falla si algo con forma de credencial aparece en un fichero de tarea.",
+  "enabled": false,
+  "list_id": null,
+  "custom_fields": {
+    "$comment": "Nombre en ClickUp -> id del campo. Los rellena CHORE-0003 al crear la lista, leyéndolos de GET /v2/list/{list_id}/field.",
+    "Harness ID": null,
+    "Rama": null,
+    "Pull request": null
+  },
+  "users": {
+    "$comment": "assignee.id del harness -> id numérico de usuario en ClickUp. Vacío significa que no se asigna a nadie, que es mejor que asignar a quien no toca."
+  }
+}

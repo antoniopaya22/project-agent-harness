@@ -2,7 +2,7 @@
 area: integrations
 updated: 2026-08-18
 owner: Antonio Payá
-verified_commit: a85a96155978
+verified_commit: b54d10e9538c
 ---
 
 # Área: Integraciones con trackers externos
@@ -43,15 +43,17 @@ Un adaptador vive en `.harness/integrations/<proveedor>/adapter.mjs` y exporta:
 | `readConfig` / `writeConfig` | no | Configuración persistida del destino (identificadores, nunca credenciales) |
 
 `harness sync` es el único que orquesta: recorre las tareas, calcula el plan y llama a `apply` una vez
-por operación. Un adaptador **no decide a quién le toca** ni escribe en el backlog.
+por operación. Un adaptador **no decide a quién le toca** ni escribe en el backlog. `prepare` corre
+**antes** del plan: al revés, el plan se calculaba sin el índice que `prepare` carga y veintidós tareas
+no llegaban nunca al tablero.
 
-El orden importa y costó un error: `prepare` corre **antes** de calcular el plan. Al revés, el plan se
-calculaba sin el índice de incidencias que `prepare` carga, y veintidós tareas no llegaban nunca al
-tablero.
+Hay **dos implementaciones reales** (GitHub y ClickUp), que es la única forma de saber si la abstracción
+está bien puesta. Lo que enseñó la segunda: `isEnabled` devuelve `{ enabled, reason }` y devolver un
+booleano **no fallaba** — daba una fila «disabled» con el motivo en blanco. Ahora lo comprueba `doctor`
+(check `sinks`).
 
-Añadir Jira o Linear significa escribir otro directorio con estas exportaciones, sin tocar el núcleo.
-Hoy hay **una implementación real** (GitHub); hasta que haya dos no se sabe si la abstracción está bien
-puesta, y ese es el motivo de que ClickUp siga en el backlog.
+ClickUp está probado contra un `fetch` falso y **nunca se ha ejecutado contra un espacio real**: falta la
+lista destino (CHORE-0003) y un token. Hasta entonces `enabled` es `false`.
 
 ### GitHub: el sumidero por defecto
 
