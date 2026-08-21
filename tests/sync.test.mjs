@@ -3,7 +3,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
 import { contentHash, describeSinks, planFor, runSink } from '../.harness/bin/lib/sync.mjs';
-import { makeTask, tempHarness } from './helpers.mjs';
+import * as clickup from '../.harness/integrations/clickup/adapter.mjs';
+import { REPO, makeTask, tempHarness } from './helpers.mjs';
 
 /** A sink that records what it was asked to do, so the engine can be tested on its own. */
 function fakeSink(behaviour = {}) {
@@ -241,6 +242,99 @@ test('a sink with nothing outstanding still skips', async () => {
     const result = await runSink(ctx, sink, [task], {});
     assert.equal(result.applied, 0);
     assert.equal(result.skipped, 1);
+  } finally {
+    cleanup();
+  }
+});
+
+// --- the ClickUp sink, through the engine ------------------------------------
+
+/** The real ClickUp adapter, installed into a temp harness. */
+function withClickupSink({ config = {}, env = {} } = {}) {
+  const { ctx, cleanup } = tempHarness();
+  // The mapping is copied because the test edits it; the adapter is imported from the repo,
+  // because a copy of it under a temp root cannot resolve its own imports of `bin/lib`.
+  const dir = path.join(ctx.harnessDir, 'integrations', 'clickup');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.copyFileSync(path.join(REPO, '.harness', 'integrations', 'clickup', 'mapping.json'), path.join(dir, 'mapping.json'));
+  fs.writeFileSync(
+    path.join(dir, 'config.json'),
+    `${JSON.stringify({ enabled: true, list_id: '901', custom_fields: {}, users: {}, ...config }, null, 2)}\n`,
+  );
+  return { ctx, cleanup, env: { CLICKUP_API_TOKEN: 'pk_1_ABC', ...env } };
+}
+
+test('the state mapping is changed by editing configuration, with no code touched', () => {
+  // The point of mapping.json. If the adapter carried a fallback table this would pass while
+  // the coupling stayed, so the check is that the *file* decides.
+  const { ctx, cleanup } = withClickupSink();
+  try {
+    assert.equal(clickup.mapStatus(clickup.readMapping(ctx), 'in_review'), 'in review');
+
+    const file = path.join(ctx.harnessDir, 'integrations', 'clickup', 'mapping.json');
+    const mapping = JSON.parse(fs.readFileSync(file, 'utf8'));
+    mapping.status.in_review = 'en revisión del equipo';
+    fs.writeFileSync(file, JSON.stringify(mapping, null, 2));
+
+    assert.equal(clickup.mapStatus(clickup.readMapping(ctx), 'in_review'), 'en revisión del equipo');
+  } finally {
+    cleanup();
+  }
+});
+
+test('the adapter is replaceable: the engine calls the interface and nothing else', async () => {
+  // A second sink with a completely different shape must work through the same engine. If the
+  // engine knew anything about GitHub or ClickUp specifically, this would fail.
+  const { ctx, cleanup } = tempHarness({ tasks: [makeTask({ id: 'FEAT-0001' })] });
+  try {
+    const seen = [];
+    const sink = {
+      id: 'inventado',
+      module: {
+        isEnabled: () => ({ enabled: true, reason: 'de mentira' }),
+        apply: async (_ctx, { op, task }) => {
+          seen.push(`${op}:${task.id}`);
+          return { id: 'x1' };
+        },
+      },
+    };
+    const result = await runSink(ctx, sink, [makeTask({ id: 'FEAT-0001' })], { dryRun: false });
+    assert.equal(result.applied, 1);
+    assert.deepEqual(seen, ['create:FEAT-0001']);
+    assert.deepEqual(describeSinks(ctx, [sink]), [{ id: 'inventado', enabled: true, reason: 'de mentira' }]);
+  } finally {
+    cleanup();
+  }
+});
+
+test('without a credential the sink is skipped with a reason and the run still succeeds', () => {
+  // No other command may depend on this area. A projection that can break a build is a
+  // projection somebody disables, and then the board rots.
+  const { ctx, cleanup, env } = withClickupSink();
+  try {
+    const verdict = clickup.isEnabled(ctx, {});
+    assert.equal(verdict.enabled, false);
+    assert.match(verdict.reason, /CLICKUP_API_TOKEN/);
+
+    // With the token it is enabled, so the refusal is about the credential and nothing else.
+    assert.equal(clickup.isEnabled(ctx, env).enabled, true);
+  } finally {
+    cleanup();
+  }
+});
+
+test('a second projection of an unchanged task makes no remote call at all', async () => {
+  // Engine-level idempotence: the content hash stops the operation before the adapter is
+  // reached, so a scheduled projection over a quiet backlog costs nothing.
+  const { ctx, cleanup } = tempHarness();
+  try {
+    const task = makeTask({ id: 'FEAT-0001' });
+    const hash = contentHash(task);
+    const projected = { ...task, external: { clickup: { id: 'abc', content_hash: hash } } };
+
+    const sink = { id: 'clickup', module: { isEnabled: () => ({ enabled: true, reason: 'ok' }), apply: async () => ({ id: 'abc' }) } };
+    const plan = planFor(ctx, sink, [projected]);
+    assert.deepEqual(plan.map((p) => p.op), ['skip']);
   } finally {
     cleanup();
   }

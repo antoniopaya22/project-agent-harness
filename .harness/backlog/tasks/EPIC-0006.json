@@ -3,7 +3,7 @@
   "id": "EPIC-0006",
   "title": "Proyección del backlog a ClickUp",
   "type": "epic",
-  "status": "backlog",
+  "status": "in_progress",
   "priority": "low",
   "description": "Perfiles no técnicos ven el estado del proyecto sin tocar el repositorio, y nada del núcleo depende de ello.",
   "acceptance_criteria": [
@@ -50,5 +50,5 @@
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-20T20:04:51Z"
+  "updated_at": "2026-08-21T09:12:48Z"
 }

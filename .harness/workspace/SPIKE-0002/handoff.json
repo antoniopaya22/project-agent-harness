@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "SPIKE-0002",
+  "stage": "claimed",
+  "by": "researcher",
+  "branch": "spike/0002-verificar-la-interfaz-de-programacion-de",
+  "summary": "Tarea reclamada por agent:researcher. Rama spike/0002-verificar-la-interfaz-de-programacion-de. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-21T09:12:49Z"
+}

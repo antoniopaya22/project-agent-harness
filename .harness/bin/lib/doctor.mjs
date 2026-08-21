@@ -18,7 +18,7 @@ import { areaFreshness } from './freshness.mjs';
 /** Every check name, so `--only` can validate its argument instead of silently matching nothing. */
 export const CHECKS = [
   'project-schema', 'task-schema', 'backlog', 'index', 'adapters', 'read-path',
-  'areas', 'codemap', 'doc-freshness', 'definitions', 'secrets', 'git-visibility', 'orphans', 'templates',
+  'areas', 'codemap', 'doc-freshness', 'sinks', 'definitions', 'secrets', 'git-visibility', 'orphans', 'templates',
 ];
 
 export function runDoctor(ctx, { fix = false } = {}) {
@@ -179,6 +179,39 @@ export function runDoctor(ctx, { fix = false } = {}) {
         check: 'doc-freshness',
         message: `${row.doc}: ${row.commits} commits en el área desde ${row.verified} (umbral ${row.threshold}). ${row.action}`,
       });
+    }
+  }
+
+  // 8c. every installed sink adapter honours the interface.
+  //
+  // The engine spreads `isEnabled`'s return value into its report, so an adapter that returns a
+  // bare boolean produces a row reading "disabled" with an empty reason and no error anywhere.
+  // That is the whole reason this check exists: the contract failed silently, and silence is
+  // what makes a wrong contract expensive.
+  const sinkRoot = path.join(ctx.harnessDir, 'integrations');
+  if (fs.existsSync(sinkRoot)) {
+    for (const entry of fs.readdirSync(sinkRoot)) {
+      const adapter = path.join(sinkRoot, entry, 'adapter.mjs');
+      if (!fs.existsSync(adapter)) continue;
+      const source = fs.readFileSync(adapter, 'utf8');
+      for (const required of ['isEnabled', 'apply']) {
+        if (!new RegExp(`export (async )?function ${required}\\b`).test(source)) {
+          issues.push({
+            level: 'error',
+            check: 'sinks',
+            message: `integrations/${entry}/adapter.mjs no exporta ${required}: sin él el destino se ignora en silencio`,
+          });
+        }
+      }
+      // Checked textually rather than by importing: `doctor` must not execute an adapter, which
+      // could talk to a network or write to somebody's board just for being looked at.
+      if (/return Boolean\(|return\s+\w+\.enabled\s*&&/.test(source)) {
+        issues.push({
+          level: 'error',
+          check: 'sinks',
+          message: `integrations/${entry}/adapter.mjs: isEnabled parece devolver un booleano; el contrato es { enabled, reason }`,
+        });
+      }
     }
   }
 

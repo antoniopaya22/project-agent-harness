@@ -4,3 +4,4 @@
 {"at":"2026-08-21T09:03:39Z","by":"human","event":"verified","note":"AC2 -> pass"}
 {"at":"2026-08-21T09:04:47Z","by":"harness","event":"status_changed","note":"in_progress -> in_review (finish)"}
 {"at":"2026-08-21T09:04:47Z","by":"harness","event":"committed","note":"feat: Registrar coste y duracion por tarea"}
+{"at":"2026-08-21T09:05:10Z","by":"human","event":"completed","note":"in_review -> done"}

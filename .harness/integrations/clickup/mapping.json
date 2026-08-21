@@ -1,0 +1,34 @@
+{
+  "$comment": "Cómo se traduce un concepto del harness a ClickUp. Editable sin tocar código: añadir un estado o renombrar un campo personalizado es un cambio aquí y nada más. Cada ruta está verificada contra la documentación oficial — ver docs/HARNESS-PLAN.md, sección «La API de ClickUp, verificada».",
+  "status": {
+    "$comment": "Mapeo identidad: la lista destino se crea con estos mismos siete nombres, así que no hay traducción que equivocarse. Si un espacio ya existente usa otros nombres, se cambian aquí.",
+    "backlog": "backlog",
+    "ready": "ready",
+    "in_progress": "in progress",
+    "in_review": "in review",
+    "blocked": "blocked",
+    "done": "complete",
+    "cancelled": "cancelled"
+  },
+  "closed_statuses": ["complete", "cancelled"],
+  "priority": {
+    "$comment": "ClickUp usa 1..4, donde 1 es urgente. Un valor nulo deja la tarjeta sin prioridad.",
+    "critical": 1,
+    "high": 2,
+    "medium": 3,
+    "low": 4
+  },
+  "custom_fields": {
+    "$comment": "Nombre del campo en ClickUp -> qué del harness va dentro. Los identificadores reales los descubre `harness sync` y los guarda en config.json; aquí sólo van nombres, nunca ids ni credenciales.",
+    "Harness ID": "id",
+    "Rama": "branch",
+    "Pull request": "links.pr"
+  },
+  "labels_from": ["type", "labels"],
+  "time_estimate": {
+    "$comment": "El campo `time_estimate` de ClickUp es un entero en MILISEGUNDOS. Verificado en Create Task. Enviar horas aquí produce estimaciones absurdas que nadie relaciona con la causa.",
+    "field": "estimate_hours",
+    "unit": "ms",
+    "multiplier": 3600000
+  }
+}

@@ -2,40 +2,36 @@
 
 # Tablero — project-agent-harness
 
-90 tareas · 9 abiertas · 81 hechas
+90 tareas · 5 abiertas · 85 hechas
 
 | Columna | Tareas |
 |---------|--------|
-| Backlog | 5 |
+| Backlog | 1 |
+| Listas para empezar | 2 |
 | En curso | 2 |
-| En revisión | 2 |
-| Hechas | 81 |
+| Hechas | 85 |
 
-## Backlog (5)
+## Backlog (1)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
 | `CHORE-0003` | Crear la lista destino y sus campos personalizados | low | S | integrations | espera SPIKE-0002, FEAT-0046 · de EPIC-0006 |
-| `EPIC-0006` | Proyección del backlog a ClickUp | low | — | — | — |
+
+## Listas para empezar (2)
+
+| Id | Tarea | Prioridad | Tamaño | Área | Notas |
+|----|-------|-----------|--------|------|-------|
 | `FEAT-0027` | Interfaz de adaptador y tabla de correspondencias | low | M | integrations | espera CHORE-0003, FEAT-0046 · de EPIC-0006 |
 | `FEAT-0028` | Cliente de sincronización en una sola dirección | low | M | integrations | espera FEAT-0027, FEAT-0046 · de EPIC-0006 |
-| `SPIKE-0002` | Verificar la interfaz de programación de ClickUp | low | S | integrations | de EPIC-0006 |
 
 ## En curso (2)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
-| `EPIC-0013` | Preguntas abiertas y medicion honesta | medium | — | — | — |
-| `FEAT-0056` | Registrar coste y duracion por tarea | medium | S | cli | agent:implementer · de EPIC-0013 |
+| `EPIC-0006` | Proyección del backlog a ClickUp | low | — | — | — |
+| `SPIKE-0002` | Verificar la interfaz de programación de ClickUp | low | S | integrations | agent:researcher · de EPIC-0006 |
 
-## En revisión (2)
-
-| Id | Tarea | Prioridad | Tamaño | Área | Notas |
-|----|-------|-----------|--------|------|-------|
-| `SPIKE-0004` | Decidir si una tarea puede pertenecer a varias areas | medium | S | definitions | agent:planner · de EPIC-0013 |
-| `SPIKE-0005` | Como evaluar si un cambio de prompt mejora o empeora | medium | M | definitions | agent:planner · de EPIC-0013 |
-
-## Hechas (81)
+## Hechas (85)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -59,6 +55,7 @@
 | `EPIC-0010` | Anti-podredumbre: que la estructura se defienda sola | high | — | — | — |
 | `EPIC-0011` | Proyeccion del backlog a GitHub | high | — | — | — |
 | `EPIC-0012` | Ergonomia y huecos del dia a dia | high | — | — | — |
+| `EPIC-0013` | Preguntas abiertas y medicion honesta | medium | — | — | — |
 | `FEAT-0001` | Esquema JSON de tarea | critical | M | definitions | agent:implementer · de EPIC-0001 |
 | `FEAT-0002` | Esquema JSON de proyecto y configuración de ejemplo | critical | M | definitions | agent:implementer · de EPIC-0001 |
 | `FEAT-0003` | Ejecutable principal y equivalentes para PowerShell y POSIX | critical | M | cli | agent:implementer · de EPIC-0002 |
@@ -112,6 +109,7 @@
 | `FEAT-0053` | Buscar que tareas tocan una ruta | medium | XS | cli | agent:implementer · de EPIC-0012 |
 | `FEAT-0054` | Importar incidencias existentes como tareas | medium | S | cli | agent:implementer · de EPIC-0012 |
 | `FEAT-0055` | Tiempo de ciclo en el informe de situacion | low | S | cli | agent:implementer · de EPIC-0012 |
+| `FEAT-0056` | Registrar coste y duracion por tarea | medium | S | cli | agent:implementer · de EPIC-0013 |
 | `FIX-0001` | El CLI llegaba incompleto al repositorio remoto | critical | — | cli | agent:implementer |
 | `FIX-0002` | Las opciones repetidas se descartaban en silencio | high | — | cli | agent:implementer |
 | `FIX-0003` | El emparejado de rutas fallaba fuera de Windows | high | — | cli | agent:implementer |
@@ -120,6 +118,8 @@
 | `RFCT-0002` | Los comandos referencian a los agentes en vez de reescribirlos | high | M | definitions | agent:implementer · de EPIC-0008 |
 | `SPIKE-0001` | Verificar los formatos reales de Cursor y de Copilot | low | S | adapters | agent:researcher · de EPIC-0005 |
 | `SPIKE-0003` | Verificar la interfaz de programacion de proyectos y sub-issues | high | S | integrations | agent:researcher · de EPIC-0011 |
+| `SPIKE-0004` | Decidir si una tarea puede pertenecer a varias areas | medium | S | definitions | agent:planner · de EPIC-0013 |
+| `SPIKE-0005` | Como evaluar si un cambio de prompt mejora o empeora | medium | M | definitions | agent:planner · de EPIC-0013 |
 
 ---
 
