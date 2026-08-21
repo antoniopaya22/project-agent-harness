@@ -3,3 +3,4 @@
 {"at":"2026-08-21T08:26:39Z","by":"human","event":"verified","note":"AC1 -> pass"}
 {"at":"2026-08-21T08:26:39Z","by":"human","event":"verified","note":"AC2 -> pass"}
 {"at":"2026-08-21T08:26:57Z","by":"implementer","event":"status_changed","note":"in_progress -> in_review"}
+{"at":"2026-08-21T08:27:42Z","by":"human","event":"completed","note":"in_review -> done"}

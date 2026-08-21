@@ -2,6 +2,7 @@
 area: definitions
 updated: 2026-08-18
 owner: Antonio Payá
+verified_commit: a85a96155978
 ---
 
 # Área: Definiciones canónicas

@@ -103,6 +103,16 @@ Update the handoff to `verified`.
 Invoke the **scribe** with the diff. It updates only the docs the change invalidated, then runs
 `harness doctor` to confirm the codemap still tells the truth.
 
+Then record what the task made you read that it did not name:
+
+```bash
+node .harness/bin/harness.mjs read-log add $1 --file <ruta> --file <ruta>
+```
+
+Files the task already listed are dropped automatically, so list what you actually opened. This is the
+only evidence that grooming does what this harness claims it does; skip it and the claim stays a
+belief. It is also the one stage whose value is entirely in somebody else's future task.
+
 ## 9 — Review
 
 Invoke the **reviewer**. Address every blocking finding (that means going back to stage 6 for those
@@ -112,12 +122,12 @@ edits. Update the handoff to `reviewed`.
 ## 10 — Close
 
 ```bash
-node .harness/bin/harness.mjs task set-status $1 in_review --as tester
-node .harness/bin/harness.mjs commit --task $1
+node .harness/bin/harness.mjs finish $1
 ```
 
-`commit` pushes to the task branch and — because the task is now `in_review` — opens the pull
-request. Then report:
+One call: criteria, gates, documents, status, commit. It stops at the first failure and says which,
+and nothing after a failed stage runs. It pushes to the task branch and — because the task reaches
+`in_review` — opens the pull request. Then report:
 
 - what changed, in one screen;
 - the criteria table with verdicts;

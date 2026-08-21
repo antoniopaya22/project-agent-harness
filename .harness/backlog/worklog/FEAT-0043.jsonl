@@ -1,3 +1,8 @@
 {"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
 {"at":"2026-08-20T15:40:18Z","by":"human","event":"status_changed","note":"depends_on=FEAT-0031"}
 {"at":"2026-08-20T16:07:56Z","by":"human","event":"verified","note":"baseline: AC1=fail AC2=fail"}
+{"at":"2026-08-21T08:37:58Z","by":"implementer","event":"claimed","note":"branch feat/0043-realimentacion-sobre-la-calidad-del-refinamiento"}
+{"at":"2026-08-21T08:37:58Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-21T08:37:58Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-21T08:37:58Z","by":"human","event":"verified","note":"AC3 -> pass"}
+{"at":"2026-08-21T08:38:18Z","by":"implementer","event":"status_changed","note":"in_progress -> in_review"}

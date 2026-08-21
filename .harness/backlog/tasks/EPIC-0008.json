@@ -3,7 +3,7 @@
   "id": "EPIC-0008",
   "title": "Eficiencia del camino de lectura en frío",
   "type": "epic",
-  "status": "in_progress",
+  "status": "done",
   "priority": "critical",
   "description": "Reducir lo que un agente paga en contexto y en llamadas de herramienta para llegar a trabajar. Es la tesis central del harness, y hoy está medida con la regla equivocada.",
   "acceptance_criteria": [
@@ -51,5 +51,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-21T08:26:30Z"
+  "updated_at": "2026-08-21T08:27:42Z"
 }
