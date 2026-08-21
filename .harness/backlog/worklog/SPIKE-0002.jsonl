@@ -5,3 +5,4 @@
 {"at":"2026-08-21T09:12:48Z","by":"researcher","event":"claimed","note":"branch spike/0002-verificar-la-interfaz-de-programacion-de"}
 {"at":"2026-08-21T09:12:49Z","by":"human","event":"verified","note":"AC1 -> pass"}
 {"at":"2026-08-21T09:13:31Z","by":"harness","event":"status_changed","note":"in_progress -> in_review (finish)"}
+{"at":"2026-08-21T09:13:32Z","by":"harness","event":"committed","note":"spike(docs): Verificar la interfaz de programación de ClickUp"}

@@ -38,9 +38,11 @@
   "claimed_at": "2026-08-21T09:12:48Z",
   "branch": "spike/0002-verificar-la-interfaz-de-programacion-de",
   "links": {
-    "pr": null,
+    "pr": "https://github.com/antoniopaya22/project-agent-harness/pull/105",
     "issue": null,
-    "commits": []
+    "commits": [
+      "d38e9f648e31"
+    ]
   },
   "external": {
     "github": {
@@ -55,5 +57,5 @@
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-21T09:13:31Z"
+  "updated_at": "2026-08-21T09:13:37Z"
 }
