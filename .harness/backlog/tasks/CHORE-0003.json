@@ -3,7 +3,7 @@
   "id": "CHORE-0003",
   "title": "Crear la lista destino y sus campos personalizados",
   "type": "chore",
-  "status": "backlog",
+  "status": "blocked",
   "priority": "low",
   "size": "S",
   "parent": "EPIC-0006",
@@ -38,6 +38,7 @@
     "SPIKE-0002",
     "FEAT-0046"
   ],
+  "blocked_reason": "Requiere crear una lista en el ClickUp de la empresa: hace falta un CLICKUP_API_TOKEN que no esta en este entorno, y es una escritura en el espacio de trabajo del usuario, no algo que deba hacer un agente por su cuenta. El adaptador y su mapeo ya estan escritos y probados contra un fetch falso (tests/clickup.test.mjs, 19 casos). Para desbloquear: (1) crear la lista destino con los siete estados del harness -backlog, ready, in progress, in review, blocked, complete, cancelled- marcando complete y cancelled como cerrados; (2) crear los tres campos personalizados Harness ID (texto), Rama (texto) y Pull request (URL); (3) anotar list_id y los ids de campo en .harness/integrations/clickup/config.json y poner enabled a true; (4) poner CLICKUP_API_TOKEN en .env. Sin verificar todavia: si la lista se puede crear con estados propios en una sola llamada a la API, que es lo que decide si los pasos 1 y 2 se pueden automatizar.",
   "labels": [],
   "assignee": null,
   "claimed_at": null,
@@ -60,5 +61,5 @@
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-20T20:04:21Z"
+  "updated_at": "2026-08-21T09:14:08Z"
 }

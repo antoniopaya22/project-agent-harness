@@ -2,36 +2,29 @@
 
 # Tablero — project-agent-harness
 
-90 tareas · 5 abiertas · 85 hechas
+90 tareas · 4 abiertas · 86 hechas
 
 | Columna | Tareas |
 |---------|--------|
-| Backlog | 1 |
-| Listas para empezar | 2 |
-| En curso | 2 |
-| Hechas | 85 |
+| Listas para empezar | 3 |
+| Bloqueadas | 1 |
+| Hechas | 86 |
 
-## Backlog (1)
-
-| Id | Tarea | Prioridad | Tamaño | Área | Notas |
-|----|-------|-----------|--------|------|-------|
-| `CHORE-0003` | Crear la lista destino y sus campos personalizados | low | S | integrations | espera SPIKE-0002, FEAT-0046 · de EPIC-0006 |
-
-## Listas para empezar (2)
-
-| Id | Tarea | Prioridad | Tamaño | Área | Notas |
-|----|-------|-----------|--------|------|-------|
-| `FEAT-0027` | Interfaz de adaptador y tabla de correspondencias | low | M | integrations | espera CHORE-0003, FEAT-0046 · de EPIC-0006 |
-| `FEAT-0028` | Cliente de sincronización en una sola dirección | low | M | integrations | espera FEAT-0027, FEAT-0046 · de EPIC-0006 |
-
-## En curso (2)
+## Listas para empezar (3)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
 | `EPIC-0006` | Proyección del backlog a ClickUp | low | — | — | — |
-| `SPIKE-0002` | Verificar la interfaz de programación de ClickUp | low | S | integrations | agent:researcher · de EPIC-0006 |
+| `FEAT-0027` | Interfaz de adaptador y tabla de correspondencias | low | M | integrations | espera CHORE-0003, FEAT-0046 · de EPIC-0006 |
+| `FEAT-0028` | Cliente de sincronización en una sola dirección | low | M | integrations | espera FEAT-0027, FEAT-0046 · de EPIC-0006 |
 
-## Hechas (85)
+## Bloqueadas (1)
+
+| Id | Tarea | Prioridad | Tamaño | Área | Notas |
+|----|-------|-----------|--------|------|-------|
+| `CHORE-0003` | Crear la lista destino y sus campos personalizados | low | S | integrations | de EPIC-0006 |
+
+## Hechas (86)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -117,6 +110,7 @@
 | `RFCT-0001` | Sacar el historial de trabajo del fichero de tarea | high | S | cli | agent:implementer · de EPIC-0008 |
 | `RFCT-0002` | Los comandos referencian a los agentes en vez de reescribirlos | high | M | definitions | agent:implementer · de EPIC-0008 |
 | `SPIKE-0001` | Verificar los formatos reales de Cursor y de Copilot | low | S | adapters | agent:researcher · de EPIC-0005 |
+| `SPIKE-0002` | Verificar la interfaz de programación de ClickUp | low | S | integrations | agent:researcher · de EPIC-0006 |
 | `SPIKE-0003` | Verificar la interfaz de programacion de proyectos y sub-issues | high | S | integrations | agent:researcher · de EPIC-0011 |
 | `SPIKE-0004` | Decidir si una tarea puede pertenecer a varias areas | medium | S | definitions | agent:planner · de EPIC-0013 |
 | `SPIKE-0005` | Como evaluar si un cambio de prompt mejora o empeora | medium | M | definitions | agent:planner · de EPIC-0013 |
