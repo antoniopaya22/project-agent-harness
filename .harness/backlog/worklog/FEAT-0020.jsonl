@@ -1,2 +1,7 @@
 {"at":"2026-08-18T19:00:00Z","by":"harness","event":"created","note":"sembrada desde docs/HARNESS-PLAN.md §12"}
 {"at":"2026-08-18T18:05:20Z","by":"human","event":"status_changed","note":"depends_on=FEAT-0019"}
+{"at":"2026-08-21T08:06:19Z","by":"implementer","event":"claimed","note":"branch feat/0020-aplicacion-de-la-estructura-y-verificacion"}
+{"at":"2026-08-21T08:07:19Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-21T08:07:19Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-21T08:07:19Z","by":"human","event":"verified","note":"AC3 -> pass"}
+{"at":"2026-08-21T08:08:36Z","by":"implementer","event":"status_changed","note":"in_progress -> in_review"}

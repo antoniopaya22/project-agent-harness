@@ -8,3 +8,5 @@
 {"at":"2026-08-21T08:01:41Z","by":"human","event":"verified","note":"AC1 -> pass"}
 {"at":"2026-08-21T08:01:41Z","by":"human","event":"verified","note":"AC2 -> pass"}
 {"at":"2026-08-21T08:04:30Z","by":"implementer","event":"status_changed","note":"in_progress -> in_review"}
+{"at":"2026-08-21T08:04:47Z","by":"harness","event":"committed","note":"feat(cli): Inferencia y propuesta de adopción"}
+{"at":"2026-08-21T08:06:07Z","by":"human","event":"completed","note":"in_review -> done"}

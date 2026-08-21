@@ -33,6 +33,11 @@ dependa de la buena voluntad de un modelo.
 | Situación | `lib/status.mjs` | Una pantalla, incluida la deriva |
 | Generación | `lib/generate.mjs` | Proyección a adaptadores |
 | Actor | `lib/actor.mjs` | Humano vs. agente |
+| Comandos de adopción | `lib/adopt-cmd.mjs` | `init`, `survey`, `interview`, `propose`, `apply`, `layouts`, `restructure` |
+| Reconocimiento | `lib/survey.mjs` | Qué contiene un proyecto, con evidencia, sin escribir nada |
+| Entrevista | `lib/interview.mjs` | Lo que el código no puede responder, persistido entre ejecuciones |
+| Propuesta | `lib/proposal.mjs` | Un único fichero revisable, cada afirmación con respaldo |
+| Aplicación | `lib/apply.mjs` | Siembra el backlog y comprueba que los gates arrancan de verdad |
 
 ## Flujo principal
 
@@ -74,6 +79,15 @@ taskSchema }`. No hay estado global.
   silenciosamente. Si añades una palabra clave a un esquema, añádela también a `KNOWN`.
 - `slugify` normaliza acentos; los títulos en español producen ramas ASCII limpias. No cambies eso sin
   mirar `idFromBranch`, que es su inversa.
+- **El shell no distingue «falló» de «no arrancó»**: se come el ENOENT, sale con un código propio (1 en
+  `cmd.exe`, no el 127 de POSIX) y lo explica **en el idioma del usuario**. Ni el código ni el mensaje
+  sirven como señal. Por eso `gateBaseline` resuelve el ejecutable contra el `PATH` antes de ejecutar,
+  con `resolveExecutable`. Lo que sigue siendo indetectable es un fallo *envuelto* (`npm run lint` con
+  npm instalado y la herramienta de dentro no): eso se queda en `fail` y el gate sigue configurado,
+  porque perder una red de seguridad que funciona es el error más caro de los dos.
+- **`import.meta.dirname` cambia de profundidad al mover un fichero.** `init` localiza la plantilla
+  subiendo desde su propio directorio; al pasar de `bin/` a `bin/lib/` hubo que añadir un `..`. Lo
+  detectó la prueba de adopción de punta a punta, no el linter ni el autodiagnóstico.
 
 ## Cómo añadir algo nuevo aquí
 
