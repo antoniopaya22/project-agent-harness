@@ -244,19 +244,6 @@ export function doCommit(ctx, opts = {}) {
       task.links.pr = pr.url;
       ok(`pull request: ${pr.url}`);
 
-      // The link is learnt after the commit that carries the work, so without this it stays
-      // in the working tree: the branch never records its own PR, the repository is left
-      // dirty, and the next `git checkout` refuses. A follow-up commit rather than an amend,
-      // because the branch is already pushed and this command never force-pushes.
-      save(ctx, task);
-      git.git(ctx, ['add', '--', path.relative(ctx.root, taskFile(ctx, task.id))], { allowFail: true });
-      const staged = git.git(ctx, ['diff', '--cached', '--name-only'], { allowFail: true });
-      if (staged.code === 0 && staged.out.trim()) {
-        git.git(ctx, ['commit', '-m', `chore(${task.id}): registrar la pull request en la tarea`], { allowFail: true });
-        const pushed = git.git(ctx, ['push'], { allowFail: true });
-        if (pushed.code === 0) ok('enlace de la PR registrado en la tarea');
-        else warn('el enlace de la PR quedó en un commit sin subir: haz `git push`');
-      }
     } else if (pr.manualUrl) {
       warn(`gh not available — open the PR here:\n   ${pr.manualUrl}`);
     }
@@ -266,7 +253,43 @@ export function doCommit(ctx, opts = {}) {
   }
 
   save(ctx, task);
+  recordAfterCommit(ctx, task, report);
   return report;
+}
+
+/**
+ * Commits what `commit` itself wrote *after* the commit.
+ *
+ * Three things can only be known once the commit exists: its hash, the worklog entry for it,
+ * and the pull request url. Writing them and stopping left the working tree dirty every
+ * single time — the branch never recorded its own PR, and the next `git checkout` refused to
+ * switch, which is how three merges in a row needed a manual stash.
+ *
+ * A follow-up commit rather than an amend, because the branch is already pushed and this
+ * command never force-pushes. Its own hash is not recorded anywhere, deliberately: chasing
+ * that tail never terminates, and a bookkeeping commit is not part of the work.
+ */
+export function recordAfterCommit(ctx, task, report) {
+  if (!report.committed) return;
+
+  const paths = [
+    toPosixPath(path.relative(ctx.root, taskFile(ctx, task.id))),
+    toPosixPath(path.relative(ctx.root, path.join(ctx.harnessDir, 'backlog', 'worklog', `${task.id}.jsonl`))),
+  ].filter((p) => fs.existsSync(path.join(ctx.root, p)));
+
+  git.git(ctx, ['add', '--', ...paths], { allowFail: true });
+  const staged = git.git(ctx, ['diff', '--cached', '--name-only'], { allowFail: true });
+  if (staged.code !== 0 || !staged.out.trim()) return;
+
+  const what = report.pr ? 'la pull request y el commit' : 'el commit';
+  git.git(ctx, ['commit', '-m', `chore(${task.id}): registrar ${what} en la tarea`], { allowFail: true });
+  if (!report.pushed) {
+    info('el registro quedó en un commit sin subir');
+    return;
+  }
+  const pushed = git.git(ctx, ['push'], { allowFail: true });
+  if (pushed.code === 0) ok(`registro de ${what} subido`);
+  else warn('el registro quedó en un commit sin subir: haz `git push`');
 }
 
 export function openPullRequest(ctx, task, { draft = false } = {}) {

@@ -1135,7 +1135,7 @@
       "depends_on": [],
       "blocked": false,
       "assignee": "agent:implementer",
-      "branch": "feat/0054-importar-incidencias-existentes-como-tareas"
+      "branch": "feat/0051-la-siguiente-tarea-se-elige-por"
     },
     {
       "id": "FEAT-0055",
