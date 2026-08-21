@@ -1,15 +1,15 @@
 {
   "harness_version": "1.1.0",
   "counts": {
-    "backlog": 1,
-    "ready": 2,
-    "in_progress": 2,
+    "backlog": 0,
+    "ready": 3,
+    "in_progress": 0,
     "in_review": 0,
-    "blocked": 0,
-    "done": 85,
+    "blocked": 1,
+    "done": 86,
     "cancelled": 0,
     "total": 90,
-    "open": 5
+    "open": 4
   },
   "next": null,
   "tasks": [
@@ -48,7 +48,7 @@
       "id": "CHORE-0003",
       "title": "Crear la lista destino y sus campos personalizados",
       "type": "chore",
-      "status": "backlog",
+      "status": "blocked",
       "priority": "low",
       "size": "S",
       "area": "integrations",
@@ -57,7 +57,7 @@
         "SPIKE-0002",
         "FEAT-0046"
       ],
-      "blocked": true,
+      "blocked": false,
       "assignee": null,
       "branch": null
     },
@@ -233,7 +233,7 @@
       "id": "EPIC-0006",
       "title": "Proyección del backlog a ClickUp",
       "type": "epic",
-      "status": "in_progress",
+      "status": "ready",
       "priority": "low",
       "size": null,
       "area": null,
@@ -1267,7 +1267,7 @@
       "id": "SPIKE-0002",
       "title": "Verificar la interfaz de programación de ClickUp",
       "type": "spike",
-      "status": "in_progress",
+      "status": "done",
       "priority": "low",
       "size": "S",
       "area": "integrations",

@@ -3,7 +3,7 @@
   "id": "SPIKE-0002",
   "title": "Verificar la interfaz de programación de ClickUp",
   "type": "spike",
-  "status": "in_review",
+  "status": "done",
   "priority": "low",
   "size": "S",
   "parent": "EPIC-0006",
@@ -57,5 +57,5 @@
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-21T09:13:37Z"
+  "updated_at": "2026-08-21T09:13:48Z"
 }

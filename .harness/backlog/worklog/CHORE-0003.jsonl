@@ -2,3 +2,4 @@
 {"at":"2026-08-18T18:05:21Z","by":"human","event":"status_changed","note":"depends_on=SPIKE-0002"}
 {"at":"2026-08-20T15:40:18Z","by":"human","event":"status_changed","note":"priority=low"}
 {"at":"2026-08-20T15:40:18Z","by":"human","event":"status_changed","note":"depends_on=FEAT-0046"}
+{"at":"2026-08-21T09:14:08Z","by":"human","event":"status_changed","note":"backlog -> blocked"}
