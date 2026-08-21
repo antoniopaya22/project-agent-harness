@@ -55,9 +55,11 @@
   "claimed_at": "2026-08-21T08:06:19Z",
   "branch": "feat/0020-aplicacion-de-la-estructura-y-verificacion",
   "links": {
-    "pr": null,
+    "pr": "https://github.com/antoniopaya22/project-agent-harness/pull/96",
     "issue": null,
-    "commits": []
+    "commits": [
+      "5adde9f576d1"
+    ]
   },
   "external": {
     "github": {
@@ -72,5 +74,5 @@
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-21T08:08:36Z"
+  "updated_at": "2026-08-21T08:08:59Z"
 }
