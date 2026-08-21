@@ -2,7 +2,7 @@
 area: cli
 updated: 2026-08-18
 owner: Antonio Payá
-verified_commit: a85a96155978
+verified_commit: 9921b8dd25f5
 ---
 
 # Área: CLI
@@ -70,6 +70,10 @@ taskSchema }`. No hay estado global.
 
 ## Trampas conocidas
 
+- **Una flag desconocida se rechaza, no se ignora.** `parseArgs` recoge lo que le den, así que una errata
+  desaparecía en silencio: nueve criterios se registraron con `--note`, que nada consume — OK por pantalla
+  y la evidencia a ningún sitio. Un subcomando declara las suyas con `rejectUnknownFlags(flags, ['x'],
+  usage)`; las globales van solas.
 - **Una flag repetida acumula en un array**, así que `--file a --file b` conserva las dos. Con una sola
   aparición sigue siendo un escalar, y por eso los subcomandos que aceptan repetición la envuelven con
   `[].concat(flags.x || [])` y los que no comprueban `typeof flags.x === 'string'`. Si mezclas las dos
@@ -86,12 +90,11 @@ taskSchema }`. No hay estado global.
   silenciosamente. Si añades una palabra clave a un esquema, añádela también a `KNOWN`.
 - `slugify` normaliza acentos; los títulos en español producen ramas ASCII limpias. No cambies eso sin
   mirar `idFromBranch`, que es su inversa.
-- **El shell no distingue «falló» de «no arrancó»**: se come el ENOENT, sale con un código propio (1 en
-  `cmd.exe`, no el 127 de POSIX) y lo explica **en el idioma del usuario**. Ni el código ni el mensaje
-  sirven como señal. Por eso `gateBaseline` resuelve el ejecutable contra el `PATH` antes de ejecutar,
-  con `resolveExecutable`. Lo que sigue siendo indetectable es un fallo *envuelto* (`npm run lint` con
-  npm instalado y la herramienta de dentro no): eso se queda en `fail` y el gate sigue configurado,
-  porque perder una red de seguridad que funciona es el error más caro de los dos.
+- **El shell no distingue «falló» de «no arrancó»**: se come el ENOENT, sale con código propio (1 en
+  `cmd.exe`, no el 127 de POSIX) y lo explica **en el idioma del usuario**. Por eso `gateBaseline` resuelve
+  el ejecutable contra el `PATH` antes de ejecutar (`resolveExecutable`). Un fallo *envuelto* (`npm run
+  lint` con npm instalado y su herramienta no) sigue siendo indetectable: se queda en `fail` y el gate
+  sigue configurado, porque perder una red de seguridad que funciona es el error más caro.
 - **Derivado se regenera, generado se comprueba.** `finish` regenera el índice y el tablero sin
   preguntar, porque salen de los ficheros de tarea y no hay criterio humano dentro; en cambio la deriva
   de los adaptadores sí rehúsa, porque ahí puede haber ediciones a mano que merezca la pena ver. Negarse
@@ -99,9 +102,9 @@ taskSchema }`. No hay estado global.
   se abandone.
 - **`allocateId` cuenta los ficheros que hay en disco**, así que un lote de tareas construido antes de
   escribir ninguna reparte el mismo id dos veces. `import` las escribe de una en una por eso.
-- **Importar la propia proyección crea un bucle.** `sync` escribe incidencias tituladas `FEAT-0042 · …`
-  con un marcador en el cuerpo; `import` las reconoce y las salta. El bucle no se ve en la salida hasta
-  que el backlog se ha duplicado, así que la comprobación va en el código, no en el prompt.
+- **Importar la propia proyección crea un bucle.** `sync` escribe incidencias `FEAT-0042 · …` con un
+  marcador en el cuerpo; `import` las salta. No se nota hasta que el backlog se ha duplicado, así que la
+  comprobación va en el código y no en el prompt.
 
 ## Cómo añadir algo nuevo aquí
 

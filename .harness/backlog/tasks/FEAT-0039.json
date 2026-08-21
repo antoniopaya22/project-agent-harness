@@ -3,7 +3,7 @@
   "id": "FEAT-0039",
   "title": "Bloquear la edicion de ficheros generados con automatismos del proveedor",
   "type": "feature",
-  "status": "ready",
+  "status": "in_review",
   "priority": "high",
   "size": "M",
   "parent": "EPIC-0009",
@@ -16,7 +16,8 @@
         "type": "manual",
         "run": null
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "exit 2 y veredicto deny al editar un fichero generado, con el mensaje diciendo donde esta la fuente real. tests/hooks.test.mjs caso 1."
     },
     {
       "id": "AC2",
@@ -25,7 +26,8 @@
         "type": "manual",
         "run": null
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "PostToolUse sobre un fichero de tarea valida contra el esquema e informa sin arreglar. tests/hooks.test.mjs casos 8 y 9."
     },
     {
       "id": "AC3",
@@ -34,8 +36,9 @@
         "type": "manual",
         "run": null
       },
-      "status": "pending",
-      "baseline": "pass"
+      "status": "pass",
+      "baseline": "pass",
+      "evidence": "Los hooks se generan desde project.json (seccion hooks) a .claude/settings.json; el guard bloquea los 29 ficheros que devuelve plan(ctx). Verificado invocando el guard directamente: tests/hooks.test.mjs casos 1, 10 y 11, y tests/generate.test.mjs 'the guard blocks every path generate would overwrite'. NO verificado: que Claude Code cargue el hook en vivo, porque los settings se leen al arrancar la sesion y este fichero se acaba de crear."
     }
   ],
   "context": {
@@ -48,13 +51,18 @@
   "labels": [
     "mejora"
   ],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-21T08:44:33Z",
+  "branch": "feat/0039-bloquear-la-edicion-de-ficheros-generados",
   "links": {
-    "pr": null,
+    "pr": "https://github.com/antoniopaya22/project-agent-harness/pull/102",
     "issue": null,
-    "commits": []
+    "commits": [
+      "ebd7cea64ddd"
+    ]
   },
   "external": {
     "github": {
@@ -69,5 +77,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T18:39:22Z"
+  "updated_at": "2026-08-21T08:48:53Z"
 }

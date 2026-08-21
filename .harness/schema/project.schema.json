@@ -285,6 +285,22 @@
           "description": "How many times implementation may go round after a failed verification before stopping for a human. The right number depends on the project, so it is not a sentence in a prompt."
         }
       }
+    },
+    "hooks": {
+      "description": "Provider automation for the hard rules. The policy lives here; each provider gets a projection of it.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "false disables the projection entirely; the rules stay written but nothing enforces them."
+        }
+      }
+    },
+    "doc_freshness_threshold": {
+      "description": "How many commits an area may take before doctor calls its document stale.",
+      "type": "integer",
+      "minimum": 1
     }
   },
   "$defs": {

@@ -329,3 +329,35 @@ export function generatedHeader(sourceLabel, comment = 'html') {
   if (comment === 'html') return `<!-- ${text} -->`;
   return `# ${text}`;
 }
+
+/** Flags every command accepts, so a subcommand only has to declare its own. */
+export const GLOBAL_FLAGS = ['as', 'json', 'quiet', 'force', 'help'];
+
+/**
+ * Refuses a flag nobody reads.
+ *
+ * `parseArgs` collects whatever it is given, so a misspelling — or a flag that simply does not
+ * exist — used to be dropped without a word. That is how eight acceptance criteria in this
+ * repository ended up recorded with `--note`, which nothing consumes: the command printed OK,
+ * the evidence went nowhere, and the criteria read as verified.
+ *
+ * The failure is silent, which is what makes it worth an exit code. A typo costs one retry; a
+ * flag that vanishes costs whatever was riding on it.
+ */
+export function rejectUnknownFlags(flags, known, usage) {
+  const allowed = new Set([...known, ...GLOBAL_FLAGS]);
+  const unknown = Object.keys(flags).filter((f) => !allowed.has(f));
+  if (unknown.length === 0) return;
+  const near = (bad) => {
+    // Only an obvious neighbour is suggested. A wrong guess reads as authoritative and sends
+    // somebody down the wrong path, which is worse than no suggestion at all.
+    const hit = [...allowed].find((k) => k.startsWith(bad.slice(0, 3)) || bad.startsWith(k.slice(0, 3)));
+    return hit ? ` (¿querías --${hit}?)` : '';
+  };
+  fail(
+    `flag${unknown.length > 1 ? 's' : ''} desconocida${unknown.length > 1 ? 's' : ''}: ` +
+      unknown.map((f) => `--${f}${near(f)}`).join(', ') +
+      `\n   ${usage}`,
+    EXIT.USAGE,
+  );
+}

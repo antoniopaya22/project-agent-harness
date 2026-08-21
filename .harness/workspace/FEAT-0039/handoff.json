@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "FEAT-0039",
+  "stage": "claimed",
+  "by": "implementer",
+  "branch": "feat/0039-bloquear-la-edicion-de-ficheros-generados",
+  "summary": "Tarea reclamada por agent:implementer. Rama feat/0039-bloquear-la-edicion-de-ficheros-generados. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-21T08:44:34Z"
+}

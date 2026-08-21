@@ -3,7 +3,7 @@
   "id": "EPIC-0009",
   "title": "Mecanismos en lugar de instrucciones",
   "type": "epic",
-  "status": "ready",
+  "status": "in_progress",
   "priority": "critical",
   "description": "Cada vez que un prompt dice \"fijate en X\" hay una oportunidad de convertirlo en un codigo de salida. Lo que depende de que un modelo se acuerde, tarde o temprano falla.",
   "acceptance_criteria": [
@@ -51,5 +51,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T20:04:59Z"
+  "updated_at": "2026-08-21T08:44:33Z"
 }

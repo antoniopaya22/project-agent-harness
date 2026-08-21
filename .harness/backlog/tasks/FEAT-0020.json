@@ -34,7 +34,8 @@
         "type": "review",
         "run": null
       },
-      "status": "pass"
+      "status": "pass",
+      "evidence": "ruff ausente del PATH degrada lint a not-configured y apply sale con 1; un test que ejecuta y falla sigue configured. tests/adopt.test.mjs casos 23 y 24."
     }
   ],
   "context": {
@@ -74,5 +75,5 @@
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-21T08:09:53Z"
+  "updated_at": "2026-08-21T08:46:37Z"
 }
