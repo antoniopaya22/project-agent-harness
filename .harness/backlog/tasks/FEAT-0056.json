@@ -45,9 +45,11 @@
   "claimed_at": "2026-08-21T09:03:38Z",
   "branch": "feat/0056-registrar-coste-y-duracion-por-tarea",
   "links": {
-    "pr": null,
+    "pr": "https://github.com/antoniopaya22/project-agent-harness/pull/104",
     "issue": null,
-    "commits": []
+    "commits": [
+      "133823af0b2d"
+    ]
   },
   "external": {
     "github": {
@@ -62,5 +64,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-21T09:04:47Z"
+  "updated_at": "2026-08-21T09:04:51Z"
 }
