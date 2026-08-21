@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "FIX-0004",
+  "stage": "claimed",
+  "by": "implementer",
+  "branch": "fix/0004-el-tablero-externo-se-quedaba-atras",
+  "summary": "Tarea reclamada por agent:implementer. Rama fix/0004-el-tablero-externo-se-quedaba-atras. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-21T07:37:58Z"
+}

@@ -71,12 +71,34 @@ export function hasGh(ctx) {
   return gh(ctx, ['--version'], { allowFail: true }).code === 0;
 }
 
-/** Does the current credential carry the `project` scope? */
-export function hasProjectScope(ctx) {
-  const res = gh(ctx, ['api', 'graphql', '-f', 'query={viewer{login}}'], { allowFail: true });
-  if (res.code !== 0) return false;
-  const probe = gh(ctx, ['api', 'graphql', '-f', 'query={viewer{projectsV2(first:1){totalCount}}}'], { allowFail: true });
-  return probe.code === 0;
+/**
+ * Can this credential reach *that* board?
+ *
+ * The first version asked whether the caller could read its own projects. Actions'
+ * GITHUB_TOKEN passes that — the bot's own empty list reads fine — and then every board
+ * write failed one task at a time with "Resource not accessible by integration". The only
+ * probe worth making is against the resource actually being written.
+ */
+export function canReachProject(ctx, project) {
+  if (!project?.owner || !project?.number) return { ok: false, reason: 'no project configured' };
+  try {
+    discoverProject(ctx, project);
+    return { ok: true, reason: null };
+  } catch (e) {
+    return { ok: false, reason: classifyProjectError(e.message) };
+  }
+}
+
+export const DENIED_HINT =
+  'the credential cannot reach the board (locally: gh auth refresh -s project; in CI: a PAT in HARNESS_PROJECT_TOKEN)';
+
+/**
+ * A permission problem and a configuration mistake need different answers, so they are told
+ * apart rather than reported as one vague failure.
+ */
+export function classifyProjectError(message) {
+  const denied = /not accessible|resource not accessible|insufficient|scope|forbidden|401|403/i.test(String(message));
+  return denied ? DENIED_HINT : String(message);
 }
 
 export function isEnabled(ctx) {
@@ -242,15 +264,13 @@ export function prepare(ctx, { dryRun = false } = {}) {
     projectDisabledReason = 'no project configured in integrations/github/config.json';
     return;
   }
-  if (!hasProjectScope(ctx)) {
-    // The honest degradation: issues still project, the board is skipped with a reason.
-    projectDisabledReason = 'the credential has no `project` scope (gh auth refresh -s project, or a PAT in CI)';
-    return;
-  }
+  // Finding out what we can do belongs here, once — not in the writes, one failure per task.
   // A dry run discovers too: the queries are read-only, and a plan that could not see the
   // board would report nothing to do for every task already missing from it.
-  if (cfg.project.project_id && cfg.project.status_field_id) {
-    projectIds = cfg.project;
+  const reach = canReachProject(ctx, cfg.project);
+  if (!reach.ok) {
+    // The honest degradation: issues still project, the board is skipped with a reason.
+    projectDisabledReason = reach.reason;
     return;
   }
   projectIds = { ...cfg.project, ...discoverProject(ctx, cfg.project) };
