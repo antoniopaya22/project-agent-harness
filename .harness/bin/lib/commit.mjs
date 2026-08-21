@@ -243,20 +243,7 @@ export function doCommit(ctx, opts = {}) {
     if (pr.url) {
       task.links.pr = pr.url;
       ok(`pull request: ${pr.url}`);
-
-      // The link is learnt after the commit that carries the work, so without this it stays
-      // in the working tree: the branch never records its own PR, the repository is left
-      // dirty, and the next `git checkout` refuses. A follow-up commit rather than an amend,
-      // because the branch is already pushed and this command never force-pushes.
-      save(ctx, task);
-      git.git(ctx, ['add', '--', path.relative(ctx.root, taskFile(ctx, task.id))], { allowFail: true });
-      const staged = git.git(ctx, ['diff', '--cached', '--name-only'], { allowFail: true });
-      if (staged.code === 0 && staged.out.trim()) {
-        git.git(ctx, ['commit', '-m', `chore(${task.id}): registrar la pull request en la tarea`], { allowFail: true });
-        const pushed = git.git(ctx, ['push'], { allowFail: true });
-        if (pushed.code === 0) ok('enlace de la PR registrado en la tarea');
-        else warn('el enlace de la PR quedó en un commit sin subir: haz `git push`');
-      }
+      report.recordPr = true;
     } else if (pr.manualUrl) {
       warn(`gh not available — open the PR here:\n   ${pr.manualUrl}`);
     }
@@ -266,6 +253,25 @@ export function doCommit(ctx, opts = {}) {
   }
 
   save(ctx, task);
+
+  // The PR url is only learnt *after* the commit that carries the work, so it has to be
+  // committed on its own — and strictly after the last `save`, because `save` stamps
+  // `updated_at` and a save afterwards would leave the file dirty again. Without this the
+  // branch never records its own PR and the next `git checkout` refuses to switch.
+  //
+  // A follow-up commit rather than an amend: the branch is already pushed and this command
+  // never force-pushes.
+  if (report.recordPr) {
+    const rel = toPosixPath(path.relative(ctx.root, taskFile(ctx, task.id)));
+    git.git(ctx, ['add', '--', rel], { allowFail: true });
+    const staged = git.git(ctx, ['diff', '--cached', '--name-only'], { allowFail: true });
+    if (staged.code === 0 && staged.out.trim()) {
+      git.git(ctx, ['commit', '-m', `chore(${task.id}): registrar la pull request en la tarea`], { allowFail: true });
+      const pushed = git.git(ctx, ['push'], { allowFail: true });
+      if (pushed.code === 0) ok('enlace de la PR registrado en la tarea');
+      else warn('el enlace de la PR quedó en un commit sin subir: haz `git push`');
+    }
+  }
   return report;
 }
 
