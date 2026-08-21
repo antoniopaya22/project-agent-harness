@@ -49,13 +49,13 @@
       "id": "87",
       "url": null,
       "issue": 87,
-      "drifted": false,
-      "remote_hash": "6bc2ce7112acf555",
+      "drifted": true,
+      "remote_hash": "61e23a186ce62d3c",
       "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XJEg",
-      "content_hash": "40c63a4c8b8c38f1",
-      "last_synced_at": "2026-08-20T18:41:52Z"
+      "content_hash": "17eac4981fe149b4",
+      "last_synced_at": "2026-08-21T09:16:26Z"
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-21T09:13:48Z"
+  "updated_at": "2026-08-21T09:16:26Z"
 }
