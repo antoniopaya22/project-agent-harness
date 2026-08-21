@@ -1,0 +1,12 @@
+{"at":"2026-08-21T07:37:56Z","by":"human","event":"created","note":null}
+{"at":"2026-08-21T07:37:56Z","by":"human","event":"groomed","note":"AC1 set"}
+{"at":"2026-08-21T07:37:57Z","by":"human","event":"groomed","note":"AC2 set"}
+{"at":"2026-08-21T07:37:57Z","by":"human","event":"groomed","note":"AC3 set"}
+{"at":"2026-08-21T07:37:57Z","by":"human","event":"groomed","note":"file+.harness/integrations/github/adapter.mjs"}
+{"at":"2026-08-21T07:37:57Z","by":"planner","event":"status_changed","note":"backlog -> ready"}
+{"at":"2026-08-21T07:37:58Z","by":"implementer","event":"claimed","note":"branch fix/0004-el-tablero-externo-se-quedaba-atras"}
+{"at":"2026-08-21T07:37:58Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-21T07:37:58Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-21T07:37:58Z","by":"human","event":"verified","note":"AC3 -> pass"}
+{"at":"2026-08-21T07:38:08Z","by":"tester","event":"status_changed","note":"in_progress -> in_review"}
+{"at":"2026-08-21T07:38:08Z","by":"human","event":"completed","note":"in_review -> done"}

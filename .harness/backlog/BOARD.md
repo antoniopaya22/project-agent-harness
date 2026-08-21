@@ -2,14 +2,14 @@
 
 # Tablero — project-agent-harness
 
-89 tareas · 31 abiertas · 58 hechas
+90 tareas · 31 abiertas · 59 hechas
 
 | Columna | Tareas |
 |---------|--------|
 | Backlog | 11 |
 | Listas para empezar | 18 |
 | En curso | 2 |
-| Hechas | 58 |
+| Hechas | 59 |
 
 ## Backlog (11)
 
@@ -57,7 +57,7 @@
 | `EPIC-0012` | Ergonomia y huecos del dia a dia | high | — | — | — |
 | `FEAT-0051` | La siguiente tarea se elige por camino critico | high | S | cli | agent:implementer · de EPIC-0012 |
 
-## Hechas (58)
+## Hechas (59)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -116,6 +116,7 @@
 | `FIX-0001` | El CLI llegaba incompleto al repositorio remoto | critical | — | cli | agent:implementer |
 | `FIX-0002` | Las opciones repetidas se descartaban en silencio | high | — | cli | agent:implementer |
 | `FIX-0003` | El emparejado de rutas fallaba fuera de Windows | high | — | cli | agent:implementer |
+| `FIX-0004` | El tablero externo se quedaba atras sin decir por que | high | — | integrations | agent:implementer |
 | `RFCT-0001` | Sacar el historial de trabajo del fichero de tarea | high | S | cli | agent:implementer · de EPIC-0008 |
 | `RFCT-0002` | Los comandos referencian a los agentes en vez de reescribirlos | high | M | definitions | agent:implementer · de EPIC-0008 |
 | `SPIKE-0003` | Verificar la interfaz de programacion de proyectos y sub-issues | high | S | integrations | agent:researcher · de EPIC-0011 |

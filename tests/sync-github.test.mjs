@@ -5,7 +5,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  DENIED_HINT,
   STATUS_OPTIONS,
+  canReachProject,
+  classifyProjectError,
   isClosed,
   issueBody,
   issueTitle,
@@ -92,4 +95,33 @@ test('every option declares a colour, because the board is read at a glance', ()
   for (const option of STATUS_OPTIONS) {
     assert.match(option.color, /^[A-Z]+$/, `${option.name} has no colour`);
   }
+});
+
+// --- alcance del tablero -----------------------------------------------------
+
+test('no project configured is reported as such, not as a permission problem', () => {
+  assert.equal(canReachProject({}, null).ok, false);
+  assert.match(canReachProject({}, null).reason, /no project configured/);
+  assert.match(canReachProject({}, { owner: 'x' }).reason, /no project configured/, 'a number is required too');
+});
+
+test('a permission failure is told apart from a configuration mistake', () => {
+  // The probe used to ask whether the caller could read its *own* projects. Actions'
+  // GITHUB_TOKEN passes that — the bot's own empty list reads fine — and then every board
+  // write failed one task at a time with "Resource not accessible by integration".
+  for (const denied of [
+    'gh: Resource not accessible by integration',
+    'HTTP 403: Forbidden',
+    'your authentication token is missing required scopes [read:project]',
+    'HTTP 401',
+  ]) {
+    assert.equal(classifyProjectError(denied), DENIED_HINT, `not classified as denied: ${denied}`);
+  }
+  assert.match(DENIED_HINT, /gh auth refresh -s project/, 'and it says how to fix it locally');
+  assert.match(DENIED_HINT, /HARNESS_PROJECT_TOKEN/, 'and in CI');
+});
+
+test('a genuine configuration mistake keeps its own message', () => {
+  const message = 'project antoniopaya22/#9 not found';
+  assert.equal(classifyProjectError(message), message, 'a wrong number is not a permission problem');
 });

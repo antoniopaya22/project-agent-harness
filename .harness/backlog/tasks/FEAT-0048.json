@@ -70,13 +70,13 @@
       "id": "72",
       "url": null,
       "issue": 72,
-      "drifted": false,
-      "remote_hash": "663e74b60200c968",
+      "drifted": true,
+      "remote_hash": "79009167a3a360bf",
       "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3XIcw",
-      "content_hash": "880799ac88c888f6",
-      "last_synced_at": "2026-08-20T18:40:22Z"
+      "content_hash": "2011a113b3fd8381",
+      "last_synced_at": "2026-08-21T07:35:47Z"
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T20:06:52Z"
+  "updated_at": "2026-08-21T07:35:47Z"
 }

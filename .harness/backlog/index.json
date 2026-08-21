@@ -6,9 +6,9 @@
     "in_progress": 2,
     "in_review": 0,
     "blocked": 0,
-    "done": 58,
+    "done": 59,
     "cancelled": 0,
-    "total": 89,
+    "total": 90,
     "open": 31
   },
   "next": "FEAT-0018",
@@ -1206,6 +1206,20 @@
       "blocked": false,
       "assignee": "agent:implementer",
       "branch": "fix/0003-el-emparejado-de-rutas-fallaba-fuera"
+    },
+    {
+      "id": "FIX-0004",
+      "title": "El tablero externo se quedaba atras sin decir por que",
+      "type": "fix",
+      "status": "done",
+      "priority": "high",
+      "size": null,
+      "area": "integrations",
+      "parent": null,
+      "depends_on": [],
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "fix/0004-el-tablero-externo-se-quedaba-atras"
     },
     {
       "id": "RFCT-0001",

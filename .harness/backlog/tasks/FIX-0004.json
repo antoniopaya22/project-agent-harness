@@ -1,0 +1,77 @@
+{
+  "$schema": "../../schema/task.schema.json",
+  "id": "FIX-0004",
+  "title": "El tablero externo se quedaba atras sin decir por que",
+  "type": "fix",
+  "status": "done",
+  "priority": "high",
+  "description": "La comprobacion de permisos del sumidero preguntaba si el token puede leer sus propios proyectos. El token de integracion continua pasa esa prueba, porque el viewer es el bot y su lista vacia se lee bien, asi que la mitad del tablero seguia activada y fallaba al escribir una vez por tarea en lugar de desactivarse con su motivo. Ademas el tablero no quedaba vinculado al repositorio, asi que la pestana Projects aparecia vacia y nadie lo encontraba.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "must": "La comprobacion se hace contra el tablero que se va a escribir, no contra los proyectos de quien llama",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/sync-github.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "canReachProject prueba discoverProject sobre el tablero real; 12 tests en tests/sync-github.test.mjs"
+    },
+    {
+      "id": "AC2",
+      "must": "Un fallo de permisos se distingue de un error de configuracion y cada uno dice como arreglarse",
+      "check": {
+        "type": "command",
+        "run": "node --test tests/sync-github.test.mjs"
+      },
+      "status": "pass",
+      "evidence": "classifyProjectError distingue 403/401/scope de un numero de proyecto equivocado"
+    },
+    {
+      "id": "AC3",
+      "must": "El tablero queda vinculado al repositorio, para que aparezca en su pestana de proyectos",
+      "check": {
+        "type": "manual",
+        "run": null
+      },
+      "status": "pass",
+      "evidence": "linkProjectV2ToRepository ejecutado: el repo reporta 1 proyecto vinculado"
+    }
+  ],
+  "context": {
+    "area": "integrations",
+    "docs": [],
+    "files": [
+      ".harness/integrations/github/adapter.mjs"
+    ],
+    "out_of_scope": []
+  },
+  "depends_on": [],
+  "blocked_reason": null,
+  "labels": [],
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-21T07:37:57Z",
+  "branch": "fix/0004-el-tablero-externo-se-quedaba-atras",
+  "links": {
+    "pr": null,
+    "issue": null,
+    "commits": []
+  },
+  "external": {
+    "github": {
+      "id": "92",
+      "url": null,
+      "issue": 92,
+      "drifted": false,
+      "remote_hash": "51254379fe7ffa57",
+      "project_item_id": "PVTI_lAHOAOjmK84Bg-VWzg3bpfM",
+      "content_hash": "ab6339804ccfa3f7",
+      "last_synced_at": "2026-08-21T07:38:17Z"
+    }
+  },
+  "created_at": "2026-08-21T07:37:56Z",
+  "updated_at": "2026-08-21T07:38:17Z"
+}
