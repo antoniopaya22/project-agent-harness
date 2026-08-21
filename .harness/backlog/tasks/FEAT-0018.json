@@ -3,7 +3,7 @@
   "id": "FEAT-0018",
   "title": "Entrevista iterativa al humano",
   "type": "feature",
-  "status": "ready",
+  "status": "done",
   "priority": "high",
   "size": "M",
   "parent": "EPIC-0004",
@@ -16,7 +16,8 @@
         "type": "review",
         "run": null
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "pendingRounds nunca devuelve mas de cuatro y las confirmaciones van primero; tests/interview.test.mjs"
     },
     {
       "id": "AC2",
@@ -25,7 +26,8 @@
         "type": "review",
         "run": null
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "todo lo que la encuesta encontro se pregunta como confirmacion con su inferencia y su evidencia, no en abierto"
     },
     {
       "id": "AC3",
@@ -34,7 +36,8 @@
         "type": "command",
         "run": "node --test tests/adopt.test.mjs"
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "una segunda pasada no repite lo respondido, y un 'no lo se' se recuerda para no volver a preguntarlo"
     }
   ],
   "context": {
@@ -46,10 +49,14 @@
   "depends_on": [
     "FEAT-0017"
   ],
+  "blocked_reason": null,
   "labels": [],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-21T07:42:26Z",
+  "branch": "feat/0018-entrevista-iterativa-al-humano",
   "links": {
     "pr": null,
     "issue": null,
@@ -68,5 +75,5 @@
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-20T18:36:55Z"
+  "updated_at": "2026-08-21T07:42:37Z"
 }

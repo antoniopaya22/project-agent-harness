@@ -21,7 +21,7 @@ Deliverables are written in `es`.
 
 Subagents: `implementer`, `planner`, `researcher`, `reviewer`, `scribe`, `tester`.
 
-Slash commands: `/commit`, `/doctor`, `/handoff`, `/implement`, `/plan`, `/review`, `/status`, `/task`, `/verify`.
+Slash commands: `/adopt`, `/commit`, `/doctor`, `/handoff`, `/implement`, `/plan`, `/review`, `/status`, `/task`, `/verify`.
 
 ## The CLI
 
