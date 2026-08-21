@@ -2,16 +2,16 @@
   "harness_version": "1.0.0",
   "counts": {
     "backlog": 11,
-    "ready": 17,
-    "in_progress": 2,
-    "in_review": 0,
+    "ready": 15,
+    "in_progress": 3,
+    "in_review": 1,
     "blocked": 0,
     "done": 60,
     "cancelled": 0,
     "total": 90,
     "open": 30
   },
-  "next": "FEAT-0019",
+  "next": "FEAT-0032",
   "tasks": [
     {
       "id": "CHORE-0001",
@@ -205,7 +205,7 @@
       "id": "EPIC-0004",
       "title": "Adopción de un proyecto ya existente",
       "type": "epic",
-      "status": "ready",
+      "status": "in_progress",
       "priority": "high",
       "size": null,
       "area": null,
@@ -599,7 +599,7 @@
       "id": "FEAT-0019",
       "title": "Inferencia y propuesta de adopción",
       "type": "feature",
-      "status": "ready",
+      "status": "in_review",
       "priority": "high",
       "size": "M",
       "area": "cli",
@@ -609,8 +609,8 @@
         "FEAT-0018"
       ],
       "blocked": false,
-      "assignee": null,
-      "branch": null
+      "assignee": "agent:implementer",
+      "branch": "feat/0019-inferencia-y-propuesta-de-adopcion"
     },
     {
       "id": "FEAT-0020",

@@ -7,8 +7,9 @@
 | Columna | Tareas |
 |---------|--------|
 | Backlog | 11 |
-| Listas para empezar | 17 |
-| En curso | 2 |
+| Listas para empezar | 15 |
+| En curso | 3 |
+| En revisión | 1 |
 | Hechas | 60 |
 
 ## Backlog (11)
@@ -27,17 +28,15 @@
 | `SPIKE-0001` | Verificar los formatos reales de Cursor y de Copilot | low | S | adapters | de EPIC-0005 |
 | `SPIKE-0002` | Verificar la interfaz de programación de ClickUp | low | S | integrations | de EPIC-0006 |
 
-## Listas para empezar (17)
+## Listas para empezar (15)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
 | `CHORE-0002` | Proyectos de prueba y verificación de la adopción en integración continua | medium | M | cli | espera FEAT-0020, FEAT-0023 · de EPIC-0004 |
-| `EPIC-0004` | Adopción de un proyecto ya existente | high | — | — | — |
 | `EPIC-0008` | Eficiencia del camino de lectura en frío | critical | — | — | — |
 | `EPIC-0009` | Mecanismos en lugar de instrucciones | critical | — | — | — |
 | `EPIC-0010` | Anti-podredumbre: que la estructura se defienda sola | high | — | — | — |
 | `EPIC-0013` | Preguntas abiertas y medicion honesta | medium | — | — | — |
-| `FEAT-0019` | Inferencia y propuesta de adopción | high | M | cli | de EPIC-0004 |
 | `FEAT-0020` | Aplicación de la estructura y verificación final | high | M | cli | espera FEAT-0019 · de EPIC-0004 |
 | `FEAT-0032` | Cerrar una tarea en una sola llamada | high | M | cli | de EPIC-0008 |
 | `FEAT-0035` | Sugerir el nivel de modelo segun el tamano de la tarea | medium | S | definitions | de EPIC-0008 |
@@ -49,12 +48,19 @@
 | `SPIKE-0004` | Decidir si una tarea puede pertenecer a varias areas | medium | S | definitions | de EPIC-0013 |
 | `SPIKE-0005` | Como evaluar si un cambio de prompt mejora o empeora | medium | M | definitions | de EPIC-0013 |
 
-## En curso (2)
+## En curso (3)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
+| `EPIC-0004` | Adopción de un proyecto ya existente | high | — | — | — |
 | `EPIC-0012` | Ergonomia y huecos del dia a dia | high | — | — | — |
 | `FEAT-0051` | La siguiente tarea se elige por camino critico | high | S | cli | agent:implementer · de EPIC-0012 |
+
+## En revisión (1)
+
+| Id | Tarea | Prioridad | Tamaño | Área | Notas |
+|----|-------|-----------|--------|------|-------|
+| `FEAT-0019` | Inferencia y propuesta de adopción | high | M | cli | agent:implementer · de EPIC-0004 |
 
 ## Hechas (60)
 

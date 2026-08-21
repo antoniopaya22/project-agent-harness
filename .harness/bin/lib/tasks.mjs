@@ -288,6 +288,14 @@ export function transitionProblems(ctx, task, to, { actorKind = 'human', allTask
       const d = byId.get(dep);
       if (d && d.status !== 'done') problems.push(`blocked by ${dep} (${d.status})`);
     }
+    // `in_progress` means somebody is working on it somewhere, so both facts have to exist.
+    // Reaching it through bare `set-status` used to leave a task in progress with no branch
+    // and no owner, which only `lint-backlog` noticed afterwards and nothing could repair.
+    // An epic is a container that is never worked on directly, so it is exempt.
+    if (task.type !== 'epic') {
+      if (!task.branch) problems.push('in_progress needs a branch — use `harness task claim`, which creates it');
+      if (!task.assignee) problems.push('in_progress needs an assignee — use `harness task claim`');
+    }
   }
 
   if (to === 'blocked' && !task.blocked_reason) {

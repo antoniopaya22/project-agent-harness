@@ -214,3 +214,32 @@ test('the gate check can be skipped, so backlog hygiene does not run test suites
     cleanup();
   }
 });
+
+test('in_progress without a branch or an owner is refused at the transition', () => {
+  // Reaching in_progress through bare set-status used to leave a task in progress with no
+  // branch and no owner: only lint-backlog noticed, afterwards, and nothing could repair it.
+  const task = makeTask({ status: 'ready', branch: null, assignee: null });
+  const { ctx, cleanup } = tempHarness({ tasks: [task] });
+  try {
+    const problems = transitionProblems(ctx, task, 'in_progress', { actorKind: 'agent', skipGates: true });
+    assert.ok(problems.some((p) => /needs a branch/.test(p)));
+    assert.ok(problems.some((p) => /needs an assignee/.test(p)));
+    assert.ok(problems.every((p) => /task claim/.test(p)), 'y cada queja dice cuál es el camino correcto');
+
+    const claimed = { ...task, branch: 'feat/0001-algo', assignee: { kind: 'agent', id: 'implementer' } };
+    assert.deepEqual(transitionProblems(ctx, claimed, 'in_progress', { actorKind: 'agent', skipGates: true }), []);
+  } finally {
+    cleanup();
+  }
+});
+
+test('an epic is exempt, because it is a container and nobody works on it directly', () => {
+  const epic = makeTask({ id: 'EPIC-0001', type: 'epic', status: 'ready', branch: null, assignee: null });
+  const { ctx, cleanup } = tempHarness({ tasks: [epic] });
+  try {
+    const problems = transitionProblems(ctx, epic, 'in_progress', { actorKind: 'human', skipGates: true });
+    assert.ok(!problems.some((p) => /branch|assignee/.test(p)));
+  } finally {
+    cleanup();
+  }
+});

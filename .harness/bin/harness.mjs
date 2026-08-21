@@ -31,11 +31,11 @@ import * as commitLib from './lib/commit.mjs';
 import { SUBCOMMANDS, taskCommand, next as taskNext } from './lib/task-cmd.mjs';
 import * as readpath from './lib/readpath.mjs';
 import * as workspace from './lib/workspace.mjs';
-import * as init from './lib/init.mjs';
 import * as syncLib from './lib/sync.mjs';
 import * as surveyLib from './lib/survey.mjs';
 import * as layoutsLib from './lib/layouts.mjs';
 import * as restructureLib from './lib/restructure.mjs';
+import { commands as adoptCommands } from './lib/adopt-cmd.mjs';
 import { lintBacklog } from './lib/lint.mjs';
 
 function actorId(ctx, flags) {
@@ -61,9 +61,6 @@ function loadContext() {
 // commands
 // ---------------------------------------------------------------------------
 
-/** Markdown fence, kept as a constant so writing it never fights with template literals. */
-const FENCE = '```';
-
 const commands = {};
 
 commands.help = () => {
@@ -74,6 +71,9 @@ commands.help = () => {
       [
         ['init [dir]', 'install the harness into a project that does not have one'],
         ['survey [dir]', 'read-only report of what a project actually contains [--baseline]'],
+        ['interview [dir]', 'the adoption questions still outstanding [--answer id=v] [--unknown id]'],
+        ['propose [dir]', 'write the single reviewable adoption proposal and nothing else'],
+        ['apply [dir]', 'seed the backlog and prove the inferred gates actually run'],
         ['layouts [id]', 'the declared target structures a reorganisation may move towards'],
         ['restructure [dir]', 'move the code to the declared layout, in verified batches [--dry-run]'],
         ['status', 'one-screen situational awareness'],
@@ -107,151 +107,7 @@ commands.version = () => {
   return EXIT.OK;
 };
 
-commands.init = (_unused, { positional, flags }) => {
-  const target = path.resolve(positional[0] || process.cwd());
-  // The template is the repository this CLI lives in: .harness/bin/ -> repo root.
-  const templateRoot = path.resolve(import.meta.dirname, '..', '..');
-  if (!fs.existsSync(path.join(templateRoot, '.harness', 'ENTRYPOINT.md'))) {
-    fail('cannot locate the harness template to install from', EXIT.NOT_FOUND);
-  }
-  if (!fs.existsSync(target)) fail(`${target} does not exist`, EXIT.NOT_FOUND);
-  if (path.resolve(templateRoot) === target) {
-    fail('refusing to initialise the template into itself', EXIT.PRECONDITION);
-  }
-
-  const result = init.initProject(templateRoot, target, {
-    name: typeof flags.name === 'string' ? flags.name : null,
-    purpose: typeof flags.purpose === 'string' ? flags.purpose : null,
-    language: typeof flags.language === 'string' ? flags.language : 'es',
-    layout: typeof flags.layout === 'string' ? flags.layout : 'as-is',
-    force: Boolean(flags.force),
-  });
-  if (flags.json) {
-    say(JSON.stringify(result, null, 2));
-    return EXIT.OK;
-  }
-  init.printInitReport(target, result);
-  return EXIT.OK;
-};
-
-commands.survey = (ctx, { positional, flags }) => {
-  const target = path.resolve(positional[0] || ctx.root);
-  const result = surveyLib.survey(target);
-  if (flags.baseline) {
-    // Separate and opt-in: unlike the rest of the survey, this executes the project's own
-    // tooling, which can leave artefacts that are not ours to create.
-    result.baseline = surveyLib.gateBaseline(target, result.stack);
-    result.safetyNet = surveyLib.hasSafetyNet(result.baseline);
-  }
-  if (flags.json) {
-    say(JSON.stringify(result, null, 2));
-    return EXIT.OK;
-  }
-  say(c.bold(`${result.root}`) + c.gray(`  ${result.fileCount} ficheros${result.isGitRepo ? '' : '  (sin git)'}`));
-  say('');
-  say(`${c.bold('stack')}      ${result.stack.language || c.yellow('no reconocido')}${result.stack.packageManager ? c.gray(`  ·  ${result.stack.packageManager}`) : ''}`);
-  const gates = Object.entries(result.stack.gates);
-  say(`${c.bold('gates')}      ${gates.length ? '' : c.yellow('ninguno con evidencia')}`);
-  for (const [name, g] of gates) say(`  ${name.padEnd(10)} ${g.run}${c.gray(`   [${g.evidence}]`)}`);
-  say(`${c.bold('areas')}      ${result.areas.map((a) => a.id).join(', ') || c.yellow('ninguna evidente')}`);
-  say(`${c.bold('ci')}         ${result.ci.map((x) => x.file).join(', ') || c.gray('ninguna')}`);
-  say(`${c.bold('docs')}       ${result.docs.length} ficheros markdown`);
-  say(`${c.bold('pendientes')} ${result.pending.length} marcas TODO/FIXME`);
-  if (result.existingHarness) {
-    say('');
-    warn(`este proyecto ya tiene harness v${result.existingHarness.version}: ${result.existingHarness.gates.join(', ') || 'sin gates'}`);
-    say(c.gray('   adoptarlo otra vez no es lo que quieres; usa `harness doctor`.'));
-  }
-  if (result.hotspots.length) {
-    say('');
-    say(c.bold('Más tocados'));
-    say(table(result.hotspots.slice(0, 8).map((x) => [String(x.touches), x.file]), ['COMMITS', 'FICHERO']));
-  }
-  if (result.baseline) {
-    say('');
-    say(c.bold('Línea base'));
-    for (const [name, b] of Object.entries(result.baseline)) {
-      const mark = b.state === 'pass' ? c.green('PASS') : c.red(b.state.toUpperCase());
-      say(`  ${mark} ${name.padEnd(10)} ${c.gray(b.command)}`);
-    }
-    say('');
-    if (result.safetyNet.safe) ok(`Red de seguridad: ${result.safetyNet.reason}`);
-    else bad(`Sin red de seguridad: ${result.safetyNet.reason}`);
-  }
-  return EXIT.OK;
-};
-
-commands.layouts = (ctx, { positional, flags }) => {
-  const requested = positional[0];
-  if (requested) {
-    const layout = layoutsLib.loadLayout(ctx, requested);
-    say(flags.json ? JSON.stringify(layout, null, 2) : layoutsLib.summarise(layout));
-    return EXIT.OK;
-  }
-  const rows = [...layoutsLib.availableLayouts(ctx), layoutsLib.AS_IS].map((id) => {
-    if (id === layoutsLib.AS_IS) return [id, 'no mueve ningún fichero'];
-    return [id, layoutsLib.summarise(layoutsLib.loadLayout(ctx, id))];
-  });
-  say(table(rows, ['LAYOUT', 'ESTRUCTURA DESTINO']));
-  say('');
-  info(`este proyecto usa: ${ctx.project.layout || layoutsLib.AS_IS}`);
-  return EXIT.OK;
-};
-
-commands.restructure = (ctx, { positional, flags }) => {
-  const target = path.resolve(positional[0] || ctx.root);
-  const layout = layoutsLib.loadLayout(ctx, typeof flags.layout === 'string' ? flags.layout : undefined);
-  if (!layout) {
-    info(`layout "${ctx.project.layout || layoutsLib.AS_IS}": no se mueve ningún fichero. Declara otro perfil para reorganizar.`);
-    return EXIT.OK;
-  }
-
-  // The oracle has to exist before anything moves, so it is taken here rather than trusted.
-  const stack = surveyLib.detectStack(target);
-  const baseline = surveyLib.gateBaseline(target, stack);
-  const safetyNet = surveyLib.hasSafetyNet(baseline);
-  say(c.bold('Línea base'));
-  for (const [name, b] of Object.entries(baseline)) {
-    say(`  ${b.state === 'pass' ? c.green('PASS') : c.red(b.state.toUpperCase())} ${name.padEnd(10)} ${c.gray(b.command)}`);
-  }
-  if (Object.keys(baseline).length === 0) say(c.gray('  (ningún gate con evidencia)'));
-  say('');
-
-  const result = restructureLib.restructure(ctx, target, {
-    layout,
-    baseline,
-    safetyNet,
-    dryRun: Boolean(flags['dry-run']),
-    batchSize: flags.batch ? Number(flags.batch) : 10,
-    packageName: typeof flags.package === 'string' ? flags.package : null,
-  });
-  restructureLib.printReport(result);
-
-  if (flags['dry-run'] && result.report.length) {
-    const planFile = path.join(ctx.harnessDir, 'adoption', 'RESTRUCTURE-PLAN.md');
-    fs.mkdirSync(path.dirname(planFile), { recursive: true });
-    const body = ['# Plan de reorganización', '', FENCE, ...result.report, FENCE, ''].join('\n');
-    fs.writeFileSync(planFile, body, 'utf8');
-    say('');
-    ok(`plan escrito en ${path.relative(ctx.root, planFile)}`);
-  }
-
-  // Condition 4: whatever survived becomes one commit, so reverting is one command.
-  if (!flags['dry-run'] && result.commits > 1) {
-    restructureLib.squashInto(ctx, result.commits, 'chore(restructure): mover el código al layout declarado');
-    ok('lotes combinados en un único commit revertible');
-  }
-
-  if (result.aborted?.asTasks) {
-    say('');
-    info('tareas que emitir en su lugar:');
-    for (const t of restructureLib.movesAsTasks(restructureLib.planMoves(target, layout), safetyNet)) {
-      say(`   ${t.type.padEnd(9)} ${t.title}`);
-    }
-    return EXIT.PRECONDITION;
-  }
-  return result.aborted ? EXIT.CHECK_FAILED : EXIT.OK;
-};
+Object.assign(commands, adoptCommands);
 
 commands.status = (ctx, { flags }) => {
   const r = statusLib.report(ctx);

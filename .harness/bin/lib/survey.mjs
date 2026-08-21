@@ -256,17 +256,105 @@ export function gateBaseline(dir, stack, { timeoutMs = 300000 } = {}) {
   const baseline = {};
   for (const [gate, found] of Object.entries(stack.gates)) {
     if (gate === 'start') continue; // not something you pass
+
+    // Checked before running, not after: if the tool is not installed there is nothing to
+    // learn from executing it, and the shell would report the miss in the user's own
+    // language, which is not something to pattern-match on.
+    const exe = leadingExecutable(found.run);
+    if (exe && !resolveExecutable(exe)) {
+      baseline[gate] = {
+        command: found.run,
+        evidence: found.evidence,
+        state: 'error',
+        code: null,
+        excerpt: `"${exe}" no está en el PATH: el comando no llega a ejecutarse`,
+      };
+      continue;
+    }
+
     const res = spawnSync(found.run, { cwd: dir, shell: true, encoding: 'utf8', timeout: timeoutMs, stdio: 'pipe' });
     const timedOut = res.error?.code === 'ETIMEDOUT';
+    const output = String(res.stderr || res.stdout || '');
     baseline[gate] = {
       command: found.run,
       evidence: found.evidence,
-      state: timedOut ? 'timeout' : res.status === 0 ? 'pass' : res.status === null ? 'error' : 'fail',
+      state: timedOut
+        ? 'timeout'
+        : res.status === 0
+          ? 'pass'
+          : res.status === null || didNotRun(res.status, output)
+            ? 'error'
+            : 'fail',
       code: res.status,
-      excerpt: String(res.stderr || res.stdout || '').trim().split('\n').slice(-3).join('\n').slice(0, 400),
+      excerpt: output.trim().split('\n').slice(-3).join('\n').slice(0, 400),
     };
   }
   return baseline;
+}
+
+/**
+ * Did the command fail, or never start at all?
+ *
+ * The two need different answers — a failing test suite is a working gate telling the truth,
+ * while a command that does not exist is not a gate at all — but a shell hides the
+ * difference. It catches the ENOENT itself, exits with a code of its own (1 under cmd.exe,
+ * not the 127 POSIX shells use) and explains itself **in the user's language**. Neither the
+ * code nor the message is something to build on.
+ *
+ * So the executable is resolved against the PATH directly instead, which is locale-free and
+ * needs no shell. What remains undetectable is a *wrapped* miss: `npm run lint` where npm
+ * exists but the script's own tool does not. npm reports that as a plain failure, and no
+ * machine-readable signal separates it from a real lint failure. Those stay `fail`, and the
+ * gate stays configured — losing a working safety net is the more expensive mistake.
+ */
+export function didNotRun(code, output = '') {
+  if (code === 127 || code === 126 || code === 9009) return true;
+  return /command not found|is not recognized as an internal|no such file or directory|Missing script|Unknown command|executable file not found/i.test(
+    output,
+  );
+}
+
+/** The program a shell command would actually launch, honouring quotes and env prefixes. */
+export function leadingExecutable(command) {
+  // Quoted first, so `"C:/Program Files/x/tool.exe" --flag` is one token and not three.
+  const tokens = String(command).trim().match(/"[^"]*"|'[^']*'|\S+/g) || [];
+  for (const token of tokens) {
+    // `FOO=bar cmd` is a prefix, not the program.
+    if (/^[A-Za-z_][A-Za-z0-9_]*=/.test(token)) continue;
+    const clean = token.replace(/^["']|["']$/g, '');
+    if (clean) return clean;
+  }
+  return null;
+}
+
+/**
+ * Where the PATH would find this program, or null.
+ * A path with a separator in it is checked as a path; a bare name is looked up, extended by
+ * PATHEXT on Windows so `ruff` finds `ruff.exe`.
+ */
+export function resolveExecutable(name, { env = process.env } = {}) {
+  const exts = process.platform === 'win32'
+    ? (env.PATHEXT || '.COM;.EXE;.BAT;.CMD').split(';').filter(Boolean)
+    : [''];
+  const candidates = (base) => [base, ...exts.map((e) => base + e.toLowerCase()), ...exts.map((e) => base + e)];
+
+  if (name.includes('/') || name.includes('\\')) {
+    return candidates(name).find((p) => fs.existsSync(p) && fs.statSync(p).isFile()) ?? null;
+  }
+  // A shell builtin is always available and has no file to find.
+  if (['cd', 'echo', 'set', 'exit', 'true', 'false', 'test'].includes(name)) return name;
+
+  for (const dir of (env.PATH || env.Path || '').split(path.delimiter).filter(Boolean)) {
+    const hit = candidates(path.join(dir, name)).find((p) => {
+      try {
+        return fs.statSync(p).isFile();
+      } catch {
+        return false;
+      }
+    });
+    if (hit) return hit;
+  }
+  return null;
 }
 
 /** Is there a safety net? Nothing may be moved without one (D5, condition 6). */
