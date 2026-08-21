@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "CHORE-0002",
+  "stage": "claimed",
+  "by": "implementer",
+  "branch": "chore/0002-proyectos-de-prueba-y-verificacion-de",
+  "summary": "Tarea reclamada por agent:implementer. Rama chore/0002-proyectos-de-prueba-y-verificacion-de. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-21T08:09:54Z"
+}
