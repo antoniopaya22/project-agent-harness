@@ -861,3 +861,48 @@ dos veces. Por tanto:
   reestructuración es posible o hay que crear antes la red de seguridad, D5 condición 6), y si tiene
   documentación. Un caso raro (monorepo, cero tests, docs muy desactualizadas) puede alterar el orden de la
   Fase 3.
+
+---
+
+## ClickUp: mapeo y verificaciones pendientes
+
+Movido aquí desde `docs/areas/integrations.md`, que se salía del presupuesto del camino de lectura. Es
+material de diseño sin verificar: no es contexto que haga falta para trabajar en el área hoy.
+
+## Mapeo de campos a ClickUp
+
+Jerarquía: Workspace → Space → Folder → List → Task.
+
+| Harness | ClickUp |
+|---------|---------|
+| `id` | campo personalizado de texto **Harness ID**, con prefijo de proyecto: `HRN · FEAT-0042` |
+| `title` | `name` |
+| `description` + criterios | `description` en Markdown, criterios como checklist |
+| `status` | estado de la lista, por nombre — **mapeo identidad** |
+| `priority` | `priority` 1–4 (1 = urgent) |
+| `type` | `tags` |
+| `labels` | `tags` |
+| `assignee` | `assignees`, vía el mapa `integrations.clickup.users` |
+| `parent` | subtarea |
+| `depends_on` | dependencias nativas — **[VERIFY]** endpoint exacto |
+| `estimate_hours` | time estimate — **[VERIFY]** unidad (¿ms?) |
+| `branch`, `links.pr` | campos personalizados tipo URL |
+
+**Mapeo identidad de estados**: la List destino se crea desde cero con exactamente los siete estados del
+harness (`backlog`, `ready`, `in progress`, `in review`, `blocked`, `complete`, `cancelled`, los dos
+últimos marcados como cerrados). Así `mapping.json` es la identidad y desaparece una clase entera de
+bugs de traducción.
+
+## Trampas conocidas y verificaciones pendientes
+
+Todo lo que sigue debe confirmarse contra la documentación oficial **antes** de escribir el cliente. No
+se implementa sobre esto tal como está:
+
+- **[VERIFY]** base `https://api.clickup.com/api/v2` y forma exacta de la cabecera de autorización con
+  un token personal.
+- **[VERIFY]** endpoints: crear tarea en una lista, actualizar tarea, listar tareas de una lista, listar
+  campos personalizados, fijar el valor de un campo personalizado.
+- **[VERIFY]** límite de peticiones por minuto y cabeceras de rate limit, para respetarlo con backoff.
+- **[VERIFY]** paginación de la lista de tareas.
+- **[VERIFY]** endpoint de dependencias y unidad del time estimate.
+

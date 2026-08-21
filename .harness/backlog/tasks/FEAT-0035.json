@@ -3,7 +3,7 @@
   "id": "FEAT-0035",
   "title": "Sugerir el nivel de modelo segun el tamano de la tarea",
   "type": "feature",
-  "status": "in_review",
+  "status": "done",
   "priority": "medium",
   "size": "S",
   "parent": "EPIC-0008",
@@ -64,5 +64,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-21T08:26:57Z"
+  "updated_at": "2026-08-21T08:27:42Z"
 }

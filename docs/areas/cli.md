@@ -2,6 +2,7 @@
 area: cli
 updated: 2026-08-18
 owner: Antonio Payá
+verified_commit: a85a96155978
 ---
 
 # Área: CLI
@@ -41,6 +42,9 @@ dependa de la buena voluntad de un modelo.
 | Importación | `lib/import.mjs` | Siembra el backlog desde las incidencias que ya existen |
 | Cierre | `lib/finish.mjs` | Las cinco etapas del cierre, parando en la primera que falla |
 | Nivel de modelo | `lib/tier.mjs` | Sugerencia de nivel a partir de tipo, tamaño y radio de impacto |
+| Anti-podredumbre | `lib/docs-cmd.mjs` | `doc` y `read-log` |
+| Frescura | `lib/freshness.mjs` | Commits en un área desde que alguien leyó su documento |
+| Realimentación | `lib/feedback.mjs` | Lecturas fuera del camino previsto, agregadas por área |
 
 ## Flujo principal
 
@@ -98,9 +102,6 @@ taskSchema }`. No hay estado global.
 - **Importar la propia proyección crea un bucle.** `sync` escribe incidencias tituladas `FEAT-0042 · …`
   con un marcador en el cuerpo; `import` las reconoce y las salta. El bucle no se ve en la salida hasta
   que el backlog se ha duplicado, así que la comprobación va en el código, no en el prompt.
-- **`import.meta.dirname` cambia de profundidad al mover un fichero.** `init` localiza la plantilla
-  subiendo desde su propio directorio; al pasar de `bin/` a `bin/lib/` hubo que añadir un `..`. Lo
-  detectó la prueba de adopción de punta a punta, no el linter ni el autodiagnóstico.
 
 ## Cómo añadir algo nuevo aquí
 

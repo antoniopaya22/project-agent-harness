@@ -1,2 +1,3 @@
 {"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
 {"at":"2026-08-21T08:26:30Z","by":"harness","event":"status_changed","note":"ready -> in_progress (derivado de sus hijas)"}
+{"at":"2026-08-21T08:27:42Z","by":"harness","event":"status_changed","note":"in_progress -> done (derivado de sus hijas)"}

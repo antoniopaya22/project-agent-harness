@@ -2,6 +2,7 @@
 area: docs
 updated: 2026-08-18
 owner: Antonio Payá
+verified_commit: a85a96155978
 ---
 
 # Área: Documentación
@@ -39,12 +40,20 @@ agente.
   todos para saber cuál es verdad.
 - **Cada documento declara qué contiene y qué no**, en su cita de apertura. Sin eso, la regla anterior se
   incumple por accidente.
-- **Los presupuestos de líneas del camino de lectura se cumplen**: los declara `read_path` en
-  `.harness/project.json` y los hace cumplir `doctor`. Cuando un documento se pasa, se **saca**
-  contenido; subir el presupuesto es cómo el camino de lectura deja de ser corto.
+- **Los presupuestos del camino de lectura se cumplen, y se miden en tokens**, no en líneas: los declara
+  `read_path` con `max_tokens` en `.harness/project.json` y los hace cumplir `doctor`. Se cambió de
+  líneas a tokens porque una tabla ancha y un párrafo corto ocupan lo mismo en líneas y muy distinto en
+  contexto, que es el recurso real. Cuando un documento se pasa, se **saca** contenido; subir el
+  presupuesto es cómo el camino de lectura deja de ser corto.
 - **Toda ruta citada en `CODEMAP.md` existe.** `doctor` lo comprueba. Es el mecanismo anti-podredumbre
   que funciona, porque es mecánico y no depende de que nadie se acuerde.
-- **Front-matter con `updated` y `owner`** en todo documento de `docs/`.
+- **Front-matter con `updated` y `owner`** en todo documento de `docs/`, salvo `HARNESS-PLAN.md`, que es
+  un registro de decisiones y no tiene dueño único. Nada lo comprueba todavía: es una convención, no una
+  invariante, y decir lo contrario sería una de esas afirmaciones que este documento existe para evitar.
+- **Cada documento de área declara el commit contra el que se verificó** (`verified_commit`). `doctor` lo
+  exige en cuanto el documento deja de ser la plantilla, y avisa cuando el área ha recibido más commits
+  que el umbral desde entonces. Que existan las rutas citadas solo detecta un renombrado; esto detecta
+  que el documento describe algo que ya cambió.
 - **Un documento de área no pasa de 300 líneas.** Si lo hace, el área es demasiado grande: se parte el
   área, no el presupuesto.
 - Documentación en español; prompts en inglés (D8).

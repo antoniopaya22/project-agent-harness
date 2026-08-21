@@ -3,7 +3,7 @@
   "id": "FEAT-0043",
   "title": "Realimentacion sobre la calidad del refinamiento de tareas",
   "type": "feature",
-  "status": "ready",
+  "status": "in_review",
   "priority": "high",
   "size": "L",
   "parent": "EPIC-0010",
@@ -16,7 +16,7 @@
         "type": "command",
         "run": "node --test tests/feedback.test.mjs"
       },
-      "status": "pending",
+      "status": "pass",
       "baseline": "fail"
     },
     {
@@ -26,7 +26,7 @@
         "type": "command",
         "run": "node --test tests/feedback.test.mjs"
       },
-      "status": "pending",
+      "status": "pass",
       "baseline": "fail"
     },
     {
@@ -36,7 +36,7 @@
         "type": "review",
         "run": null
       },
-      "status": "pending"
+      "status": "pass"
     }
   ],
   "context": {
@@ -48,12 +48,16 @@
   "depends_on": [
     "FEAT-0031"
   ],
+  "blocked_reason": null,
   "labels": [
     "mejora"
   ],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "implementer"
+  },
+  "claimed_at": "2026-08-21T08:37:57Z",
+  "branch": "feat/0043-realimentacion-sobre-la-calidad-del-refinamiento",
   "links": {
     "pr": null,
     "issue": null,
@@ -72,5 +76,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-20T18:39:47Z"
+  "updated_at": "2026-08-21T08:38:18Z"
 }

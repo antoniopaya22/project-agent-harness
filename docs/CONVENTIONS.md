@@ -80,6 +80,20 @@ No válidos: `update stuff` (no dice nada) · `feat: Añadida la funcionalidad.`
 **Nunca**: commitear en una rama protegida · `git push --force` sin decirlo · commitear con un gate
 requerido en rojo salvo `--no-verify` explícito y anotado · mergear un PR desde un agente.
 
+## Cómo escribir una comprobación
+
+Estas dos reglas salieron de equivocarse en las dos direcciones, y valen para cualquier check nuevo.
+
+- **Un check imposible de satisfacer es peor que ningún check.** Entrena a la gente a ignorar la salida
+  entera. Si la condición no se puede cumplir en algún caso legítimo —el fichero no tiene dónde poner la
+  marca, el proyecto acaba de nacer— ese caso es un aviso con su propio mensaje, no el mismo error.
+- **Un aviso no puede sostener un criterio de aceptación**: `doctor` y los gates salen con 0 ante avisos.
+  Si un criterio dice «el autodiagnóstico lo comprueba», entonces o el check es de nivel error, o el
+  criterio no está comprobado por nada. Lo mismo con `node --test --test-name-pattern`, que sale con 0
+  cuando no casa ningún test.
+- **Distingue «falló» de «no se pudo ejecutar»** antes de decidir el nivel. Son dos problemas con dos
+  arreglos distintos, y juntarlos produce mensajes que no dicen qué hacer.
+
 ## Documentación
 
 - **Un tema, un dueño.** Ningún hecho aparece en dos documentos. Se enlaza, no se repite.

@@ -2,6 +2,7 @@
 area: integrations
 updated: 2026-08-18
 owner: Antonio Payá
+verified_commit: a85a96155978
 ---
 
 # Área: Integraciones con trackers externos
@@ -32,19 +33,25 @@ impide que los demás se completen.
 
 Un adaptador vive en `.harness/integrations/<proveedor>/adapter.mjs` y exporta:
 
-| Función | Contrato |
-|---------|----------|
-| `run(ctx, { dryRun })` | Punto de entrada que llama `harness sync`. Devuelve un código de `EXIT` |
-| `listRemote(cfg)` | Las tareas remotas de la lista destino, paginadas |
-| `fetchRemote(cfg, remoteId)` | Una tarea remota |
-| `createRemote(cfg, task)` | Crea y devuelve `{ id, url }` |
-| `updateRemote(cfg, task, remoteId)` | Actualiza |
-| `mapStatus(status)` | Estado del harness → nombre de estado remoto |
-| `unmapStatus(remote)` | La inversa, para detectar deriva |
+| Exportación | Obligatoria | Contrato |
+|-------------|-------------|----------|
+| `isEnabled(ctx)` | sí | Si este destino debe correr. Sin esto el destino se ignora |
+| `apply(ctx, { op, task })` | sí | Ejecuta una operación (`create`, `update`, `close`) y devuelve el estado remoto a guardar |
+| `prepare(ctx, { dryRun })` | no | Todo lo que se hace una vez antes del lote: descubrir el tablero, cargar el índice de incidencias |
+| `incompleteReason(ctx, task)` | no | Por qué esta tarea no está lista para proyectarse. Sin esto, el hash de contenido decide solo |
+| `skipEpics` | no | Constante: si las épicas se omiten |
+| `readConfig` / `writeConfig` | no | Configuración persistida del destino (identificadores, nunca credenciales) |
 
-Añadir Jira o Linear significa escribir otro directorio con estas funciones, sin tocar el núcleo.
-Con GitHub y ClickUp la interfaz tiene **dos implementaciones reales**, que es la única forma de saber
-si una abstracción está bien puesta.
+`harness sync` es el único que orquesta: recorre las tareas, calcula el plan y llama a `apply` una vez
+por operación. Un adaptador **no decide a quién le toca** ni escribe en el backlog.
+
+El orden importa y costó un error: `prepare` corre **antes** de calcular el plan. Al revés, el plan se
+calculaba sin el índice de incidencias que `prepare` carga, y veintidós tareas no llegaban nunca al
+tablero.
+
+Añadir Jira o Linear significa escribir otro directorio con estas exportaciones, sin tocar el núcleo.
+Hoy hay **una implementación real** (GitHub); hasta que haya dos no se sabe si la abstracción está bien
+puesta, y ese es el motivo de que ClickUp siga en el backlog.
 
 ### GitHub: el sumidero por defecto
 
@@ -58,7 +65,7 @@ los proyectos clásicos está retirada. Requiere el scope `project` en el token
 | `id` | prefijo del título: `FEAT-0042 · …` |
 | `status` | campo de selección única del tablero, **mapeo identidad** con los siete estados |
 | `type`, `priority`, `context.area` | etiquetas |
-| `parent` (épica) | sub-issue — **[VERIFY]** superficie exacta de la API |
+| `parent` (épica) | hoy **no se proyecta como sub-issue**: la relación vive solo en el backlog. La épica sí tiene su propia incidencia (`skipEpics = false`) |
 | `branch`, `links.pr` | referencias cruzadas nativas |
 
 ### Verificado contra la API (20/08/2026)
@@ -92,27 +99,14 @@ project` para el tablero.
 
 ## Mapeo de campos a ClickUp
 
-Jerarquía: Workspace → Space → Folder → List → Task.
+Todavía no implementado, y el plan detallado (jerarquía, campos, y las verificaciones que hay que hacer
+contra la API antes de escribir una línea) vive donde le corresponde: en
+[`docs/HARNESS-PLAN.md`](../HARNESS-PLAN.md), sección «ClickUp». Un plan sin verificar no es contexto
+para trabajar aquí hoy, y meterlo en el camino de lectura cuesta contexto a cada tarea del área.
 
-| Harness | ClickUp |
-|---------|---------|
-| `id` | campo personalizado de texto **Harness ID**, con prefijo de proyecto: `HRN · FEAT-0042` |
-| `title` | `name` |
-| `description` + criterios | `description` en Markdown, criterios como checklist |
-| `status` | estado de la lista, por nombre — **mapeo identidad** |
-| `priority` | `priority` 1–4 (1 = urgent) |
-| `type` | `tags` |
-| `labels` | `tags` |
-| `assignee` | `assignees`, vía el mapa `integrations.clickup.users` |
-| `parent` | subtarea |
-| `depends_on` | dependencias nativas — **[VERIFY]** endpoint exacto |
-| `estimate_hours` | time estimate — **[VERIFY]** unidad (¿ms?) |
-| `branch`, `links.pr` | campos personalizados tipo URL |
-
-**Mapeo identidad de estados**: la List destino se crea desde cero con exactamente los siete estados del
-harness (`backlog`, `ready`, `in progress`, `in review`, `blocked`, `complete`, `cancelled`, los dos
-últimos marcados como cerrados). Así `mapping.json` es la identidad y desaparece una clase entera de
-bugs de traducción.
+Lo único que hace falta saber aquí: el destino se crea desde cero con exactamente los siete estados del
+harness, de modo que el mapeo de estados es la **identidad** y desaparece una clase entera de errores de
+traducción.
 
 ## Invariantes
 
@@ -127,18 +121,10 @@ bugs de traducción.
   `last_synced_at`, alguien editó la tarjeta a mano: se **avisa**, se empuja igual (el repo manda) y
   queda en el log.
 
-## Trampas conocidas y verificaciones pendientes
+## Trampas conocidas
 
-Todo lo que sigue debe confirmarse contra la documentación oficial **antes** de escribir el cliente. No
-se implementa sobre esto tal como está:
-
-- **[VERIFY]** base `https://api.clickup.com/api/v2` y forma exacta de la cabecera de autorización con
-  un token personal.
-- **[VERIFY]** endpoints: crear tarea en una lista, actualizar tarea, listar tareas de una lista, listar
-  campos personalizados, fijar el valor de un campo personalizado.
-- **[VERIFY]** límite de peticiones por minuto y cabeceras de rate limit, para respetarlo con backoff.
-- **[VERIFY]** paginación de la lista de tareas.
-- **[VERIFY]** endpoint de dependencias y unidad del time estimate.
+Las verificaciones pendientes contra la API de ClickUp están en
+[`docs/HARNESS-PLAN.md`](../HARNESS-PLAN.md): son decisiones sin tomar, no contexto de trabajo.
 
 No usamos los *custom task IDs* de ClickUp: el id canónico es el nuestro y viaja en un campo
 personalizado.

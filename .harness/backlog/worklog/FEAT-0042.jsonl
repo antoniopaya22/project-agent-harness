@@ -1,1 +1,6 @@
 {"at":"2026-08-20T15:30:00Z","by":"planner","event":"created","note":"revision del harness construido"}
+{"at":"2026-08-21T08:37:12Z","by":"implementer","event":"claimed","note":"branch feat/0042-frescura-de-documentos-medida-en-commits"}
+{"at":"2026-08-21T08:37:57Z","by":"human","event":"verified","note":"AC1 -> pass"}
+{"at":"2026-08-21T08:37:57Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-21T08:37:57Z","by":"human","event":"verified","note":"AC3 -> pass"}
+{"at":"2026-08-21T08:38:38Z","by":"harness","event":"status_changed","note":"in_review (finish)"}

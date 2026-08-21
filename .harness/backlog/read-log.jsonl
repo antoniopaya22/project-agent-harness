@@ -1,0 +1,6 @@
+{"task":"FEAT-0042","area":"cli","file":".harness/bin/lib/doctor.mjs","note":null,"at":"2026-08-21T08:33:08Z"}
+{"task":"FEAT-0020","area":"cli","file":".harness/bin/lib/init.mjs","note":"init no estaba en el camino de lectura de la tarea","at":"2026-08-21T08:33:20Z"}
+{"task":"FEAT-0020","area":"cli","file":".harness/bin/lib/survey.mjs","note":"init no estaba en el camino de lectura de la tarea","at":"2026-08-21T08:33:20Z"}
+{"task":"FEAT-0032","area":"cli","file":".harness/bin/lib/doctor.mjs","note":null,"at":"2026-08-21T08:33:20Z"}
+{"task":"FEAT-0032","area":"cli","file":".harness/bin/lib/generate.mjs","note":null,"at":"2026-08-21T08:33:20Z"}
+{"task":"FEAT-0032","area":"cli","file":".harness/bin/lib/gates.mjs","note":null,"at":"2026-08-21T08:33:20Z"}

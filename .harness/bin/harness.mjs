@@ -38,6 +38,7 @@ import * as restructureLib from './lib/restructure.mjs';
 import { commands as adoptCommands } from './lib/adopt-cmd.mjs';
 import * as importLib from './lib/import.mjs';
 import * as finishLib from './lib/finish.mjs';
+import { commands as docsCommands } from './lib/docs-cmd.mjs';
 import * as tierLib from './lib/tier.mjs';
 import { lintBacklog } from './lib/lint.mjs';
 
@@ -90,6 +91,8 @@ commands.help = () => {
         ['index', 'regenerate backlog/index.json and backlog/BOARD.md'],
         ['generate [--check]', 'write provider adapters from .harness/ (--check for CI)'],
         ['doctor [--fix] [--only c]', 'validate the harness itself, including read-path budgets'],
+        ['doc <sub> [area]', 'freshness | verified — which area docs are stale, and stamping one as read'],
+        ['read-log <sub>', 'record the files a task forced you to read beyond its read path, and report'],
         ['handoff <sub> <ID>', 'read | write | validate | resume the in-flight state of a task'],
         ['plan-risk <ID>', 'exit 3 when the plan needs a human checkpoint before coding'],
         ['commit [--task ID]', 'conventional commit + push (+ PR when the task is in_review)'],
@@ -353,6 +356,8 @@ commands.doctor = (ctx, { flags }) => {
   else bad(`${counts.error} error(s), ${counts.warn} warning(s)`);
   return counts.error ? EXIT.CHECK_FAILED : EXIT.OK;
 };
+
+Object.assign(commands, docsCommands);
 
 commands.gate = (ctx, { positional, flags }) => {
   const name = gates.requireGateName(positional[0]);

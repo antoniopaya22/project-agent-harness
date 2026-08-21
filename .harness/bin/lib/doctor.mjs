@@ -11,13 +11,14 @@ import { budgetProblems } from './readpath.mjs';
 import * as generate from './generate.mjs';
 import { buildIndex, indexPath, boardPath, renderBoard } from './board.mjs';
 import { validate } from './schema.mjs';
+import { areaFreshness } from './freshness.mjs';
 
 /** @typedef {{level:'error'|'warn', check:string, message:string}} Issue */
 
 /** Every check name, so `--only` can validate its argument instead of silently matching nothing. */
 export const CHECKS = [
   'project-schema', 'task-schema', 'backlog', 'index', 'adapters', 'read-path',
-  'areas', 'codemap', 'definitions', 'secrets', 'git-visibility', 'orphans', 'templates',
+  'areas', 'codemap', 'doc-freshness', 'definitions', 'secrets', 'git-visibility', 'orphans', 'templates',
 ];
 
 export function runDoctor(ctx, { fix = false } = {}) {
@@ -145,6 +146,39 @@ export function runDoctor(ctx, { fix = false } = {}) {
       if (!pathExistsLoose(ctx, pathRef)) {
         issues.push({ level: 'error', check: 'codemap', message: `docs/CODEMAP.md:${line} references ${pathRef}, which does not exist` });
       }
+    }
+  }
+
+  // 8b. area documents against the commits that landed since anyone last read them.
+  // Checking that a document's paths exist catches a rename and nothing else: a document can
+  // describe behaviour that changed a year ago with every path in it alive.
+  for (const row of areaFreshness(ctx)) {
+    if (!row.verified) {
+      issues.push({
+        // An error only once the document can carry the marker *and* somebody has actually
+        // written it: then the missing marker leaves the whole mechanism inert and the fix is
+        // one command. Without front matter there is nowhere to put a marker, so demanding
+        // one would be a check nobody can satisfy; while it is still the untouched stub the
+        // document is simply new, and a brand new project going red on day one teaches
+        // everybody to ignore the self-check.
+        level: row.template || !row.stampable ? 'warn' : 'error',
+        check: 'doc-freshness',
+        message: row.stampable
+          ? `${row.doc} nunca se ha verificado contra el código. ${row.action}`
+          : `${row.doc} no tiene front matter donde poner la marca: añádeselo y luego \`harness doc verified ${row.area}\``,
+      });
+    } else if (row.commits == null) {
+      issues.push({
+        level: 'warn',
+        check: 'doc-freshness',
+        message: `${row.doc}: ${row.reason}. Vuelve a verificarlo y sella: harness doc verified ${row.area}`,
+      });
+    } else if (row.stale) {
+      issues.push({
+        level: 'warn',
+        check: 'doc-freshness',
+        message: `${row.doc}: ${row.commits} commits en el área desde ${row.verified} (umbral ${row.threshold}). ${row.action}`,
+      });
     }
   }
 
