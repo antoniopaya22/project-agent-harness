@@ -3,3 +3,4 @@
 {"at":"2026-08-21T08:55:18Z","by":"researcher","event":"claimed","note":"branch spike/0001-verificar-los-formatos-reales-de-cursor"}
 {"at":"2026-08-21T08:55:18Z","by":"human","event":"verified","note":"AC1 -> pass"}
 {"at":"2026-08-21T08:56:09Z","by":"harness","event":"status_changed","note":"in_review (finish)"}
+{"at":"2026-08-21T08:56:10Z","by":"harness","event":"committed","note":"spike: Verificar los formatos reales de Cursor y de Copilot"}
