@@ -7,7 +7,7 @@ import path from 'node:path';
 import { EXIT, c, fail, info, ok, say, toPosixPath, warn } from './util.mjs';
 import { findSecrets } from './secrets.mjs';
 import * as git from './git.mjs';
-import { TYPE_GIT, branchFor, idFromBranch, load, logEvent, save } from './tasks.mjs';
+import { TYPE_GIT, branchFor, idFromBranch, load, logEvent, save, taskFile } from './tasks.mjs';
 import { printGateResults, runAllGates, summarize } from './gates.mjs';
 
 export function resolveTask(ctx, explicitId) {
@@ -243,6 +243,20 @@ export function doCommit(ctx, opts = {}) {
     if (pr.url) {
       task.links.pr = pr.url;
       ok(`pull request: ${pr.url}`);
+
+      // The link is learnt after the commit that carries the work, so without this it stays
+      // in the working tree: the branch never records its own PR, the repository is left
+      // dirty, and the next `git checkout` refuses. A follow-up commit rather than an amend,
+      // because the branch is already pushed and this command never force-pushes.
+      save(ctx, task);
+      git.git(ctx, ['add', '--', path.relative(ctx.root, taskFile(ctx, task.id))], { allowFail: true });
+      const staged = git.git(ctx, ['diff', '--cached', '--name-only'], { allowFail: true });
+      if (staged.code === 0 && staged.out.trim()) {
+        git.git(ctx, ['commit', '-m', `chore(${task.id}): registrar la pull request en la tarea`], { allowFail: true });
+        const pushed = git.git(ctx, ['push'], { allowFail: true });
+        if (pushed.code === 0) ok('enlace de la PR registrado en la tarea');
+        else warn('el enlace de la PR quedó en un commit sin subir: haz `git push`');
+      }
     } else if (pr.manualUrl) {
       warn(`gh not available — open the PR here:\n   ${pr.manualUrl}`);
     }

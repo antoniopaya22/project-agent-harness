@@ -2,14 +2,14 @@
   "harness_version": "1.0.0",
   "counts": {
     "backlog": 11,
-    "ready": 15,
+    "ready": 14,
     "in_progress": 3,
     "in_review": 1,
     "blocked": 0,
-    "done": 60,
+    "done": 61,
     "cancelled": 0,
     "total": 90,
-    "open": 30
+    "open": 29
   },
   "next": "FEAT-0032",
   "tasks": [
@@ -599,7 +599,7 @@
       "id": "FEAT-0019",
       "title": "Inferencia y propuesta de adopción",
       "type": "feature",
-      "status": "in_review",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "cli",
@@ -616,7 +616,7 @@
       "id": "FEAT-0020",
       "title": "Aplicación de la estructura y verificación final",
       "type": "feature",
-      "status": "ready",
+      "status": "in_review",
       "priority": "high",
       "size": "M",
       "area": "cli",
@@ -624,9 +624,9 @@
       "depends_on": [
         "FEAT-0019"
       ],
-      "blocked": true,
-      "assignee": null,
-      "branch": null
+      "blocked": false,
+      "assignee": "agent:implementer",
+      "branch": "feat/0020-aplicacion-de-la-estructura-y-verificacion"
     },
     {
       "id": "FEAT-0021",

@@ -21,15 +21,12 @@ CLI command that does the deterministic part.
 node .harness/bin/harness.mjs survey $1
 ```
 
-Read what it reports. It carries **evidence for every finding**, and absence is reported as
-absence: a `tsconfig.json` is not a typecheck command, and loose `.mjs` files are not a
-declared stack. Do not fill those gaps with convention — that is exactly how an adoption
-produces confident, wrong documentation.
+It carries evidence for every finding, and reports absence as absence: a `tsconfig.json` is
+not a typecheck command. Do not fill those gaps with convention.
 
-If it says the project already has a harness, **stop**: adopting twice is almost never what
-somebody means. Run `harness doctor` instead.
+If it says the project already has a harness, **stop** and run `harness doctor` instead.
 
-Then take the oracle, which everything later depends on:
+Then take the oracle everything later depends on:
 
 ```bash
 node .harness/bin/harness.mjs survey $1 --baseline
@@ -48,15 +45,11 @@ them, then record what you heard in the same command:
 node .harness/bin/harness.mjs interview $1 --answer purpose="..." --unknown glossary
 ```
 
-Repeat until it exits 0. The question set, the rounds and the persistence are handled for
-you: the harness knows what the survey already found and will not ask it again.
+Repeat until it exits 0. The rounds, the persistence and the phrasing are handled for you —
+the questions already confirm inferences rather than asking in the open, and the harness will
+not re-ask what the survey found. Do not rewrite a confirmation into an open question.
 
-Prefer confirming an inference over asking in the open — that is already how the questions
-are phrased, so keep it: *"I found `pytest -q` in your CI, is that the real command?"* gets a
-yes in a second. Do not rewrite a confirmation into an open question.
-
-When the human does not know something, record that as **not known**. It becomes an
-`[SIN VERIFICAR]` marker in the docs. Never fill it in yourself.
+When the human does not know, record `--unknown`. It becomes a `[SIN VERIFICAR]` marker.
 
 ## 3 — Infer and propose. One file, nothing else touched
 
@@ -91,12 +84,21 @@ Stop. Explicit go-ahead from the human before anything is created.
 node .harness/bin/harness.mjs init $1 --purpose "<lo que respondió el humano>"
 ```
 
-Then the **scribe** fills the area docs from the proposal, and the **planner** seeds the
-backlog — in `backlog`, never `ready`: they are unrefined ideas and marking them ready would
-be lying about their state.
-
 `init` never overwrites an existing file and reports what it left alone. If a `README.md` or
 a `docs/` already exists, it is written alongside.
+
+Then seed the backlog and **prove the inferred gates actually run**:
+
+```bash
+node .harness/bin/harness.mjs apply $1
+```
+
+A gate command read off a config file is a hypothesis. `apply` runs each one once and
+downgrades any that never started to `not-configured`, exiting 1 so you cannot miss it. One
+that runs and *fails* stays configured: that is the truth about the project today.
+
+It also seeds the backlog, all in `backlog` and never `ready`. Then the **scribe** fills the
+area docs from the proposal — the one part no command can write, and the most valuable.
 
 ## 6 — Reorganise, only if there is a safety net
 
@@ -123,8 +125,13 @@ around: without an oracle, moving a file is indistinguishable from breaking it.
 ```bash
 node .harness/bin/harness.mjs generate
 node .harness/bin/harness.mjs doctor
+node .harness/bin/harness.mjs gate test
 node .harness/bin/harness.mjs status
 ```
+
+`doctor` green and `gate test` green together are the claim this whole command makes: not
+"the files were written" but "the harness works here". Run them from **inside** the adopted
+project, not from the template.
 
 Report: what got documented, what is still `[SIN VERIFICAR]`, which files moved, which
 configuration was rewritten **by name**, and what the human has to fill in.

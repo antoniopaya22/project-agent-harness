@@ -3,7 +3,7 @@
   "id": "FEAT-0019",
   "title": "Inferencia y propuesta de adopción",
   "type": "feature",
-  "status": "in_review",
+  "status": "done",
   "priority": "high",
   "size": "M",
   "parent": "EPIC-0004",
@@ -47,9 +47,11 @@
   "claimed_at": "2026-08-21T08:01:35Z",
   "branch": "feat/0019-inferencia-y-propuesta-de-adopcion",
   "links": {
-    "pr": null,
+    "pr": "https://github.com/antoniopaya22/project-agent-harness/pull/95",
     "issue": null,
-    "commits": []
+    "commits": [
+      "8ed65b5821a4"
+    ]
   },
   "external": {
     "github": {
@@ -64,5 +66,5 @@
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-21T08:04:30Z"
+  "updated_at": "2026-08-21T08:06:07Z"
 }
