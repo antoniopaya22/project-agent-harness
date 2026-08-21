@@ -1,0 +1,121 @@
+---
+id: adopt
+name: Adopt
+purpose: Take a project that already exists and leave it usable by the harness — documented from evidence, with a seeded backlog, and optionally reorganised.
+args: "[ruta]"
+kind: hybrid
+agents: [researcher, scribe, planner]
+capabilities: [read, search, edit, shell, delegate, ask]
+model: deep
+---
+
+Adopt the project at **$1** (the current directory if no path is given).
+
+This is a session with a human, not a one-shot command. Everything they answer is persisted,
+so a second run continues instead of starting over. Work through the stages; each one has a
+CLI command that does the deterministic part.
+
+## 1 — Survey. Look, write nothing
+
+```bash
+node .harness/bin/harness.mjs survey $1
+```
+
+Read what it reports. It carries **evidence for every finding**, and absence is reported as
+absence: a `tsconfig.json` is not a typecheck command, and loose `.mjs` files are not a
+declared stack. Do not fill those gaps with convention — that is exactly how an adoption
+produces confident, wrong documentation.
+
+If it says the project already has a harness, **stop**: adopting twice is almost never what
+somebody means. Run `harness doctor` instead.
+
+Then take the oracle, which everything later depends on:
+
+```bash
+node .harness/bin/harness.mjs survey $1 --baseline
+```
+
+## 2 — Interview. Ask only what the code cannot answer
+
+The question set, the rounds and the persistence are handled for you: the harness knows what
+the survey already found and will not ask it again. Your job is to **run the rounds and
+record the answers**, at most four questions at a time.
+
+Prefer confirming an inference over asking in the open — that is already how the questions
+are phrased, so keep it: *"I found `pytest -q` in your CI, is that the real command?"* gets a
+yes in a second. Do not rewrite a confirmation into an open question.
+
+When the human does not know something, record that as **not known**. It becomes an
+`[SIN VERIFICAR]` marker in the docs. Never fill it in yourself.
+
+## 3 — Infer and propose. One file, nothing else touched
+
+Invoke the **researcher** for anything genuinely unknown (an unfamiliar framework, an
+undocumented corner), then the **scribe** to write `.harness/adoption/PROPOSAL.md`:
+
+- what will be created, and what each document will say;
+- the gates, each with the file they came from;
+- the areas, from real directories crossed with the git hotspots;
+- the seed backlog, from `TODO`/`FIXME` and open issues;
+- the move plan, if any.
+
+Every statement carries `[evidencia: ruta:línea]` or is marked `[SIN VERIFICAR — confirmar]`.
+**Nothing else is written in this stage.** The human reads it, corrects it, and you propose
+again — that loop is the point.
+
+## 4 — Confirm
+
+Stop. Explicit go-ahead from the human before anything is created.
+
+## 5 — Apply the structure
+
+```bash
+node .harness/bin/harness.mjs init $1 --purpose "<lo que respondió el humano>"
+```
+
+Then the **scribe** fills the area docs from the proposal, and the **planner** seeds the
+backlog — in `backlog`, never `ready`: they are unrefined ideas and marking them ready would
+be lying about their state.
+
+`init` never overwrites an existing file and reports what it left alone. If a `README.md` or
+a `docs/` already exists, it is written alongside.
+
+## 6 — Reorganise, only if there is a safety net
+
+```bash
+node .harness/bin/harness.mjs restructure $1 --dry-run
+```
+
+Read the plan it writes. Then, if the human agrees:
+
+```bash
+node .harness/bin/harness.mjs restructure $1
+```
+
+It refuses on a dirty tree, moves with `git mv` in small batches, fixes the references in the
+same batch, compares the gates against the baseline between batches, reverts a batch that
+made anything worse, and squashes what survived into one revertible commit.
+
+**If the baseline had no passing test gate it moves nothing** and prints the reorganisation as
+backlog tasks instead, starting with one to get a safety net. That is not a failure to work
+around: without an oracle, moving a file is indistinguishable from breaking it.
+
+## 7 — Verify and report
+
+```bash
+node .harness/bin/harness.mjs generate
+node .harness/bin/harness.mjs doctor
+node .harness/bin/harness.mjs status
+```
+
+Report: what got documented, what is still `[SIN VERIFICAR]`, which files moved, which
+configuration was rewritten **by name**, and what the human has to fill in.
+
+## Never
+
+- Never invent a gate command, a purpose, or a domain term. The whole value of an adoption is
+  that its output can be trusted.
+- Never write anything in stages 1 and 2.
+- Never move code without a green baseline and an explicit yes.
+- Never seed a task as `ready`.
+- Never overwrite or delete an existing document. Write alongside and report the overlap.

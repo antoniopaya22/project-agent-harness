@@ -2,16 +2,16 @@
   "harness_version": "1.0.0",
   "counts": {
     "backlog": 11,
-    "ready": 18,
+    "ready": 17,
     "in_progress": 2,
     "in_review": 0,
     "blocked": 0,
-    "done": 59,
+    "done": 60,
     "cancelled": 0,
     "total": 90,
-    "open": 31
+    "open": 30
   },
-  "next": "FEAT-0018",
+  "next": "FEAT-0019",
   "tasks": [
     {
       "id": "CHORE-0001",
@@ -583,7 +583,7 @@
       "id": "FEAT-0018",
       "title": "Entrevista iterativa al humano",
       "type": "feature",
-      "status": "ready",
+      "status": "done",
       "priority": "high",
       "size": "M",
       "area": "cli",
@@ -592,8 +592,8 @@
         "FEAT-0017"
       ],
       "blocked": false,
-      "assignee": null,
-      "branch": null
+      "assignee": "agent:implementer",
+      "branch": "feat/0018-entrevista-iterativa-al-humano"
     },
     {
       "id": "FEAT-0019",
@@ -608,7 +608,7 @@
         "FEAT-0017",
         "FEAT-0018"
       ],
-      "blocked": true,
+      "blocked": false,
       "assignee": null,
       "branch": null
     },

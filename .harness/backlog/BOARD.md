@@ -2,14 +2,14 @@
 
 # Tablero — project-agent-harness
 
-90 tareas · 31 abiertas · 59 hechas
+90 tareas · 30 abiertas · 60 hechas
 
 | Columna | Tareas |
 |---------|--------|
 | Backlog | 11 |
-| Listas para empezar | 18 |
+| Listas para empezar | 17 |
 | En curso | 2 |
-| Hechas | 59 |
+| Hechas | 60 |
 
 ## Backlog (11)
 
@@ -27,7 +27,7 @@
 | `SPIKE-0001` | Verificar los formatos reales de Cursor y de Copilot | low | S | adapters | de EPIC-0005 |
 | `SPIKE-0002` | Verificar la interfaz de programación de ClickUp | low | S | integrations | de EPIC-0006 |
 
-## Listas para empezar (18)
+## Listas para empezar (17)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -37,8 +37,7 @@
 | `EPIC-0009` | Mecanismos en lugar de instrucciones | critical | — | — | — |
 | `EPIC-0010` | Anti-podredumbre: que la estructura se defienda sola | high | — | — | — |
 | `EPIC-0013` | Preguntas abiertas y medicion honesta | medium | — | — | — |
-| `FEAT-0018` | Entrevista iterativa al humano | high | M | cli | de EPIC-0004 |
-| `FEAT-0019` | Inferencia y propuesta de adopción | high | M | cli | espera FEAT-0017, FEAT-0018 · de EPIC-0004 |
+| `FEAT-0019` | Inferencia y propuesta de adopción | high | M | cli | de EPIC-0004 |
 | `FEAT-0020` | Aplicación de la estructura y verificación final | high | M | cli | espera FEAT-0019 · de EPIC-0004 |
 | `FEAT-0032` | Cerrar una tarea en una sola llamada | high | M | cli | de EPIC-0008 |
 | `FEAT-0035` | Sugerir el nivel de modelo segun el tamano de la tarea | medium | S | definitions | de EPIC-0008 |
@@ -57,7 +56,7 @@
 | `EPIC-0012` | Ergonomia y huecos del dia a dia | high | — | — | — |
 | `FEAT-0051` | La siguiente tarea se elige por camino critico | high | S | cli | agent:implementer · de EPIC-0012 |
 
-## Hechas (59)
+## Hechas (60)
 
 | Id | Tarea | Prioridad | Tamaño | Área | Notas |
 |----|-------|-----------|--------|------|-------|
@@ -90,6 +89,7 @@
 | `FEAT-0015` | Comando de commit con apertura de solicitud de cambios | critical | L | cli | agent:implementer · de EPIC-0003 |
 | `FEAT-0016` | Comandos de revisión y de traspaso | high | S | definitions | agent:implementer · de EPIC-0003 |
 | `FEAT-0017` | Reconocimiento del proyecto y línea base de calidad | high | M | cli | agent:implementer · de EPIC-0004 |
+| `FEAT-0018` | Entrevista iterativa al humano | high | M | cli | agent:implementer · de EPIC-0004 |
 | `FEAT-0021` | Perfiles de estructura destino por lenguaje | high | S | definitions | agent:implementer · de EPIC-0004 |
 | `FEAT-0022` | Reescritura de referencias tras mover ficheros | critical | L | cli | agent:implementer · de EPIC-0004 |
 | `FEAT-0023` | Motor de reorganización por lotes verificados | critical | L | cli | agent:implementer · de EPIC-0004 |

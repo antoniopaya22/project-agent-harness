@@ -40,6 +40,7 @@ role at a time explicitly and respect its limits — they are what keep the work
 
 Each of these is a numbered runbook you can follow or paste as a prompt:
 
+- `adopt` [ruta] — Take a project that already exists and leave it usable by the harness — documented from evidence, with a seeded backlog, and optionally reorganised. → `docs/runbooks/adopt.md`
 - `commit` [mensaje opcional] — Commit and push the current work on the task branch, following the git conventions, and open the PR when the task is finished. → `docs/runbooks/commit.md`
 - `doctor` [--fix] — Validate the harness itself — schemas, backlog hygiene, generated adapters, read-path budgets and codemap truthfulness. → `docs/runbooks/doctor.md`
 - `handoff` [TASK-ID] — Persist the state of the current task so the work survives a context reset, and stop cleanly. → `docs/runbooks/handoff.md`
