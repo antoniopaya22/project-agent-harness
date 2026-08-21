@@ -44,11 +44,13 @@
     "id": "implementer"
   },
   "claimed_at": "2026-08-21T08:17:50Z",
-  "branch": "feat/0054-importar-incidencias-existentes-como-tareas",
+  "branch": "feat/0051-la-siguiente-tarea-se-elige-por",
   "links": {
-    "pr": null,
+    "pr": "https://github.com/antoniopaya22/project-agent-harness/pull/98",
     "issue": null,
-    "commits": []
+    "commits": [
+      "2504c301855a"
+    ]
   },
   "external": {
     "github": {
@@ -63,5 +65,5 @@
     }
   },
   "created_at": "2026-08-20T15:30:00Z",
-  "updated_at": "2026-08-21T08:18:27Z"
+  "updated_at": "2026-08-21T08:19:01Z"
 }
