@@ -6,3 +6,4 @@
 {"at":"2026-08-21T08:45:06Z","by":"implementer","event":"status_changed","note":"in_progress -> in_review"}
 {"at":"2026-08-21T08:46:37Z","by":"human","event":"verified","note":"AC1 -> pass"}
 {"at":"2026-08-21T08:46:37Z","by":"human","event":"verified","note":"AC2 -> pass"}
+{"at":"2026-08-21T08:49:13Z","by":"human","event":"completed","note":"in_review -> done"}

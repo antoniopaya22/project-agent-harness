@@ -3,7 +3,7 @@
   "id": "EPIC-0007",
   "title": "Endurecimiento, automatismos y publicación",
   "type": "epic",
-  "status": "in_progress",
+  "status": "done",
   "priority": "medium",
   "description": "El harness se defiende solo de la degradación y cualquiera puede empezar a usarlo en dos minutos.",
   "acceptance_criteria": [
@@ -50,5 +50,5 @@
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-21T08:44:46Z"
+  "updated_at": "2026-08-21T08:49:13Z"
 }

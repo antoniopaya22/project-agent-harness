@@ -3,7 +3,7 @@
   "id": "SPIKE-0001",
   "title": "Verificar los formatos reales de Cursor y de Copilot",
   "type": "spike",
-  "status": "backlog",
+  "status": "in_review",
   "priority": "low",
   "size": "S",
   "parent": "EPIC-0005",
@@ -16,7 +16,8 @@
         "type": "review",
         "run": null
       },
-      "status": "pending"
+      "status": "pass",
+      "evidence": "Cursor: .cursor/rules/*.mdc con tres campos de front-matter (description, globs, alwaysApply), cuatro modos de aplicacion, referencias con @fichero. Fuente https://cursor.com/docs/rules. Copilot: .github/copilot-instructions.md para todo el repo y .github/instructions/NOMBRE.instructions.md con applyTo (y excludeAgent opcional), solo en el agente en la nube y la revision de codigo; ademas lee AGENTS.md. Fuente https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions. Recogido en docs/PROVIDERS.md, con .cursorrules marcado SIN VERIFICAR porque la documentacion ya no lo menciona y eso no equivale a estar retirado."
     }
   ],
   "context": {
@@ -26,14 +27,20 @@
     "out_of_scope": []
   },
   "depends_on": [],
+  "blocked_reason": null,
   "labels": [],
-  "assignee": null,
-  "claimed_at": null,
-  "branch": null,
+  "assignee": {
+    "kind": "agent",
+    "id": "researcher"
+  },
+  "claimed_at": "2026-08-21T08:55:17Z",
+  "branch": "spike/0001-verificar-los-formatos-reales-de-cursor",
   "links": {
-    "pr": null,
+    "pr": "https://github.com/antoniopaya22/project-agent-harness/pull/103",
     "issue": null,
-    "commits": []
+    "commits": [
+      "133e1b0027cc"
+    ]
   },
   "external": {
     "github": {
@@ -48,5 +55,5 @@
     }
   },
   "created_at": "2026-08-18T19:00:00Z",
-  "updated_at": "2026-08-20T18:41:47Z"
+  "updated_at": "2026-08-21T08:56:14Z"
 }

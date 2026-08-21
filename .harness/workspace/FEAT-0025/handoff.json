@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schema/handoff.schema.json",
+  "task": "FEAT-0025",
+  "stage": "claimed",
+  "by": "implementer",
+  "branch": "feat/0025-anulaciones-locales-regiones-preservadas-y-matriz",
+  "summary": "Tarea reclamada por agent:implementer. Rama feat/0025-anulaciones-locales-regiones-preservadas-y-matriz. Nada implementado todavía.",
+  "next": "planner",
+  "at": "2026-08-21T08:55:29Z"
+}

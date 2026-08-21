@@ -2,7 +2,7 @@
 area: cli
 updated: 2026-08-18
 owner: Antonio Payá
-verified_commit: 9921b8dd25f5
+verified_commit: 4ca18fa308c6
 ---
 
 # Área: CLI
@@ -43,6 +43,7 @@ dependa de la buena voluntad de un modelo.
 | Cierre | `lib/finish.mjs` | Las cinco etapas del cierre, parando en la primera que falla |
 | Nivel de modelo | `lib/tier.mjs` | Sugerencia de nivel a partir de tipo, tamaño y radio de impacto |
 | Anti-podredumbre | `lib/docs-cmd.mjs` | `doc` y `read-log` |
+| Migraciones | `lib/upgrade.mjs` | De la versión que adoptó un proyecto a la actual, idempotente |
 | Frescura | `lib/freshness.mjs` | Commits en un área desde que alguien leyó su documento |
 | Realimentación | `lib/feedback.mjs` | Lecturas fuera del camino previsto, agregadas por área |
 

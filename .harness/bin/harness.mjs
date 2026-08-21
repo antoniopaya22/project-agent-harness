@@ -39,6 +39,7 @@ import { commands as adoptCommands } from './lib/adopt-cmd.mjs';
 import * as importLib from './lib/import.mjs';
 import * as finishLib from './lib/finish.mjs';
 import { commands as docsCommands } from './lib/docs-cmd.mjs';
+import * as upgradeLib from './lib/upgrade.mjs';
 import * as tierLib from './lib/tier.mjs';
 import { lintBacklog } from './lib/lint.mjs';
 
@@ -101,6 +102,7 @@ commands.help = () => {
         ['sinks', 'which projections are installed, and whether each can run'],
         ['sync [--dry-run] [--limit n]', 'project the backlog to every enabled sink'],
         ['import [--state s]', 'seed the backlog from the issues this repository already has'],
+        ['upgrade [--dry-run]', 'migrate this project from the harness version it adopted to this one'],
         ['version', 'print the harness version'],
       ],
       ['COMMAND', 'WHAT IT DOES'],
@@ -109,6 +111,18 @@ commands.help = () => {
   say('');
   say(c.gray('Global flags: --as <actor>  --json  --quiet'));
   return EXIT.OK;
+};
+
+commands.upgrade = (ctx, { flags }) => {
+  const result = upgradeLib.upgrade(ctx, { dryRun: Boolean(flags['dry-run']) });
+  if (flags.json) {
+    say(JSON.stringify(result, null, 2));
+    return result.ahead ? EXIT.PRECONDITION : EXIT.OK;
+  }
+  upgradeLib.printUpgrade(result);
+  // Exit 3 when the project is ahead of the CLI: it is a precondition somebody has to resolve,
+  // not a success.
+  return result.ahead ? EXIT.PRECONDITION : EXIT.OK;
 };
 
 commands.version = () => {

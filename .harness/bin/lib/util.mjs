@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 
-export const HARNESS_VERSION = '1.0.0';
+export const HARNESS_VERSION = '1.1.0';
 
 /** Exit codes are part of the CLI contract: hooks and CI branch on them. */
 export const EXIT = {
