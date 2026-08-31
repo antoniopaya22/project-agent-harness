@@ -8,7 +8,7 @@
 //     `project` scope. Locally: `gh auth refresh -s project`.
 //
 // The project half therefore disables itself with an explanation rather than failing the
-// build. Verified against the GraphQL schema on 2026-08-20 (see docs/areas/integrations.md).
+// build. Verified against the GraphQL schema on 2026-08-20.
 
 import { spawnSync } from 'node:child_process';
 import crypto from 'node:crypto';
@@ -172,7 +172,7 @@ function loadIssueIndex(ctx) {
   for (let page = 0; page < 20; page += 1) {
     const res = gh(
       ctx,
-      ['issue', 'list', '--state', 'all', '--limit', '1000', '--json', 'number,title,state,body,id'],
+      ['issue', 'list', '--state', 'all', '--limit', '1000', '--json', 'number,title,state,body,id,labels'],
       { allowFail: true },
     );
     if (res.code !== 0 || !res.out) break;
@@ -196,6 +196,51 @@ function findIssueByTitle(ctx, task) {
   return issueIndex.get(task.id) || null;
 }
 
+/**
+ * Las etiquetas tienen que existir antes de poder ponerlas.
+ *
+ * `gh issue create --label X` falla si X no existe, y el respaldo -crear sin etiquetas y
+ * luego `issue edit --add-label`- falla por lo mismo. Como esa segunda llamada iba con
+ * allowFail, el error se tragaba y **en un repositorio nuevo no llegaba ninguna etiqueta,
+ * nunca**: ni type, ni priority, ni area. El tablero se quedaba sin nada por lo que filtrar.
+ *
+ * Se resuelve una vez por ejecución: se lista lo que hay y se crea lo que falta. Un color
+ * estable por familia para que el tablero se lea de un vistazo.
+ */
+let etiquetasConocidas = null;
+
+const COLOR = [
+  [/^type:/, '0E6F73'],
+  [/^priority:critical$/, '8C2F2F'],
+  [/^priority:high$/, 'A0541C'],
+  [/^priority:/, 'BFC9C7'],
+  [/^area:/, '4C6EF5'],
+  [/^cat-/, '16211F'],
+  [/^hallazgo-/, '5C6866'],
+];
+
+function colorDe(nombre) {
+  for (const [re, color] of COLOR) if (re.test(nombre)) return color;
+  return 'D3DCDA';
+}
+
+export function ensureLabels(ctx, labels) {
+  if (etiquetasConocidas === null) {
+    const res = gh(ctx, ['label', 'list', '--limit', '500', '--json', 'name'], { allowFail: true });
+    etiquetasConocidas = new Set();
+    if (res.code === 0 && res.out) {
+      try {
+        for (const l of JSON.parse(res.out)) etiquetasConocidas.add(l.name);
+      } catch { /* una lista ilegible se trata como vacía: se intentará crear */ }
+    }
+  }
+  for (const nombre of labels) {
+    if (etiquetasConocidas.has(nombre)) continue;
+    gh(ctx, ['label', 'create', nombre, '--color', colorDe(nombre), '--force'], { allowFail: true });
+    etiquetasConocidas.add(nombre);
+  }
+}
+
 /** Keeps the table honest after a create, so a re-run inside one session does not duplicate. */
 function rememberIssue(task, issue) {
   if (issueIndex) issueIndex.set(task.id, issue);
@@ -206,22 +251,37 @@ function rememberIssue(task, issue) {
 // ---------------------------------------------------------------------------
 
 /**
+ * The one query that finds a board, whoever owns it.
+ *
+ * The first version asked `user(login:)`, which is only half the owners a board can have:
+ * an organisation project came back as "not found", and a company repository is exactly
+ * where the board belongs. `repositoryOwner` is the interface both User and Organization
+ * implement, and `ProjectV2Owner` is the one that carries `projectV2` — so one inline
+ * fragment covers both without asking the configuration which kind it is, and without the
+ * second round trip a fallback would cost. Verified against the GraphQL schema on
+ * 2026-08-21 against a real organisation project.
+ */
+export const PROJECT_QUERY = `query($owner:String!,$number:Int!){
+    repositoryOwner(login:$owner){
+      ... on ProjectV2Owner { projectV2(number:$number){ id title
+        fields(first:50){ nodes{
+          ... on ProjectV2SingleSelectField { id name options { id name } }
+          ... on ProjectV2Field { id name }
+        } } } }
+    }
+  }`;
+
+/**
  * Discovers the three stable ids — project, status field, and one per option — in a single
  * query, and caches them. Four ids are needed to move a card; only the item id is per task.
  */
 export function discoverProject(ctx, { owner, number }) {
-  const query = `query($owner:String!,$number:Int!){
-    user(login:$owner){ projectV2(number:$number){ id title
-      fields(first:50){ nodes{
-        ... on ProjectV2SingleSelectField { id name options { id name } }
-        ... on ProjectV2Field { id name }
-      } } } }
-  }`;
+  const query = PROJECT_QUERY;
   const res = gh(ctx, ['api', 'graphql', '-f', `query=${query}`, '-F', `owner=${owner}`, '-F', `number=${number}`], {
     allowFail: true,
   });
   if (res.code !== 0) throw new Error(`cannot read project ${owner}/#${number}: ${res.err.split('\n')[0]}`);
-  const project = JSON.parse(res.out).data?.user?.projectV2;
+  const project = JSON.parse(res.out).data?.repositoryOwner?.projectV2;
   if (!project) throw new Error(`project ${owner}/#${number} not found`);
   const statusField = (project.fields.nodes || []).find((f) => f.name === 'Status' && f.options);
   if (!statusField) throw new Error('the project has no single-select field named "Status"');
@@ -291,6 +351,14 @@ export function incompleteReason(ctx, task) {
   const state = task.external?.github || {};
   if (!state.issue) return null; // nothing projected yet; the engine will create it
   if (projectIds && !state.project_item_id) return "not on the project board yet";
+
+  // Y las etiquetas. Sin esto, una incidencia creada cuando las etiquetas no existían se
+  // quedaba sin ellas para siempre: su contenido estaba al día, así que el motor la saltaba y
+  // nunca se volvía a llamar a apply(). Es el mismo agujero que ya tenía el tablero.
+  const remotas = new Set((findIssueByTitle(ctx, task)?.labels || []).map((l) => l.name));
+  const faltan = labelsFor(task).filter((l) => !remotas.has(l));
+  if (faltan.length) return `sin etiquetar: ${faltan.join(', ')}`;
+
   return null;
 }
 
@@ -301,9 +369,12 @@ export async function apply(ctx, { op, task }) {
   let number = existing?.number ?? null;
   let drifted = false;
 
+  const labels = labelsFor(task);
+  ensureLabels(ctx, labels);
+
   if (!existing) {
     // Labels go in the create call: one round trip instead of one per label.
-    const res = gh(ctx, ['issue', 'create', '--title', title, '--body', body, '--label', labelsFor(task).join(',')], {
+    const res = gh(ctx, ['issue', 'create', '--title', title, '--body', body, '--label', labels.join(',')], {
       allowFail: true,
     });
     if (res.code !== 0) {
@@ -311,7 +382,7 @@ export async function apply(ctx, { op, task }) {
       // and add them after: losing a label is better than losing the issue.
       const bare = gh(ctx, ['issue', 'create', '--title', title, '--body', body]);
       number = Number((bare.out.match(/\/issues\/(\d+)/) || [])[1]) || null;
-      if (number) gh(ctx, ['issue', 'edit', String(number), '--add-label', labelsFor(task).join(',')], { allowFail: true });
+      if (number) gh(ctx, ['issue', 'edit', String(number), '--add-label', labels.join(',')], { allowFail: true });
     } else {
       number = Number((res.out.match(/\/issues\/(\d+)/) || [])[1]) || null;
     }
@@ -325,7 +396,9 @@ export async function apply(ctx, { op, task }) {
     if (op === 'update' && lastWritten && existing.body) {
       drifted = bodyHash(existing.body) !== lastWritten;
     }
-    gh(ctx, ['issue', 'edit', String(number), '--title', title, '--body', body], { allowFail: true });
+    // Las etiquetas también se sincronizan al actualizar: antes solo se tocaban al crear, así
+    // que una tarea que cambiaba de prioridad o de área mantenía la etiqueta vieja para siempre.
+    gh(ctx, ['issue', 'edit', String(number), '--title', title, '--body', body, '--add-label', labels.join(',')], { allowFail: true });
   }
 
   if (isClosed(task) && existing?.state !== 'CLOSED') gh(ctx, ['issue', 'close', String(number)], { allowFail: true });
