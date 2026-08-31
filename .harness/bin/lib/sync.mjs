@@ -87,16 +87,22 @@ export function planFor(ctx, sink, tasks) {
 
 /**
  * Runs one sink. Never throws: a broken sink is reported and the others continue.
- * @returns {{id:string, applied:number, skipped:number, failed:number, drifted:string[], errors:string[]}}
+ * @returns {{id:string, applied:number, skipped:number, failed:number, drifted:string[], errors:string[], degraded:string|null}}
  */
 export async function runSink(ctx, sink, tasks, { dryRun = false, limit = null } = {}) {
-  const result = { id: sink.id, applied: 0, skipped: 0, failed: 0, drifted: [], errors: [] };
+  const result = { id: sink.id, applied: 0, skipped: 0, failed: 0, drifted: [], errors: [], degraded: null };
   let operations;
   try {
     // Prepare first: the plan asks the sink what is still missing, and it cannot answer that
     // before it knows what it is connected to. The other order made every plan claim there
     // was nothing to do.
     if (sink.module.prepare) await sink.module.prepare(ctx, { dryRun });
+    // A sink can reach *some* of what it projects (issues) but not all of it (the board is a
+    // separate credential). That partial failure used to be invisible: `projectSkipReason`
+    // was computed by both adapters and read by neither this function nor `runSync`, so a
+    // missing/expired token degraded every sync to "issues only" silently — the exact
+    // "mirror silently out of date" this projection engine exists to avoid.
+    result.degraded = sink.module.projectSkipReason ? sink.module.projectSkipReason() : null;
     operations = planFor(ctx, sink, tasks);
   } catch (e) {
     result.errors.push(`prepare failed: ${e.message}`);
@@ -177,6 +183,9 @@ export async function runSync(ctx, { dryRun = false, only = null, limit = null }
     if (result.errors.length) {
       for (const e of result.errors) warn(`   ${e}`);
     }
+    if (result.degraded) {
+      warn(`   degraded: ${result.degraded}`);
+    }
     for (const id of result.drifted) {
       warn(`   ${id} was edited remotely; the repository wins and it has been overwritten`);
     }
@@ -188,6 +197,7 @@ export async function runSync(ctx, { dryRun = false, only = null, limit = null }
   }
 
   if (results.length === 0) info('no sink was enabled');
+  else if (results.some((r) => r.degraded)) warn('projection incomplete — see "degraded" above');
   else if (results.every((r) => r.failed === 0)) ok('projection complete');
   return results;
 }
