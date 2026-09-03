@@ -65,6 +65,39 @@ export function tempHarness({ project = {}, tasks = [], agents = [], commands = 
   return { ctx, cleanup: () => fs.rmSync(root, { recursive: true, force: true }) };
 }
 
+/**
+ * A stand-in `gh` on PATH, for the one caller (the GitHub sink) that shells out to it
+ * directly with no injection point. `config` maps the coarse command keys documented in
+ * tests/fixtures/fake-gh.mjs to `{ out?, err?, code? }`. Every invocation is logged so a test
+ * can assert what was actually asked, not just what came back.
+ */
+export function withFakeGh(config = {}) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'fake-gh-'));
+  const ghPath = path.join(dir, 'gh');
+  fs.copyFileSync(path.join(REPO, 'tests', 'fixtures', 'fake-gh.mjs'), ghPath);
+  fs.chmodSync(ghPath, 0o755);
+  const configPath = path.join(dir, 'config.json');
+  fs.writeFileSync(configPath, JSON.stringify(config));
+  const logPath = path.join(dir, 'log.jsonl');
+  fs.writeFileSync(logPath, '');
+
+  const prev = { PATH: process.env.PATH, FAKE_GH_CONFIG: process.env.FAKE_GH_CONFIG, FAKE_GH_LOG: process.env.FAKE_GH_LOG };
+  process.env.PATH = `${dir}${path.delimiter}${prev.PATH}`;
+  process.env.FAKE_GH_CONFIG = configPath;
+  process.env.FAKE_GH_LOG = logPath;
+
+  return {
+    calls: () => fs.readFileSync(logPath, 'utf8').trim().split('\n').filter(Boolean).map((l) => JSON.parse(l)),
+    cleanup: () => {
+      for (const [key, value] of Object.entries(prev)) {
+        if (value === undefined) delete process.env[key];
+        else process.env[key] = value;
+      }
+      fs.rmSync(dir, { recursive: true, force: true });
+    },
+  };
+}
+
 /** A schema-valid task, so each test only states what it actually cares about. */
 export function makeTask(overrides = {}) {
   return {

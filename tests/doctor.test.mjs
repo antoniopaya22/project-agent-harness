@@ -188,6 +188,23 @@ test('--fix never touches a task, a doc or any source file', () => {
   }
 });
 
+test('a directory in context.files is a legible read-path problem, not an EISDIR crash', () => {
+  const { ctx, cleanup } = tempHarness({
+    tasks: [makeTask({ context: { area: 'core', docs: [], files: ['una-carpeta'], out_of_scope: [] } })],
+    project: { read_path_total_max_tokens: 100000 },
+  });
+  try {
+    fs.mkdirSync(path.join(ctx.root, 'una-carpeta'));
+    const found = issuesFor(ctx).filter((i) => i.check === 'read-path');
+    assert.ok(
+      found.some((i) => i.message.includes('una-carpeta') && /directory/.test(i.message)),
+      'doctor must name the directory and say it is a directory, not throw EISDIR',
+    );
+  } finally {
+    cleanup();
+  }
+});
+
 test('this repository is healthy', () => {
   const { counts } = runDoctor(repoCtx());
   assert.equal(counts.error, 0);

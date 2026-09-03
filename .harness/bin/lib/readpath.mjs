@@ -47,6 +47,12 @@ export function readPathFor(ctx, task) {
 function entry(ctx, relPath, why) {
   const full = path.join(ctx.root, relPath);
   if (!fs.existsSync(full)) return { path: toPosixPath(relPath), why, tokens: 0, lines: 0, missing: true };
+  // A directory passes existsSync but readFileSync throws EISDIR on it. context.files is
+  // meant to name files to read, but nothing stops a task from pointing it at a directory —
+  // and when that happens, doctor and brief should say so, not crash.
+  if (fs.statSync(full).isDirectory()) {
+    return { path: toPosixPath(relPath), why, tokens: 0, lines: 0, missing: false, isDirectory: true };
+  }
   const text = fs.readFileSync(full, 'utf8');
   return {
     path: toPosixPath(relPath),
@@ -55,6 +61,13 @@ function entry(ctx, relPath, why) {
     lines: text.split('\n').length,
     missing: false,
   };
+}
+
+/** Reads a path for inlining into a brief, without throwing EISDIR if it turns out to be a directory. */
+function readForBrief(full) {
+  if (!fs.existsSync(full)) return '(missing)';
+  if (fs.statSync(full).isDirectory()) return '(is a directory, not a file — cannot inline)';
+  return fs.readFileSync(full, 'utf8').trimEnd();
 }
 
 /**
@@ -135,7 +148,7 @@ export function renderBrief(ctx, task, { withFiles = false } = {}) {
 
   for (const doc of task.context?.docs || []) {
     const full = path.join(ctx.root, doc);
-    parts.push(SEP(doc) + (fs.existsSync(full) ? fs.readFileSync(full, 'utf8').trimEnd() : '(missing)'));
+    parts.push(SEP(doc) + readForBrief(full));
   }
 
   const files = task.context?.files || [];
@@ -143,7 +156,7 @@ export function renderBrief(ctx, task, { withFiles = false } = {}) {
     if (withFiles) {
       for (const f of files) {
         const full = path.join(ctx.root, f);
-        parts.push(SEP(f) + (fs.existsSync(full) ? fs.readFileSync(full, 'utf8').trimEnd() : '(missing)'));
+        parts.push(SEP(f) + readForBrief(full));
       }
     } else {
       // The work payload is listed, not inlined: read only what you actually touch.
@@ -182,6 +195,9 @@ export function budgetProblems(ctx, task) {
   }
   for (const m of rp.missing) {
     problems.push(`${m.path} is referenced by the task but does not exist`);
+  }
+  for (const e of [...rp.orientation, ...rp.work]) {
+    if (e.isDirectory) problems.push(`${e.path} is referenced by the task but is a directory, not a file`);
   }
   return problems;
 }
