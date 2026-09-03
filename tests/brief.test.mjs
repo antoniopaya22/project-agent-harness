@@ -134,6 +134,25 @@ test('work files are listed, not inlined, unless asked for', () => {
   }
 });
 
+test('a directory in context.files is inlined as a legible note, not an EISDIR crash', () => {
+  // readFileSync throws EISDIR on a directory, and existsSync says nothing about which kind
+  // of entry it is — so context.files pointing at a directory used to crash --with-files.
+  const { ctx, cleanup } = tempHarness({
+    project: { areas: [{ id: 'core', globs: ['src/**'], doc: 'docs/areas/core.md' }] },
+  });
+  try {
+    fs.writeFileSync(path.join(ctx.harnessDir, 'ENTRYPOINT.md'), '# reglas\n');
+    fs.mkdirSync(path.join(ctx.root, 'src', 'carpeta'), { recursive: true });
+    const task = makeTask({ context: { area: 'core', docs: [], files: ['src/carpeta'], out_of_scope: [] } });
+
+    const { body } = renderBrief(ctx, task, { withFiles: true });
+    assert.match(body, /src\/carpeta/);
+    assert.match(body, /is a directory/i);
+  } finally {
+    cleanup();
+  }
+});
+
 test('an ungroomed task produces a brief that says so instead of failing', () => {
   const { ctx, cleanup } = tempHarness({});
   try {
