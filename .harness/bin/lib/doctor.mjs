@@ -4,7 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { countLines, countTokens, listFiles, matchesAny, parseFrontMatter, toPosixPath } from './util.mjs';
-import { loadAll, validateTask } from './tasks.mjs';
+import { loadAll, usesGithub, validateTask } from './tasks.mjs';
 import { lintBacklog } from './lint.mjs';
 import { git } from './git.mjs';
 import { budgetProblems } from './readpath.mjs';
@@ -21,11 +21,16 @@ export const CHECKS = [
   'areas', 'codemap', 'doc-freshness', 'sinks', 'definitions', 'secrets', 'git-visibility', 'orphans', 'templates',
 ];
 
-export function runDoctor(ctx, { fix = false } = {}) {
+export function runDoctor(ctx, { fix = false, backlog = null } = {}) {
   /** @type {Issue[]} */
   const issues = [];
   const fixed = [];
-  const tasks = loadAll(ctx);
+  // With the backlog in GitHub, reading it costs API calls, and doctor runs in CI on every
+  // push (twice: ubuntu and windows). The task checks there are opt-in (`--backlog`); the
+  // store already validates each task before writing it, which is where it can be fixed.
+  const github = usesGithub(ctx);
+  const withTasks = backlog ?? !github;
+  const tasks = withTasks ? loadAll(ctx) : [];
 
   // 1. project.json against its schema
   const projectSchemaFile = path.join(ctx.harnessDir, 'schema', 'project.schema.json');
@@ -44,17 +49,17 @@ export function runDoctor(ctx, { fix = false } = {}) {
   }
 
   // 3. backlog hygiene
-  for (const f of lintBacklog(ctx, { tasks })) {
+  for (const f of withTasks ? lintBacklog(ctx, { tasks }) : []) {
     issues.push({ level: f.level, check: 'backlog', message: f.id ? `${f.id}: ${f.message}` : f.message });
   }
 
-  // 4. generated views up to date
-  const index = buildIndex(tasks);
-  const indexOnDisk = fs.existsSync(indexPath(ctx)) ? fs.readFileSync(indexPath(ctx), 'utf8') : null;
-  const wantIndex = `${JSON.stringify(index, null, 2)}\n`;
-  const boardOnDisk = fs.existsSync(boardPath(ctx)) ? fs.readFileSync(boardPath(ctx), 'utf8') : null;
-  const wantBoard = renderBoard(ctx, index);
-  if (norm(indexOnDisk) !== norm(wantIndex) || norm(boardOnDisk) !== norm(wantBoard)) {
+  // 4. generated views up to date (only the file store has them)
+  const index = github ? null : buildIndex(tasks);
+  const indexOnDisk = !github && fs.existsSync(indexPath(ctx)) ? fs.readFileSync(indexPath(ctx), 'utf8') : null;
+  const wantIndex = github ? null : `${JSON.stringify(index, null, 2)}\n`;
+  const boardOnDisk = !github && fs.existsSync(boardPath(ctx)) ? fs.readFileSync(boardPath(ctx), 'utf8') : null;
+  const wantBoard = github ? null : renderBoard(ctx, index);
+  if (!github && (norm(indexOnDisk) !== norm(wantIndex) || norm(boardOnDisk) !== norm(wantBoard))) {
     if (fix) {
       fs.mkdirSync(path.dirname(indexPath(ctx)), { recursive: true });
       fs.writeFileSync(indexPath(ctx), wantIndex, 'utf8');

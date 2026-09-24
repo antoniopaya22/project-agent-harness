@@ -59,7 +59,11 @@ export function writeConfig(ctx, config) {
 }
 
 function gh(ctx, args, { allowFail = false } = {}) {
-  const res = spawnSync('gh', args, { cwd: ctx.root, encoding: 'utf8' });
+  // HARNESS_GH_SCRIPT: a Node script standing in for `gh`, for the test suite (see store-github).
+  const script = process.env.HARNESS_GH_SCRIPT;
+  const res = script
+    ? spawnSync(process.execPath, [script, ...args], { cwd: ctx.root, encoding: 'utf8' })
+    : spawnSync('gh', args, { cwd: ctx.root, encoding: 'utf8' });
   const out = (res.stdout || '').trim();
   if (res.status !== 0 && !allowFail) {
     throw new Error(`gh ${args.slice(0, 3).join(' ')} failed: ${(res.stderr || out).trim().split('\n')[0]}`);
@@ -167,32 +171,53 @@ export function isClosed(task) {
  */
 let issueIndex = null;
 
+// `--limit` es el total a traer, no un tamaño de página: `gh issue list` pagina solo por
+// dentro hasta alcanzarlo. Un límite de 1000 (CHORE-0083, hallazgo del grooming del
+// 2026-09-24) dejaba fuera del índice cualquier incidencia más allá de las 1000 más
+// recientes -en un repositorio con 2703 a esa fecha, más de 1700 quedaban invisibles-, así
+// que `findIssueByTitle` no encontraba la incidencia real de una tarea vieja y `apply()`
+// creaba una segunda. 20000 dobla con margen amplio el tamaño actual del repositorio.
+const LIMITE_INCIDENCIAS = 20000;
+
 function loadIssueIndex(ctx) {
   const index = new Map();
-  for (let page = 0; page < 20; page += 1) {
-    const res = gh(
-      ctx,
-      ['issue', 'list', '--state', 'all', '--limit', '1000', '--json', 'number,title,state,body,id,labels'],
-      { allowFail: true },
-    );
-    if (res.code !== 0 || !res.out) break;
-    let issues;
-    try {
-      issues = JSON.parse(res.out);
-    } catch {
-      break;
-    }
-    for (const issue of issues) {
-      const id = String(issue.title).split(' ')[0];
-      if (/^[A-Z]+-\d{4}$/.test(id)) index.set(id, issue);
-    }
-    break; // `gh issue list` caps at its limit; 1000 covers any backlog this tool is for
+  const res = gh(
+    ctx,
+    ['issue', 'list', '--state', 'all', '--limit', String(LIMITE_INCIDENCIAS), '--json', 'number,title,state,body,id,labels'],
+    { allowFail: true },
+  );
+  // A list that could not be read is not an empty list. Treating it as one made every task look
+  // new and `apply` created a second issue for each of them, on every push: 2 361 duplicates in
+  // one project before anybody noticed. Failing here makes each operation fail instead, which
+  // `runSink` reports, and nothing is created.
+  if (res.code !== 0 || !res.out) {
+    throw new Error(`cannot list the repository's issues, refusing to create any: ${(res.err || 'empty answer').split('\n')[0]}`);
+  }
+  let issues;
+  try {
+    issues = JSON.parse(res.out);
+  } catch (e) {
+    throw new Error(`the issue list is not valid JSON, refusing to create any: ${e.message}`);
+  }
+  for (const issue of issues) {
+    const id = String(issue.title).split(' ')[0];
+    if (/^[A-Z]+-\d{4}$/.test(id)) index.set(id, issue);
   }
   return index;
 }
 
+let issueIndexError = null;
+
 function findIssueByTitle(ctx, task) {
-  if (!issueIndex) issueIndex = loadIssueIndex(ctx);
+  if (issueIndexError) throw issueIndexError;
+  if (!issueIndex) {
+    try {
+      issueIndex = loadIssueIndex(ctx);
+    } catch (e) {
+      issueIndexError = e; // once per run: the other tasks fail fast with the same reason
+      throw e;
+    }
+  }
   return issueIndex.get(task.id) || null;
 }
 
@@ -316,6 +341,9 @@ let projectIds = null;
 let projectDisabledReason = null;
 
 export function prepare(ctx, { dryRun = false } = {}) {
+  // Each run lists the issues afresh: a list (or a failure) from a previous run is not evidence.
+  issueIndex = null;
+  issueIndexError = null;
   const cfg = readConfig(ctx);
   projectIds = null;
   projectDisabledReason = null;

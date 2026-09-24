@@ -91,7 +91,8 @@ commands.help = () => {
         ['lint-backlog', 'cross-task hygiene: cycles, orphans, unready "ready"'],
         ['index', 'regenerate backlog/index.json and backlog/BOARD.md'],
         ['generate [--check]', 'write provider adapters from .harness/ (--check for CI)'],
-        ['doctor [--fix] [--only c]', 'validate the harness itself, including read-path budgets'],
+        ['doctor [--fix] [--only c] [--backlog]', 'validate the harness itself, including read-path budgets'],
+        ['backlog migrate-to-github', 'move the file backlog to GitHub issues + the Projects board [--dry-run] [--only ID]'],
         ['doc <sub> [area]', 'freshness | verified — which area docs are stale, and stamping one as read'],
         ['read-log <sub>', 'record the files a task forced you to read beyond its read path, and report'],
         ['metrics <sub>', 'duration per stage (derived) and consumption (declared), aggregated'],
@@ -150,7 +151,9 @@ commands['read-path'] = (ctx, { positional, flags }) => {
   const area = (ctx.project.areas || []).find((a) => a.id === task.context?.area);
   const entries = [
     { path: '.harness/ENTRYPOINT.md', why: 'rules + map' },
-    { path: `.harness/backlog/tasks/${task.id}.json`, why: 'the task' },
+    tasksLib.usesGithub(ctx)
+      ? { path: `harness task show ${task.id}`, why: 'the task', text: JSON.stringify(readpath.projectTask(task), null, 2) }
+      : { path: `.harness/backlog/tasks/${task.id}.json`, why: 'the task' },
     { path: '.harness/project.json', why: 'gates, areas, git conventions' },
   ];
   if (area) entries.push({ path: area.doc, why: `area "${area.id}"` });
@@ -168,8 +171,8 @@ commands['read-path'] = (ctx, { positional, flags }) => {
   const budgets = new Map((ctx.project.read_path || []).map((e) => [e.path, e.max_tokens]));
   const rows = entries.map((e) => {
     const full = path.join(ctx.root, e.path);
-    if (!fs.existsSync(full)) return [e.path, c.red('missing'), '', c.gray(e.why)];
-    const text = fs.readFileSync(full, 'utf8');
+    if (e.text === undefined && !fs.existsSync(full)) return [e.path, c.red('missing'), '', c.gray(e.why)];
+    const text = e.text ?? fs.readFileSync(full, 'utf8');
     const tokens = Math.ceil(text.length / 4);
     total += tokens;
     // Tokens are what the model pays; lines are shown only for human orientation.
@@ -320,6 +323,10 @@ commands['lint-backlog'] = (ctx) => {
 };
 
 commands.index = (ctx) => {
+  if (tasksLib.usesGithub(ctx)) {
+    info('el backlog vive en GitHub: el tablero es el índice, no hay index.json ni BOARD.md que regenerar');
+    return EXIT.OK;
+  }
   const { index, changed, epics } = board.regenerate(ctx);
   for (const e of epics || []) ok(`epic derivada  ${e}`);
   if (changed.length === 0) info('index and board already up to date');
@@ -348,7 +355,7 @@ commands.generate = (ctx, { flags }) => {
 
 commands.doctor = (ctx, { flags }) => {
   const only = typeof flags.only === 'string' ? flags.only : null;
-  let { issues, fixed, counts } = doctorLib.runDoctor(ctx, { fix: Boolean(flags.fix) });
+  let { issues, fixed, counts } = doctorLib.runDoctor(ctx, { fix: Boolean(flags.fix), backlog: flags.backlog ? true : null });
   if (only) {
     const known = [...new Set(doctorLib.CHECKS)];
     if (!known.includes(only)) fail(`unknown check "${only}" (known: ${known.join(', ')})`, EXIT.USAGE);
@@ -448,7 +455,18 @@ commands.tier = (ctx, { positional, flags }) => {
   return EXIT.OK;
 };
 
+commands.backlog = async (ctx, parsed) => {
+  const sub = parsed.positional.shift();
+  if (sub !== 'migrate-to-github') fail('usage: harness backlog migrate-to-github [--dry-run] [--only ID]', EXIT.USAGE);
+  const { migrateToGithub } = await import('./lib/migrate-github.mjs');
+  return migrateToGithub(ctx, parsed.flags);
+};
+
 commands.sync = async (ctx, { flags }) => {
+  if (tasksLib.usesGithub(ctx)) {
+    info('el backlog vive en GitHub (project.json → backlog.store): no hay nada que proyectar');
+    return EXIT.OK;
+  }
   const results = await syncLib.runSync(ctx, {
     dryRun: Boolean(flags['dry-run']),
     only: typeof flags.sink === 'string' ? flags.sink : null,

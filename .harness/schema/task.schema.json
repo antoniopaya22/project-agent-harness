@@ -348,6 +348,13 @@
     },
     "updated_at": {
       "type": "string"
+    },
+    "status_changed_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Cuándo cambió el estado por última vez (lo escribe el almacenamiento en GitHub; con ficheros se deriva del worklog)."
     }
   }
 }

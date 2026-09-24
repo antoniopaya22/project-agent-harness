@@ -6,6 +6,7 @@ import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import { EXIT, bad, c, fail, info, matchesAny, ok, rejectUnknownFlags, say, table, toPosixPath } from './util.mjs';
 import * as tasksLib from './tasks.mjs';
+import * as githubStore from './store-github.mjs';
 import * as board from './board.mjs';
 import { actor } from './actor.mjs';
 import * as git from './git.mjs';
@@ -189,7 +190,17 @@ taskSubs.claim = (ctx, { positional, flags }) => {
     return EXIT.PRECONDITION;
   }
   task.status = 'in_progress';
-  tasksLib.logEvent(ctx, task.id, who.id, 'claimed', `branch ${branch}`);
+  const claimEvent = tasksLib.logEvent(ctx, task.id, who.id, 'claimed', `branch ${branch}`);
+  // In GitHub two sessions can both have read `ready`: the claim comment is the lock, and the
+  // oldest claim since the task was last `ready` wins. The loser withdraws before writing.
+  if (tasksLib.usesGithub(ctx) && claimEvent) {
+    const verdict = githubStore.arbitrateClaim(ctx, task, claimEvent);
+    if (!verdict.won) {
+      tasksLib.logEvent(ctx, task.id, who.id, 'claim_withdrawn', `claim ${claimEvent.commentId}`);
+      bad(`${task.id} lo ha reclamado antes ${verdict.winner?.by ?? 'otra sesión'} (${verdict.winner?.at ?? '?'}): no la toco`);
+      return EXIT.PRECONDITION;
+    }
+  }
   tasksLib.save(ctx, task);
   board.regenerate(ctx);
   ok(`${task.id} claimed by ${who.kind}:${who.id}`);
@@ -396,7 +407,8 @@ taskSubs.retype = (ctx, { positional, flags }) => {
   task.type = type;
   tasksLib.logEvent(ctx, task.id, who.id, 'retyped', `${oldId} -> ${newId}`);
   tasksLib.save(ctx, task);
-  fs.rmSync(tasksLib.taskFile(ctx, oldId), { force: true });
+  if (tasksLib.usesGithub(ctx)) githubStore.forgetIds(ctx);
+  else fs.rmSync(tasksLib.taskFile(ctx, oldId), { force: true });
   board.regenerate(ctx);
   ok(`${oldId} -> ${newId} (${type})`);
   return EXIT.OK;

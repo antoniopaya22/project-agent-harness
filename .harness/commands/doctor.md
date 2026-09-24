@@ -17,6 +17,10 @@ node .harness/bin/harness.mjs doctor $ARGUMENTS
 `--fix` repairs only what is mechanically derivable — it regenerates `index.json`, `BOARD.md` and the
 provider adapters. It never edits a task, a doc or any source file, because those need judgement.
 
+With the GitHub store (`project.json` → `backlog.store: github`) the task checks (`task-schema`,
+`backlog`, per-task `read-path`) only run with `--backlog`: they cost API calls, and plain `doctor`
+runs in CI on every push.
+
 ## What it checks, and why each one matters
 
 | Check | Why it exists |
