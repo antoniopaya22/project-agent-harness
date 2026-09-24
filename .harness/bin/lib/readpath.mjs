@@ -4,7 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { countTokens, estimateTokens, toPosixPath } from './util.mjs';
-import { loadAll } from './tasks.mjs';
+import { loadAll, usesGithub } from './tasks.mjs';
 import { TIER_NOTE, suggestTier } from './tier.mjs';
 
 /**
@@ -22,7 +22,7 @@ export function readPathFor(ctx, task) {
 
   const orientation = [
     entry(ctx, '.harness/ENTRYPOINT.md', 'rules + map'),
-    entry(ctx, `.harness/backlog/tasks/${task.id}.json`, 'the task'),
+    taskEntry(ctx, task),
     entry(ctx, '.harness/project.json', 'gates, areas, git conventions'),
   ];
   if (area) orientation.push(entry(ctx, area.doc, `area "${area.id}"`));
@@ -42,6 +42,16 @@ export function readPathFor(ctx, task) {
     cap: ctx.project.read_path_total_max_tokens ?? null,
     missing: [...orientation, ...work].filter((e) => e.missing && e.path !== '(no area set)'),
   };
+}
+
+/**
+ * Step 2 of the read path. With the file store it is the JSON; with GitHub it is the output
+ * of `harness task show`, costed from the same projection an agent actually receives.
+ */
+function taskEntry(ctx, task) {
+  if (!usesGithub(ctx)) return entry(ctx, `.harness/backlog/tasks/${task.id}.json`, 'the task');
+  const text = JSON.stringify(projectTask(task), null, 2);
+  return { path: `harness task show ${task.id}`, why: 'the task', tokens: estimateTokens(text), lines: text.split('\n').length, missing: false, virtual: true };
 }
 
 function entry(ctx, relPath, why) {

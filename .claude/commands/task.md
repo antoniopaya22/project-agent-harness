@@ -51,7 +51,9 @@ Prefix `node .harness/bin/harness.mjs` if the `harness` shim is not on the path.
   real criterion with a check replaces it — that is `/plan`'s job, not a formality to skip.
 - **Titles are read by non-technical colleagues** on the generated board and in ClickUp. No file paths,
   no function names. `lint-backlog` warns when a title looks technical.
-- Any mutation regenerates `index.json` and `BOARD.md`. Do not edit those either.
+- With the file store, any mutation regenerates `index.json` and `BOARD.md`; do not edit those either.
+  With the GitHub store every mutation writes the issue and its card directly: never edit an issue
+  body below the `harness:datos` marker (the description above it is free).
 
 ## Report
 

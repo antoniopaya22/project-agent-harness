@@ -11,8 +11,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import * as board from './board.mjs';
 import { gateBaseline } from './survey.mjs';
-import { allocateId, slugify, taskFile } from './tasks.mjs';
-import { c, nowIso, ok, readJson, say, toPosixPath, warn, writeJson } from './util.mjs';
+import { allocateId, slugify, taskFile, usesGithub } from './tasks.mjs';
+import { EXIT, c, fail, nowIso, ok, readJson, say, toPosixPath, warn, writeJson } from './util.mjs';
 import { proposeSeedTasks } from './proposal.mjs';
 
 /**
@@ -57,6 +57,7 @@ export function verifyGates(target, gates, { timeoutMs = 300000 } = {}) {
  * their state to whoever picks one up next.
  */
 export function seedBacklog(ctx, seeds, { limit = 40 } = {}) {
+  if (usesGithub(ctx)) fail('seedBacklog escribe ficheros de tarea; con el backlog en GitHub usa `harness task new`', EXIT.PRECONDITION);
   const created = [];
   for (const seed of seeds.slice(0, limit)) {
     const id = allocateId(ctx, seed.type);

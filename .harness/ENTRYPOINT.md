@@ -9,7 +9,9 @@ repository to orient yourself — follow the read path below.
 To work on task `<ID>`, read exactly these, in order, and stop:
 
 1. **this file**
-2. `.harness/backlog/tasks/<ID>.json` — the task. It is the **router**: `context.area`,
+2. `.harness/backlog/tasks/<ID>.json` — the task (with `project.json` → `backlog.store: github`
+   there are no task files: `harness task show <ID>`, one issue per task, the board's Status field
+   as the only status). It is the **router**: `context.area`,
    `context.docs` and `context.files` tell you what else to read. Nothing outside that list is
    relevant unless you discover otherwise while working.
 3. `.harness/project.json` — gates (how to lint/test/build), areas, git conventions.
@@ -37,6 +39,8 @@ session at most, never per file.
   are wrong, stop and say so.
 - **Never commit on a protected branch** (`project.json.git.protected_branches`).
 - **Secrets never enter task files, docs, or commits.** Config holds ids; tokens live in `.env`.
+- **Change tasks only through `harness task ...`**, which validates before writing. With the GitHub
+  store a human may move a card on the board: that is a status change and is honoured as such.
 
 ## Output language
 
@@ -86,13 +90,14 @@ from its `stage`** instead of starting over.
 |---------|---------|
 | `harness task list\|show\|next\|new\|claim\|set-status\|retype\|split` | backlog operations |
 | `harness gate <name>` | run a declared quality gate |
-| `harness index` | regenerate `backlog/index.json` and `BOARD.md` |
+| `harness index` | regenerate `backlog/index.json` and `BOARD.md` (file store only) |
 | `harness validate` | tasks against the schema |
 | `harness lint-backlog` | duplicate ids, dependency cycles, orphan parents, unready `ready` |
 | `harness generate [--check]` | (re)write provider adapters from `.harness/` |
 | `harness doctor [--fix]` | validate the harness itself, including read-path budgets |
 | `harness status` | one-screen situational awareness |
-| `harness sync [--dry-run]` | project the backlog to the external tracker (optional) |
+| `harness sync [--dry-run]` | project the backlog to the external tracker (file store only) |
+| `harness backlog migrate-to-github` | move the file backlog to GitHub issues + a Projects board |
 
 Slash commands (`/implement`, `/commit`, `/plan`, `/verify`, `/review`, `/task`, `/adopt`, `/status`,
 `/doctor`, `/handoff`) are the agent-facing wrappers, defined in `.harness/commands/`.

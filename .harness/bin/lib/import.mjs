@@ -12,8 +12,8 @@
 
 import { spawnSync } from 'node:child_process';
 import * as board from './board.mjs';
-import { allocateId, load, loadAll, taskFile } from './tasks.mjs';
-import { c, nowIso, ok, say, warn, writeJson } from './util.mjs';
+import { allocateId, load, loadAll, taskFile, usesGithub } from './tasks.mjs';
+import { EXIT, c, fail, nowIso, ok, say, warn, writeJson } from './util.mjs';
 
 /** The marker `harness sync` leaves in every body it writes. */
 export const PROJECTION_MARKER = 'Proyectado por harness';
@@ -140,6 +140,9 @@ export function taskFromIssue(ctx, issue, { area = null } = {}) {
  * @returns {{created:Array, skipped:Array, error:string|null}}
  */
 export function runImport(ctx, { limit = 200, state = 'open', repo = null, area = null, dryRun = false, max = 100 } = {}) {
+  if (usesGithub(ctx)) {
+    fail('el backlog ya vive en GitHub: sus incidencias son las tareas, no hay nada que importar', EXIT.PRECONDITION);
+  }
   if (!hasGh(ctx)) {
     return { created: [], skipped: [], error: 'gh no está disponible: sin él no hay forma de leer las incidencias' };
   }

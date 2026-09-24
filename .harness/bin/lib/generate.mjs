@@ -177,7 +177,11 @@ function rootInstructions(ctx, { flavour, agents, commands, keep }) {
   lines.push('');
   lines.push('```');
   lines.push('1. .harness/ENTRYPOINT.md            rules + map');
-  lines.push('2. .harness/backlog/tasks/<ID>.json  the task (it tells you what else to read)');
+  lines.push(
+    p.backlog?.store === 'github'
+      ? '2. harness task show <ID>            the task, from GitHub (it tells you what else to read)'
+      : '2. .harness/backlog/tasks/<ID>.json  the task (it tells you what else to read)',
+  );
   lines.push('3. .harness/project.json             gates, areas, git conventions');
   lines.push('4. docs/areas/<area>.md              the slice of architecture you need');
   lines.push('```');

@@ -7,6 +7,20 @@ import path from 'node:path';
 import { EXIT, fail, listFiles, nowIso, readJson, writeJson } from './util.mjs';
 import { validate } from './schema.mjs';
 import { runAllGates, summarize } from './gates.mjs';
+import * as githubStore from './store-github.mjs';
+
+/**
+ * Where the backlog lives: `files` (JSON in `.harness/backlog/tasks/`, the default) or
+ * `github` (issues + the Projects board, `project.json` → `backlog`). Everything below that
+ * reads or writes a task goes through here, so the rest of the harness does not care.
+ */
+export function storeKind(ctx) {
+  return ctx.project?.backlog?.store === 'github' ? 'github' : 'files';
+}
+
+export function usesGithub(ctx) {
+  return storeKind(ctx) === 'github';
+}
 
 /** type <-> id prefix. The prefix is frozen once a task leaves `backlog` (see §5.1). */
 export const TYPE_PREFIX = {
@@ -74,6 +88,7 @@ export function workspaceDir(ctx, id) {
 }
 
 export function loadAll(ctx) {
+  if (usesGithub(ctx)) return githubStore.loadAll(ctx);
   return listFiles(tasksDir(ctx), '.json').map((file) => {
     const task = readJson(file);
     Object.defineProperty(task, '__file', { value: file, enumerable: false });
@@ -82,6 +97,7 @@ export function loadAll(ctx) {
 }
 
 export function load(ctx, id) {
+  if (usesGithub(ctx)) return githubStore.load(ctx, normalizeId(id));
   const file = taskFile(ctx, normalizeId(id));
   if (!fs.existsSync(file)) {
     fail(`task ${normalizeId(id)} not found (looked in ${path.relative(ctx.root, file)})`, EXIT.NOT_FOUND);
@@ -92,11 +108,13 @@ export function load(ctx, id) {
 }
 
 export function exists(ctx, id) {
+  if (usesGithub(ctx)) return githubStore.exists(ctx, normalizeId(id));
   return fs.existsSync(taskFile(ctx, normalizeId(id)));
 }
 
 /** Writes with a stable key order so diffs stay readable and reviewable. */
 export function save(ctx, task) {
+  if (usesGithub(ctx)) return githubStore.save(ctx, task);
   task.updated_at = nowIso();
   writeJson(taskFile(ctx, task.id), orderTask(task));
 }
@@ -127,6 +145,7 @@ export function validateTask(ctx, task) {
 export function allocateId(ctx, type) {
   const prefix = TYPE_PREFIX[type];
   if (!prefix) fail(`unknown task type "${type}" (expected ${Object.keys(TYPE_PREFIX).join('|')})`, EXIT.USAGE);
+  if (usesGithub(ctx)) return githubStore.allocateId(ctx, prefix);
   const used = listFiles(tasksDir(ctx), '.json')
     .map((f) => path.basename(f, '.json'))
     .filter((id) => id.startsWith(`${prefix}-`))
@@ -210,6 +229,7 @@ export function worklogFile(ctx, id) {
  * other's lines, unlike a JSON array.
  */
 export function logEvent(ctx, id, by, event, note = null) {
+  if (usesGithub(ctx)) return githubStore.logEvent(ctx, { id }, by, event, note);
   const file = worklogFile(ctx, id);
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.appendFileSync(file, `${JSON.stringify({ at: nowIso(), by, event, note })}\n`, 'utf8');
@@ -217,6 +237,7 @@ export function logEvent(ctx, id, by, event, note = null) {
 
 /** @returns the last `limit` entries, oldest first */
 export function readWorklog(ctx, id, limit = 10) {
+  if (usesGithub(ctx)) return githubStore.readWorklog(ctx, normalizeId(id), limit);
   const file = worklogFile(ctx, id);
   if (!fs.existsSync(file)) return [];
   const lines = fs.readFileSync(file, 'utf8').split('\n').filter(Boolean);
@@ -451,6 +472,12 @@ export function priorityRank(p) {
  * "in progress for nine days" is worth more than "in progress".
  */
 export function timeInStatus(ctx, task) {
+  // In GitHub the worklog is a comment thread: reading it per task would cost one call per
+  // row of `status`. The store records when the status last changed instead.
+  if (usesGithub(ctx)) {
+    const since = task.status_changed_at || task.created_at || null;
+    return { since, days: since ? daysSince(since) : null };
+  }
   const events = readWorklog(ctx, task.id, 200);
   const marker = `-> ${task.status}`;
   for (let i = events.length - 1; i >= 0; i -= 1) {

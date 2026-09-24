@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { HARNESS_VERSION, writeFileIfChanged, writeJson } from './util.mjs';
-import { OPEN_STATUSES, STATUSES, isBlockedByDeps, loadAll, logEvent, pickNext, save as saveTask } from './tasks.mjs';
+import { OPEN_STATUSES, STATUSES, isBlockedByDeps, loadAll, logEvent, pickNext, save as saveTask, usesGithub } from './tasks.mjs';
 
 const STATUS_LABEL = {
   backlog: 'Backlog',
@@ -157,6 +157,9 @@ function applyEpicStatuses(ctx, tasks) {
 
 /** @returns {{index: object, changed: string[], epics: string[]}} */
 export function regenerate(ctx, { tasks = null } = {}) {
+  // With the backlog in GitHub the board *is* the view: there is no index or BOARD.md to keep
+  // in step, and deriving epic statuses here would cost a write per epic on every command.
+  if (usesGithub(ctx)) return { index: null, changed: [], epics: [] };
   const all = tasks || loadAll(ctx);
   const epics = applyEpicStatuses(ctx, all);
   const index = buildIndex(all);

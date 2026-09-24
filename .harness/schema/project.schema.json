@@ -301,6 +301,43 @@
       "description": "How many commits an area may take before doctor calls its document stale.",
       "type": "integer",
       "minimum": 1
+    },
+    "backlog": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Dónde vive el backlog. `files` (por defecto): un JSON por tarea en .harness/backlog/tasks. `github`: una incidencia por tarea y el campo Status del tablero de GitHub Projects como único estado.",
+      "properties": {
+        "store": {
+          "enum": [
+            "files",
+            "github"
+          ],
+          "default": "files"
+        },
+        "github": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "owner",
+            "project",
+            "repo"
+          ],
+          "properties": {
+            "owner": {
+              "type": "string",
+              "description": "Usuario u organización dueña del tablero"
+            },
+            "project": {
+              "type": "integer",
+              "description": "Número del tablero de GitHub Projects"
+            },
+            "repo": {
+              "type": "string",
+              "description": "owner/nombre del repositorio de las incidencias"
+            }
+          }
+        }
+      }
     }
   },
   "$defs": {

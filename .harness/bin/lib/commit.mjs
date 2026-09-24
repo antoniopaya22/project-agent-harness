@@ -7,7 +7,7 @@ import path from 'node:path';
 import { EXIT, c, fail, info, ok, say, toPosixPath, warn } from './util.mjs';
 import { findSecrets } from './secrets.mjs';
 import * as git from './git.mjs';
-import { TYPE_GIT, branchFor, idFromBranch, load, logEvent, save, taskFile } from './tasks.mjs';
+import { TYPE_GIT, branchFor, idFromBranch, load, logEvent, save, taskFile, usesGithub } from './tasks.mjs';
 import { printGateResults, runAllGates, summarize } from './gates.mjs';
 
 export function resolveTask(ctx, explicitId) {
@@ -276,6 +276,9 @@ export function recordAfterCommit(ctx, task, report) {
     toPosixPath(path.relative(ctx.root, taskFile(ctx, task.id))),
     toPosixPath(path.relative(ctx.root, path.join(ctx.harnessDir, 'backlog', 'worklog', `${task.id}.jsonl`))),
   ].filter((p) => fs.existsSync(path.join(ctx.root, p)));
+  // With the backlog in GitHub the hash and the PR were already written to the issue by
+  // `save`: there is nothing in the tree to record.
+  if (paths.length === 0) return;
 
   git.git(ctx, ['add', '--', ...paths], { allowFail: true });
   const staged = git.git(ctx, ['diff', '--cached', '--name-only'], { allowFail: true });
@@ -333,7 +336,7 @@ export function renderPrBody(ctx, task) {
     '{{description}}': task.description,
     '{{criteria}}': criteria,
     '{{evidence}}': evidence,
-    '{{task_path}}': `.harness/backlog/tasks/${task.id}.json`,
+    '{{task_path}}': usesGithub(ctx) ? `harness task show ${task.id}` : `.harness/backlog/tasks/${task.id}.json`,
   };
 
   let text = fs.existsSync(tpl)
